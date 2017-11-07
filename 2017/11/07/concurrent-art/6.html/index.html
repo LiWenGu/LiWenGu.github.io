@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1 ConcurrentHashMap 的实现原理与使用1.1 为什么要使用 ConcurrentHashMap 线程不安全的 HashMap ，在多线程下 HashMap 的 Entry 链表导致形成环形数据结构， Entry 的 next 节点永远不为空，就会产生死循环获取 Entry 。 效率低下的 HashTable ，使用 synchronized 保证线程安全。 ConcurrentH">
+<meta property="og:type" content="article">
+<meta property="og:title" content="六、Java并发容器和框架">
+<meta property="og:url" content="http://yoursite.com/2017/11/07/concurrent-art/6.html/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1 ConcurrentHashMap 的实现原理与使用1.1 为什么要使用 ConcurrentHashMap 线程不安全的 HashMap ，在多线程下 HashMap 的 Entry 链表导致形成环形数据结构， Entry 的 next 节点永远不为空，就会产生死循环获取 Entry 。 效率低下的 HashTable ，使用 synchronized 保证线程安全。 ConcurrentH">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/concurrent_art/6_1.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/concurrent_art/6_2.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/concurrent_art/6_3.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/concurrent_art/6_4.png">
+<meta property="og:updated_time" content="2017-11-07T12:07:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="六、Java并发容器和框架">
+<meta name="twitter:description" content="1 ConcurrentHashMap 的实现原理与使用1.1 为什么要使用 ConcurrentHashMap 线程不安全的 HashMap ，在多线程下 HashMap 的 Entry 链表导致形成环形数据结构， Entry 的 next 节点永远不为空，就会产生死循环获取 Entry 。 效率低下的 HashTable ，使用 synchronized 保证线程安全。 ConcurrentH">
+<meta name="twitter:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/concurrent_art/6_1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/07/concurrent-art/6.html/"/>
+
+
+
+
+
+  <title>六、Java并发容器和框架 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/07/concurrent-art/6.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TheOhters">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">六、Java并发容器和框架</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-07T20:07:00+08:00">
+                2017-11-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/Java并发编程的艺术/" itemprop="url" rel="index">
+                    <span itemprop="name">Java并发编程的艺术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-ConcurrentHashMap-的实现原理与使用"><a href="#1-ConcurrentHashMap-的实现原理与使用" class="headerlink" title="1 ConcurrentHashMap 的实现原理与使用"></a>1 ConcurrentHashMap 的实现原理与使用</h1><h2 id="1-1-为什么要使用-ConcurrentHashMap"><a href="#1-1-为什么要使用-ConcurrentHashMap" class="headerlink" title="1.1 为什么要使用 ConcurrentHashMap"></a>1.1 为什么要使用 ConcurrentHashMap</h2><ol>
+<li>线程不安全的 HashMap ，在多线程下 HashMap 的 Entry 链表导致形成环形数据结构， Entry 的 next 节点永远不为空，就会产生死循环获取 Entry 。</li>
+<li>效率低下的 HashTable ，使用 synchronized 保证线程安全。</li>
+<li>ConcurrentHashMap 的锁分段技术有效提升并发访问率。 HashTable 效率低下是因为所有访问 HashTable 的线程都必须竞争同一把锁，如果容器里<br>有多把锁，每把锁用于锁容器其中一部分数据，那么当多线程访问容器里不同数据段的数据时，线程就不会存在锁竞争。</li>
+</ol>
+<h2 id="1-2-ConcurrentHashMap-的结构"><a href="#1-2-ConcurrentHashMap-的结构" class="headerlink" title="1.2 ConcurrentHashMap 的结构"></a>1.2 ConcurrentHashMap 的结构</h2><p>ConcurrentHashMap 由 Segment 数组结构和 HashEntry 数组结构组成。 Segment 是一种可重入锁（ReentrantLock）， Segment的结构和 HashMap<br>结构类似。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/concurrent_art/6_1.png" alt=""></p>
+<h2 id="1-3-ConcurrentHashMap-的初始化"><a href="#1-3-ConcurrentHashMap-的初始化" class="headerlink" title="1.3 ConcurrentHashMap 的初始化"></a>1.3 ConcurrentHashMap 的初始化</h2><ol>
+<li>初始化 segments 数组</li>
+<li>初始化 segmentShift 和 segmentMask。用于散列算法的一些值。</li>
+<li>初始化每个 segment，包括容量以及负载因子。</li>
+</ol>
+<h2 id="1-4-ConcurrentHashMap-的操作"><a href="#1-4-ConcurrentHashMap-的操作" class="headerlink" title="1.4 ConcurrentHashMap 的操作"></a>1.4 ConcurrentHashMap 的操作</h2><h3 id="1-4-1-get-操作"><a href="#1-4-1-get-操作" class="headerlink" title="1.4.1 get 操作"></a>1.4.1 get 操作</h3><p>get 操作的高效之处在于整个 get 过程不需要加锁，除非读到的值是空才会加锁重读。如何保证不加锁？原因在于它的 get 方法里将要使用的共享变量都<br>定义成 volatile 类型，如用于统计当前 Segment 大小的 count 字段和用于存储值的 HashEntry 的 value 。但只能被单线程写（有一种情况可以被<br>多线程写，就是写入的值不依赖于原值），在 get 操作里只需要读不需要写共享变量 count 和 value ，所以不需要加锁。即使两个线程同时修改和获取<br> volatile 变量， get 操作也能拿到最新的值，这是用 volatile 替换锁的经典应用场景。</p>
+<h3 id="1-4-2-put-操作"><a href="#1-4-2-put-操作" class="headerlink" title="1.4.2 put 操作"></a>1.4.2 put 操作</h3><p>必须加锁。先定位到 Segment ，然后在 Segment 里进行插入操作。插入操作需要经历两个步骤，第一步判断是否需要对 Segment 里的 HashEntry 数组<br>进行扩容，第二步定位添加元素的位置，然后将其放在 HashEntry 数组里。</p>
+<ol>
+<li>是否需要扩容：插入元素前会判断 Segment 里的 HashEntry 数组是否超过容量，如果超过阈值，则对数组进行扩容。</li>
+<li>如何扩容：先创建一个容量是原来容量两倍的数组，然后将原数组里元素进行散列后插入到新的数组里。为了高效， 只会对某个 Segment 进行扩容。</li>
+</ol>
+<h3 id="1-4-3-size-操作"><a href="#1-4-3-size-操作" class="headerlink" title="1.4.3 size 操作"></a>1.4.3 size 操作</h3><p>每个 Segment 的count 是 valatile 变量，但是累加过程中有可能 count 发生变化，最安全的做法是在统计 size 的时候把所有 Segment 的 put、<br>remove 和 clean 方法全部锁住，但是非常低效。所以 ConcurrentHashMap 的做法是尝试 2 次通过不锁住 Segment 的方式来统计累和，如果 count<br>发生变化，再采用加锁方式统计。如果判断count 发生变化呢？使用 modCount 变量。</p>
+<h1 id="2-ConcurrentLinkedQueue"><a href="#2-ConcurrentLinkedQueue" class="headerlink" title="2 ConcurrentLinkedQueue"></a>2 ConcurrentLinkedQueue</h1><p>实现一个线程安全的队列有两种方式：一种是使用阻塞算法，另一种是使用非阻塞算法。前者可以用一个锁（入队和出队用同一把锁）或两个锁（入队和出队<br>用不同的锁）等方式实现。非阻塞的实现则可以使用循环 CAS 的方式来实现。</p>
+<h2 id="2-1-ConcurrentLinkedQueue-的结构"><a href="#2-1-ConcurrentLinkedQueue-的结构" class="headerlink" title="2.1 ConcurrentLinkedQueue 的结构"></a>2.1 ConcurrentLinkedQueue 的结构</h2><p>由 head 节点和 tail 节点组成，每个节点（Node）由节点元素（item）和指向下一个节点（next）的引用组成。默认情况下 head 节点存储的元素为空，<br>tail 节点等于 head 节点。</p>
+<h2 id="2-2-入队列"><a href="#2-2-入队列" class="headerlink" title="2.2 入队列"></a>2.2 入队列</h2><h3 id="2-2-1-入队列的过程"><a href="#2-2-1-入队列的过程" class="headerlink" title="2.2.1 入队列的过程"></a>2.2.1 入队列的过程</h3><ol>
+<li>添加元素1。队列更新 head 节点的 next 节点为元素1节点，又因为 tail 节点默认情况下等于 head 节点，所以它们的 next 节点都指向元素1节点。  </li>
+<li>添加元素2。队列首先设置元素1节点的 next 节点为元素2节点，然后更新 tail 节点指向元素2节点。</li>
+<li>添加元素3。设置 tail 节点的 next 节点为元素3节点。</li>
+<li>添加元素4。设置元素3的 next 节点为元素4节点，然后将 tail 节点指向元素4节点。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/concurrent_art/6_2.png" alt=""><br>入队主要做两件事：一是将入队节点设置成当前队列尾节点的下一个节点；二是更新 tail 节点，如果 tail 节点的 next 节点不为空，则将入队节点设置成<br>tail 节点，如果 tail 节点的 next 节点为空，则将入队节点设置成 tail 的 next 节点，所以 tail 节点不总是尾节点。  </li>
+</ol>
+<p>在代码中，入队主要做两件事：一是定位出尾节点（通过 tail 的 next 是否为空）；二是使用 CAS 算法将入队队列设置成尾节点的 next 节点，如不成功则重试。<br>（进行 tail 的 next 判断是否为空时，如果循环两次都不为空，则重新进行队列，因为肯定有别的线程加了尾）。源码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (e == <span class="keyword">null</span>) <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</div><div class="line">    <span class="comment">// 入队前，创建一个入队节点</span></div><div class="line">    Node&lt;E&gt; n = <span class="keyword">new</span> Node&lt;E&gt;(e);</div><div class="line">    retry:</div><div class="line">    <span class="comment">// 死循环，入队不成功反复入队。</span></div><div class="line">    <span class="keyword">for</span> (;;) &#123;</div><div class="line">        <span class="comment">// 创建一个指向tail节点的引用</span></div><div class="line">        Node&lt;E&gt; t = tail;</div><div class="line">        <span class="comment">// p用来表示队列的尾节点，默认情况下等于tail节点。</span></div><div class="line">        Node&lt;E&gt; p = t;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> hops = <span class="number">0</span>; ; hops++) &#123;</div><div class="line">            <span class="comment">// 获得p节点的下一个节点。</span></div><div class="line">            Node&lt;E&gt; next = succ(p);</div><div class="line">            <span class="comment">// next节点不为空，说明p不是尾节点，需要更新p后在将它指向next节点</span></div><div class="line">            <span class="keyword">if</span> (next != <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="comment">// 循环了两次及其以上，并且当前节点还是不等于尾节点</span></div><div class="line">                <span class="keyword">if</span> (hops &gt; HOPS &amp;&amp; t != tail)</div><div class="line">                <span class="keyword">continue</span> retry;</div><div class="line">                p = next;</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// 如果p是尾节点，则设置p节点的next节点为入队节点。</span></div><div class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (p.casNext(<span class="keyword">null</span>, n)) &#123;</div><div class="line">                <span class="comment">/*如果tail节点有大于等于1个next节点，则将入队节点设置成tail节点，</span></div><div class="line"><span class="comment">                更新失败了也没关系，因为失败了表示有其他线程成功更新了tail节点*/</span></div><div class="line">                <span class="keyword">if</span> (hops &gt;= HOPS)</div><div class="line">                    casTail(t, n); <span class="comment">// 更新tail节点，允许失败</span></div><div class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">            &#125;</div><div class="line">            <span class="comment">// p有next节点,表示p的next节点是尾节点，则重新设置p节点</span></div><div class="line">            <span class="keyword">else</span> &#123;</div><div class="line">                p = succ(p);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="2-2-2-定位尾节点"><a href="#2-2-2-定位尾节点" class="headerlink" title="2.2.2 定位尾节点"></a>2.2.2 定位尾节点</h3><p>通过判断 tail 节点和 tail 节点的 next 节点。</p>
+<h3 id="2-2-3-HOPS-的设计意图"><a href="#2-2-3-HOPS-的设计意图" class="headerlink" title="2.2.3 HOPS 的设计意图"></a>2.2.3 HOPS 的设计意图</h3><p>用如下实现是否可行：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (e == <span class="keyword">null</span>)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</div><div class="line">    Node&lt;E&gt; n = <span class="keyword">new</span> Node&lt;E&gt;(e);</div><div class="line">    <span class="keyword">for</span> (;;) &#123;</div><div class="line">        Node&lt;E&gt; t = tail;</div><div class="line">        <span class="keyword">if</span> (t.casNext(<span class="keyword">null</span>, n) &amp;&amp; casTail(t, n)) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>让 tail 节点永远作为队列的尾节点，这样实现代码量非常少。但是有个缺点是，每次都要更新 tail 节点为尾节点，而使用 HOPS 常量，进行判断，如果<br>当 tail 节点和尾节点的距离大于等于常量 HOPS 的值（默认等于1）时才更新 tail 节点，来通过增加对 volatile 变量的读操作来减少对 volatile 变量<br>的写操作，入队效率提升。</p>
+<h2 id="2-3-出队列"><a href="#2-3-出队列" class="headerlink" title="2.3 出队列"></a>2.3 出队列</h2><p>只有当 head 节点里没有元素时，出队操作才会更新 head 节点。这种做法也是通过 hops 变量来减少使用 CAS 更新 head 节点的消耗，从而提高出队效率。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/concurrent_art/6_3.png" alt=""></p>
+<h1 id="3-Java-中的阻塞队列"><a href="#3-Java-中的阻塞队列" class="headerlink" title="3 Java 中的阻塞队列"></a>3 Java 中的阻塞队列</h1><h2 id="3-1-什么是阻塞队列"><a href="#3-1-什么是阻塞队列" class="headerlink" title="3.1 什么是阻塞队列"></a>3.1 什么是阻塞队列</h2><p>阻塞队列（BlockingQueue）是一个支持两个附加操作的队列。这两个附加的操作支持阻塞的插入和移除方法。</p>
+<ol>
+<li>支持阻塞的插入方法：意思当队列满时，队列会阻塞插入元素的线程，直到队列不满。</li>
+<li>支持阻塞的移除方法：意思是在队列为空时，获取元素的线程会等待队列变为非空。</li>
+</ol>
+<h2 id="3-2-Java-里的阻塞队列"><a href="#3-2-Java-里的阻塞队列" class="headerlink" title="3.2 Java 里的阻塞队列"></a>3.2 Java 里的阻塞队列</h2><table>
+<thead>
+<tr>
+<th style="text-align:left">类名</th>
+<th style="text-align:left">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">ArrayBlockingQueue</td>
+<td style="text-align:left">一个由数组结构组成的有界阻塞队列</td>
+</tr>
+<tr>
+<td style="text-align:left">LinkedBlockingQueue</td>
+<td style="text-align:left">一个由链表结构组成的有界阻塞队列</td>
+</tr>
+<tr>
+<td style="text-align:left">PriorityBlockingQueue</td>
+<td style="text-align:left">支持优先级排序的无界阻塞队列</td>
+</tr>
+<tr>
+<td style="text-align:left">DelayQueue</td>
+<td style="text-align:left">使用优先级队列实现的无界阻塞队列</td>
+</tr>
+<tr>
+<td style="text-align:left">SynchronousQueue</td>
+<td style="text-align:left">不存储元素的阻塞队列</td>
+</tr>
+<tr>
+<td style="text-align:left">LinkedTransferQueue</td>
+<td style="text-align:left">由链表结构组成的无界阻塞队列</td>
+</tr>
+<tr>
+<td style="text-align:left">LinkedBlockingDeque</td>
+<td style="text-align:left">由链表结构组成的双向阻塞队列</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-3-阻塞队列的实现原理"><a href="#3-3-阻塞队列的实现原理" class="headerlink" title="3.3 阻塞队列的实现原理"></a>3.3 阻塞队列的实现原理</h2><h3 id="3-3-1-使用通知模式实现"><a href="#3-3-1-使用通知模式实现" class="headerlink" title="3.3.1 使用通知模式实现"></a>3.3.1 使用通知模式实现</h3><p>即当生产者往满的队列里添加元素时会阻塞住消费者，当消费者消费了一个队列中的元素后，会通知生产者当前队列可用。</p>
+<h1 id="4-Fork-Join-框架"><a href="#4-Fork-Join-框架" class="headerlink" title="4 Fork/Join 框架"></a>4 Fork/Join 框架</h1><h2 id="4-1-什么是-Fork-Join-框架"><a href="#4-1-什么是-Fork-Join-框架" class="headerlink" title="4.1 什么是 Fork/Join 框架"></a>4.1 什么是 Fork/Join 框架</h2><p>Fork 就是把一个大任务切分为若干子任务并行的执行， Join 就是合并这些子任务的执行结果。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/concurrent_art/6_4.png" alt=""></p>
+<h2 id="4-2-工作窃取算法"><a href="#4-2-工作窃取算法" class="headerlink" title="4.2 工作窃取算法"></a>4.2 工作窃取算法</h2><p>某个线程先把自己队列里的任务干完，而其它线程对应的队列里还有任务等待处理，这时候，完成任务的线程去做还有任务的线程的任务。  </p>
+<ol>
+<li>优点：充分利用线程进行并行计算，减少线程间的竞争。</li>
+<li>缺点：如果只有一个任务时，还是会有竞争。并且该算法会消耗更多的系统资源，比如创建多个线程和多个双端队列。</li>
+</ol>
+<h2 id="4-3-Fork-Join-框架的设计"><a href="#4-3-Fork-Join-框架的设计" class="headerlink" title="4.3 Fork/Join 框架的设计"></a>4.3 Fork/Join 框架的设计</h2><ol>
+<li>分割任务：首先我们需要由一个 fork 类来把大任务分割成小任务，有可能子任务还是很大，所以还需要不停地分割，直到分割出的子任务足够小。</li>
+<li>执行任务并合并结果：分割的子任务分别放在双端队列里，然后几个启动线程分别从双端队列里获取任务执行。子任务执行完的结果都统一放在一个队列里，<br>启动一个线程从队列里里拿数据，然后合并这些数据。  </li>
+</ol>
+<p>Fork/Join 使用两个类来完成以上两件事。  </p>
+<ol>
+<li>ForkJoinTask：我们要使用 ForkJoin框架，必须首先创建一个 Fork/Join 任务。它提供在任务中执行 fork() 和 join() 操作的机制。通常情况下，<br>我们只需要继承它的子类，而 Fork/Join 框架提供了以下两个子类。 RecursiveAction：用于没有返回结果的任务； RecursiveTask：用于有返回结果的任务。  </li>
+<li>ForkJoinPool：ForkJoinTask 需要通过 ForkJoinPool 来执行：任务分割出的子任务会添加到当前工作线程所维护的双端队列中，进入队列的头部。<br>当一个工作线程的队列里暂时没有任务时，它会随机从其它工作线程的队列的尾部 获取一个任务。</li>
+</ol>
+<h2 id="4-4-使用-Fork-Join-框架"><a href="#4-4-使用-Fork-Join-框架" class="headerlink" title="4.4 使用 Fork/Join 框架"></a>4.4 使用 Fork/Join 框架</h2><p>需求：计算1+2+3+4的结果。<br>如果希望每个子任务最多执行两个数的相加，我们设置分割的阈值是2，由于是4个数字相加，所以fork成两个子任务，一个计算1+2，一个计算3+4，然后再join两个子任务。<br>由于有结果的任务，因此继承 RecursiveTask。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CountTask</span> <span class="keyword">extends</span> <span class="title">RecursiveTask</span>&lt;<span class="title">Integer</span>&gt;</span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> THRESHOLD = <span class="number">2</span>; <span class="comment">// 阈值</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> start;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> end;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CountTask</span><span class="params">(<span class="keyword">int</span> start, <span class="keyword">int</span> end)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.start = start;</div><div class="line">        <span class="keyword">this</span>.end = end;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">protected</span> Integer <span class="title">compute</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line">        <span class="keyword">boolean</span> canCompute = (end - start) &lt;= THRESHOLD;</div><div class="line">        <span class="comment">// 如果任务足够小就计算任务</span></div><div class="line">        <span class="keyword">if</span> (canCompute) &#123;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = start; i &lt;= end; i++) &#123;</div><div class="line">                sum += i;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// 如果任务大于阈值，就分裂成两个子任务计算</span></div><div class="line">            <span class="keyword">int</span> middle = (start + end) / <span class="number">2</span>;</div><div class="line">            CountTask leftTask = <span class="keyword">new</span> CountTask(start, middle);</div><div class="line">            CountTask rightTask = <span class="keyword">new</span> CountTask(middle + <span class="number">1</span>, end);</div><div class="line">            <span class="comment">// 执行子任务</span></div><div class="line">            leftTask.fork();</div><div class="line">            rightTask.fork();</div><div class="line">            <span class="comment">// 等待子任务执行完，并得到其结果</span></div><div class="line">            <span class="keyword">int</span> leftResult = leftTask.join();</div><div class="line">            <span class="keyword">int</span> rightResult = rightTask.join();</div><div class="line">            <span class="comment">// 合并子任务</span></div><div class="line">            sum = leftResult + rightResult;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> sum;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        ForkJoinPool forkJoinPool = <span class="keyword">new</span> ForkJoinPool();</div><div class="line">        <span class="comment">// 生成一个计算任务，负责计算1+2+3+4</span></div><div class="line">        CountTask task = <span class="keyword">new</span> CountTask(<span class="number">1</span>, <span class="number">4</span>);</div><div class="line"></div><div class="line">        Future&lt;Integer&gt; result = forkJoinPool.submit(task);</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            System.out.println(result.get());</div><div class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">catch</span> (ExecutionException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="4-5-Fork-Join-框架的实现原理"><a href="#4-5-Fork-Join-框架的实现原理" class="headerlink" title="4.5 Fork/Join 框架的实现原理"></a>4.5 Fork/Join 框架的实现原理</h2><p>ForkJoinPool 由 ForkJoinTask 数组和 ForkJoinWorkerThread 数组组成， ForkJoinTask 数组负责将存放程序提交给 ForkJoinPool 的任务，<br>而 ForkJoinWorkerThread 数组负责执行这些任务。</p>
+<h3 id="4-5-1-ForkJoinTask-的-fork-方法实现原理"><a href="#4-5-1-ForkJoinTask-的-fork-方法实现原理" class="headerlink" title="4.5.1 ForkJoinTask 的 fork 方法实现原理"></a>4.5.1 ForkJoinTask 的 fork 方法实现原理</h3><p>使用 push 方法，把当前任务存放在 ForkJoinTask 数组队列中，再调用 ForkJoinPool 的 signalWork() 方法唤醒或创建一个工作线程来异步的执行这个任务，<br>然后立即返回结果。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> ForkJoinTask&lt;V&gt; <span class="title">fork</span><span class="params">()</span> </span>&#123;</div><div class="line">    Thread t;</div><div class="line">    <span class="keyword">if</span> ((t = Thread.currentThread()) <span class="keyword">instanceof</span> ForkJoinWorkerThread)</div><div class="line">        ((ForkJoinWorkerThread)t).workQueue.push(<span class="keyword">this</span>);</div><div class="line">    <span class="keyword">else</span></div><div class="line">        ForkJoinPool.common.externalPush(<span class="keyword">this</span>);</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">final</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(ForkJoinTask&lt;?&gt; task)</span> </span>&#123;</div><div class="line">    ForkJoinTask&lt;?&gt;[] a; ForkJoinPool p;</div><div class="line">    <span class="keyword">int</span> b = base, s = top, n;</div><div class="line">    <span class="keyword">if</span> ((a = array) != <span class="keyword">null</span>) &#123;    <span class="comment">// ignore if queue removed</span></div><div class="line">        <span class="keyword">int</span> m = a.length - <span class="number">1</span>;     <span class="comment">// fenced write for task visibility</span></div><div class="line">        U.putOrderedObject(a, ((m &amp; s) &lt;&lt; ASHIFT) + ABASE, task);</div><div class="line">        U.putOrderedInt(<span class="keyword">this</span>, QTOP, s + <span class="number">1</span>);</div><div class="line">        <span class="keyword">if</span> ((n = s - b) &lt;= <span class="number">1</span>) &#123;</div><div class="line">            <span class="keyword">if</span> ((p = pool) != <span class="keyword">null</span>)</div><div class="line">                p.signalWork(p.workQueues, <span class="keyword">this</span>);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (n &gt;= m)</div><div class="line">            growArray();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="4-5-2-ForkJoinTask-的-join-方法实现原理"><a href="#4-5-2-ForkJoinTask-的-join-方法实现原理" class="headerlink" title="4.5.2 ForkJoinTask 的 join 方法实现原理"></a>4.5.2 ForkJoinTask 的 join 方法实现原理</h3><p>Join 方法主要用于阻塞当前线程并等待获取结果。调用 doJoin() 方法，通过查看任务状态，如果执行完则直接返回任务状态；如果没执行完，<br>则从任务数组里取出任务并执行。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">final</span> V <span class="title">join</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> s;</div><div class="line">    <span class="keyword">if</span> ((s = doJoin() &amp; DONE_MASK) != NORMAL)</div><div class="line">        reportException(s);</div><div class="line">    <span class="keyword">return</span> getRawResult();</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">reportException</span><span class="params">(<span class="keyword">int</span> s)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (s == CANCELLED)</div><div class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> CancellationException();</div><div class="line">    <span class="keyword">if</span> (s == EXCEPTIONAL)</div><div class="line">        rethrow(getThrowableException());</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">int</span> <span class="title">doJoin</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> s; Thread t; ForkJoinWorkerThread wt; ForkJoinPool.WorkQueue w;</div><div class="line">    <span class="keyword">return</span> (s = status) &lt; <span class="number">0</span> ? s :</div><div class="line">        ((t = Thread.currentThread()) <span class="keyword">instanceof</span> ForkJoinWorkerThread) ?</div><div class="line">        (w = (wt = (ForkJoinWorkerThread)t).workQueue).</div><div class="line">        tryUnpush(<span class="keyword">this</span>) &amp;&amp; (s = doExec()) &lt; <span class="number">0</span> ? s :</div><div class="line">        wt.pool.awaitJoin(w, <span class="keyword">this</span>, <span class="number">0L</span>) :</div><div class="line">        externalAwaitDone();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/07/concurrent-art/8.html/" rel="next" title="八、Java中的并发工具类">
+                <i class="fa fa-chevron-left"></i> 八、Java中的并发工具类
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/07/concurrent-art/4.html/" rel="prev" title="四、Java并发编程基础">
+                四、Java并发编程基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.gif"
+                alt="TheOhters" />
+            
+              <p class="site-author-name" itemprop="name">TheOhters</p>
+              <p class="site-description motion-element" itemprop="description">最怕一生碌碌无为，还安慰自己平凡可贵。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/LiWenGu/" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://liwengu.github.io/" title="原博客地址" target="_blank">原博客地址</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-ConcurrentHashMap-的实现原理与使用"><span class="nav-number">1.</span> <span class="nav-text">1 ConcurrentHashMap 的实现原理与使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-为什么要使用-ConcurrentHashMap"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 为什么要使用 ConcurrentHashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-ConcurrentHashMap-的结构"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 ConcurrentHashMap 的结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-ConcurrentHashMap-的初始化"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 ConcurrentHashMap 的初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-ConcurrentHashMap-的操作"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 ConcurrentHashMap 的操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-1-get-操作"><span class="nav-number">1.4.1.</span> <span class="nav-text">1.4.1 get 操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-2-put-操作"><span class="nav-number">1.4.2.</span> <span class="nav-text">1.4.2 put 操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-3-size-操作"><span class="nav-number">1.4.3.</span> <span class="nav-text">1.4.3 size 操作</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-ConcurrentLinkedQueue"><span class="nav-number">2.</span> <span class="nav-text">2 ConcurrentLinkedQueue</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-ConcurrentLinkedQueue-的结构"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 ConcurrentLinkedQueue 的结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-入队列"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 入队列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-1-入队列的过程"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.2.1 入队列的过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-2-定位尾节点"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2.2 定位尾节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-3-HOPS-的设计意图"><span class="nav-number">2.2.3.</span> <span class="nav-text">2.2.3 HOPS 的设计意图</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-出队列"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 出队列</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-Java-中的阻塞队列"><span class="nav-number">3.</span> <span class="nav-text">3 Java 中的阻塞队列</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-什么是阻塞队列"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 什么是阻塞队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-Java-里的阻塞队列"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Java 里的阻塞队列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-阻塞队列的实现原理"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 阻塞队列的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-1-使用通知模式实现"><span class="nav-number">3.3.1.</span> <span class="nav-text">3.3.1 使用通知模式实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Fork-Join-框架"><span class="nav-number">4.</span> <span class="nav-text">4 Fork/Join 框架</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-什么是-Fork-Join-框架"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 什么是 Fork/Join 框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-工作窃取算法"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 工作窃取算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-Fork-Join-框架的设计"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 Fork/Join 框架的设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-使用-Fork-Join-框架"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 使用 Fork/Join 框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-Fork-Join-框架的实现原理"><span class="nav-number">4.5.</span> <span class="nav-text">4.5 Fork/Join 框架的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-1-ForkJoinTask-的-fork-方法实现原理"><span class="nav-number">4.5.1.</span> <span class="nav-text">4.5.1 ForkJoinTask 的 fork 方法实现原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-2-ForkJoinTask-的-join-方法实现原理"><span class="nav-number">4.5.2.</span> <span class="nav-text">4.5.2 ForkJoinTask 的 join 方法实现原理</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017/11/07 &mdash; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">TheOhters</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
