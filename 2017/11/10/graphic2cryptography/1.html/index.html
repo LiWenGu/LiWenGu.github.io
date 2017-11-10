@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1 本章概要从整体上了解密码世界的模样。 2 密码2.1 Alice 与 Bob要讲解密码，需要给参与信息交互的人和计算机起几个名字，如下表：| 名称 | 说明 ||:—-:|:—-:|| Alice| 一般角色 || Bob | 一般角色 || Eve | 窃听者，可窃听通信内容 || Mallory | 主动攻击者，可妨碍正常通信、伪造消息等 || Trent | 可信的第三方 || Vict">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一、环游密码世界">
+<meta property="og:url" content="http://yoursite.com/2017/11/10/graphic2cryptography/1.html/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1 本章概要从整体上了解密码世界的模样。 2 密码2.1 Alice 与 Bob要讲解密码，需要给参与信息交互的人和计算机起几个名字，如下表：| 名称 | 说明 ||:—-:|:—-:|| Alice| 一般角色 || Bob | 一般角色 || Eve | 窃听者，可窃听通信内容 || Mallory | 主动攻击者，可妨碍正常通信、伪造消息等 || Trent | 可信的第三方 || Vict">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/1_1.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/1_2.png">
+<meta property="og:updated_time" content="2017-11-10T11:47:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一、环游密码世界">
+<meta name="twitter:description" content="1 本章概要从整体上了解密码世界的模样。 2 密码2.1 Alice 与 Bob要讲解密码，需要给参与信息交互的人和计算机起几个名字，如下表：| 名称 | 说明 ||:—-:|:—-:|| Alice| 一般角色 || Bob | 一般角色 || Eve | 窃听者，可窃听通信内容 || Mallory | 主动攻击者，可妨碍正常通信、伪造消息等 || Trent | 可信的第三方 || Vict">
+<meta name="twitter:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/1_1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/11/10/graphic2cryptography/1.html/"/>
+
+
+
+
+
+  <title>一、环游密码世界 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br />
+            
+            日程表
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/10/graphic2cryptography/1.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TheOhters">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">一、环游密码世界</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-10T19:47:00+08:00">
+                2017-11-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/图解密码技术/" itemprop="url" rel="index">
+                    <span itemprop="name">图解密码技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-本章概要"><a href="#1-本章概要" class="headerlink" title="1 本章概要"></a>1 本章概要</h1><p>从整体上了解密码世界的模样。</p>
+<h1 id="2-密码"><a href="#2-密码" class="headerlink" title="2 密码"></a>2 密码</h1><h2 id="2-1-Alice-与-Bob"><a href="#2-1-Alice-与-Bob" class="headerlink" title="2.1 Alice 与 Bob"></a>2.1 Alice 与 Bob</h2><p>要讲解密码，需要给参与信息交互的人和计算机起几个名字，如下表：<br>| 名称 | 说明 |<br>|:—-:|:—-:|<br>| Alice| 一般角色 |<br>| Bob | 一般角色 |<br>| Eve | 窃听者，可窃听通信内容 |<br>| Mallory | 主动攻击者，可妨碍正常通信、伪造消息等 |<br>| Trent | 可信的第三方 |<br>| Victor | 验证者 | </p>
+<h2 id="2-2-发送者、接受者和窃听者"><a href="#2-2-发送者、接受者和窃听者" class="headerlink" title="2.2 发送者、接受者和窃听者"></a>2.2 发送者、接受者和窃听者</h2><p>Alice 向 Bob 发送消息，Alice 作为 Sender，Bob 作为 Receiver，消息作为 Message。在互联网中，消息会经过许多台计算机和通信设备做中转，<br>在这个过程中，就存在被恶意窃听者（eavesdropper）偷看的可能。作为监听者，我们给它起名为Eve，它可能是人类也有可能是某些程序软件。</p>
+<h2 id="2-3-加密与解密"><a href="#2-3-加密与解密" class="headerlink" title="2.3 加密与解密"></a>2.3 加密与解密</h2><p>Alice 不想让别人看到她传递消息的内容，因为它决定将消息加密（encrypt） 后再发送出去，加密之前的是明文（plaintext），加密之后的消息称为<br>密文（ciphertext）。  </p>
+<p>Bob 收到了 Alice 的加密消息后，他需要进行解密（decrypt）之后再查阅，即将密文恢复成明文的过程。这样，窃听者在网络上得到的只是密文。</p>
+<h2 id="2-4-破译"><a href="#2-4-破译" class="headerlink" title="2.4 破译"></a>2.4 破译</h2><p>Eve 得到了密文，试图将密文还原为明文，被称为密码破译（cryptanalysis），简称破译，或者密码分析。</p>
+<h1 id="3-对称密码与公钥密码"><a href="#3-对称密码与公钥密码" class="headerlink" title="3 对称密码与公钥密码"></a>3 对称密码与公钥密码</h1><h2 id="3-1-密码算法"><a href="#3-1-密码算法" class="headerlink" title="3.1 密码算法"></a>3.1 密码算法</h2><p>用于解决复杂问题的步骤，通常称为算法（algorithm），明文生成密文的步骤，被称为“加密算法”；而解密的步骤被称为“解密算法”，它们两统称为密码算法。</p>
+<h2 id="3-2-密钥"><a href="#3-2-密钥" class="headerlink" title="3.2 密钥"></a>3.2 密钥</h2><p>密码算法中需要密钥（key）。如下：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/1_1.png" alt=""><br>无论是在加密还是解密时，都需要知道密钥。</p>
+<h2 id="3-3-对称密钥与公钥密码"><a href="#3-3-对称密钥与公钥密码" class="headerlink" title="3.3 对称密钥与公钥密码"></a>3.3 对称密钥与公钥密码</h2><p>根据密钥的使用方法，可以将密码分为对称密码和公钥密码两种。</p>
+<ol>
+<li>对称密码（symmetric cryptography）是指在加密和解密时使用同一密钥的方式。</li>
+<li>公钥密码（public-key cryptography）则是在加密和解密时使用不同密钥的方式，也称非对称密码（asymmetric cryptography）。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/1_2.png" alt=""></li>
+</ol>
+<h1 id="4-其它密码技术"><a href="#4-其它密码技术" class="headerlink" title="4 其它密码技术"></a>4 其它密码技术</h1><h1 id="5-密码学家的工具箱"><a href="#5-密码学家的工具箱" class="headerlink" title="5 密码学家的工具箱"></a>5 密码学家的工具箱</h1><h1 id="6-隐写术与数字水印"><a href="#6-隐写术与数字水印" class="headerlink" title="6 隐写术与数字水印"></a>6 隐写术与数字水印</h1><h1 id="7-密码与信息安全常识"><a href="#7-密码与信息安全常识" class="headerlink" title="7 密码与信息安全常识"></a>7 密码与信息安全常识</h1><h1 id="8-本章小结"><a href="#8-本章小结" class="headerlink" title="8 本章小结"></a>8 本章小结</h1>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/07/concurrent-art/8.html/" rel="next" title="八、Java中的并发工具类">
+                <i class="fa fa-chevron-left"></i> 八、Java中的并发工具类
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.gif"
+                alt="TheOhters" />
+            
+              <p class="site-author-name" itemprop="name">TheOhters</p>
+              <p class="site-description motion-element" itemprop="description">最怕一生碌碌无为，还安慰自己平凡可贵。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/LiWenGu/" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://liwengu.github.io/" title="原博客地址" target="_blank">原博客地址</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-本章概要"><span class="nav-number">1.</span> <span class="nav-text">1 本章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-密码"><span class="nav-number">2.</span> <span class="nav-text">2 密码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-Alice-与-Bob"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Alice 与 Bob</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-发送者、接受者和窃听者"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 发送者、接受者和窃听者</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-加密与解密"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 加密与解密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-破译"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 破译</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-对称密码与公钥密码"><span class="nav-number">3.</span> <span class="nav-text">3 对称密码与公钥密码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-密码算法"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 密码算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-密钥"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 密钥</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-对称密钥与公钥密码"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 对称密钥与公钥密码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-其它密码技术"><span class="nav-number">4.</span> <span class="nav-text">4 其它密码技术</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-密码学家的工具箱"><span class="nav-number">5.</span> <span class="nav-text">5 密码学家的工具箱</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-隐写术与数字水印"><span class="nav-number">6.</span> <span class="nav-text">6 隐写术与数字水印</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-密码与信息安全常识"><span class="nav-number">7.</span> <span class="nav-text">7 密码与信息安全常识</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-本章小结"><span class="nav-number">8.</span> <span class="nav-text">8 本章小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017/11/07 &mdash; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">TheOhters</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
