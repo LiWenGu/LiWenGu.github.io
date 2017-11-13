@@ -79,17 +79,23 @@
 
 
 
-<meta name="description" content="1 炒鸡蛋与对称密码2 本章概要3 从文字密码到比特序列密码4 一次性密码本——绝对不会被破译的密码5 DES6 三重 DES7 AES 的选定过程8 Rijndael9 本章小结10 小测验">
+<meta name="description" content="1 炒鸡蛋与对称密码鸡蛋炒好之后就完全分不清原来的蛋黄和蛋白了，使用对称密码进行加密，和炒鸡蛋有着异曲同工之妙。炒鸡蛋搅拌的是鸡蛋，而密文打乱的则是比特序列。 然后，它们最大的不同是，炒鸡蛋无法还原成原来的鸡蛋，但密文却必须能够让接收者正确解密才行。 因此，如果只是随意地搅拌和混合，则不能称之为加密，而必须仔细设计出一种能够还原的混合方式。 2 本章概要学习比特序列运算和 XOR 运算。以及介绍一">
 <meta property="og:type" content="article">
 <meta property="og:title" content="三、对称密码">
 <meta property="og:url" content="http://yoursite.com/2017/11/12/graphic2cryptography/3.html/index.html">
 <meta property="og:site_name" content="Hello">
-<meta property="og:description" content="1 炒鸡蛋与对称密码2 本章概要3 从文字密码到比特序列密码4 一次性密码本——绝对不会被破译的密码5 DES6 三重 DES7 AES 的选定过程8 Rijndael9 本章小结10 小测验">
+<meta property="og:description" content="1 炒鸡蛋与对称密码鸡蛋炒好之后就完全分不清原来的蛋黄和蛋白了，使用对称密码进行加密，和炒鸡蛋有着异曲同工之妙。炒鸡蛋搅拌的是鸡蛋，而密文打乱的则是比特序列。 然后，它们最大的不同是，炒鸡蛋无法还原成原来的鸡蛋，但密文却必须能够让接收者正确解密才行。 因此，如果只是随意地搅拌和混合，则不能称之为加密，而必须仔细设计出一种能够还原的混合方式。 2 本章概要学习比特序列运算和 XOR 运算。以及介绍一">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_1.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_2.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_3.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_4.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_5.png">
 <meta property="og:updated_time" content="2017-11-12T08:14:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="三、对称密码">
-<meta name="twitter:description" content="1 炒鸡蛋与对称密码2 本章概要3 从文字密码到比特序列密码4 一次性密码本——绝对不会被破译的密码5 DES6 三重 DES7 AES 的选定过程8 Rijndael9 本章小结10 小测验">
+<meta name="twitter:description" content="1 炒鸡蛋与对称密码鸡蛋炒好之后就完全分不清原来的蛋黄和蛋白了，使用对称密码进行加密，和炒鸡蛋有着异曲同工之妙。炒鸡蛋搅拌的是鸡蛋，而密文打乱的则是比特序列。 然后，它们最大的不同是，炒鸡蛋无法还原成原来的鸡蛋，但密文却必须能够让接收者正确解密才行。 因此，如果只是随意地搅拌和混合，则不能称之为加密，而必须仔细设计出一种能够还原的混合方式。 2 本章概要学习比特序列运算和 XOR 运算。以及介绍一">
+<meta name="twitter:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_1.png">
 
 
 
@@ -362,7 +368,55 @@
       
 
       
-        <h1 id="1-炒鸡蛋与对称密码"><a href="#1-炒鸡蛋与对称密码" class="headerlink" title="1 炒鸡蛋与对称密码"></a>1 炒鸡蛋与对称密码</h1><h1 id="2-本章概要"><a href="#2-本章概要" class="headerlink" title="2 本章概要"></a>2 本章概要</h1><h1 id="3-从文字密码到比特序列密码"><a href="#3-从文字密码到比特序列密码" class="headerlink" title="3 从文字密码到比特序列密码"></a>3 从文字密码到比特序列密码</h1><h1 id="4-一次性密码本——绝对不会被破译的密码"><a href="#4-一次性密码本——绝对不会被破译的密码" class="headerlink" title="4 一次性密码本——绝对不会被破译的密码"></a>4 一次性密码本——绝对不会被破译的密码</h1><h1 id="5-DES"><a href="#5-DES" class="headerlink" title="5 DES"></a>5 DES</h1><h1 id="6-三重-DES"><a href="#6-三重-DES" class="headerlink" title="6 三重 DES"></a>6 三重 DES</h1><h1 id="7-AES-的选定过程"><a href="#7-AES-的选定过程" class="headerlink" title="7 AES 的选定过程"></a>7 AES 的选定过程</h1><h1 id="8-Rijndael"><a href="#8-Rijndael" class="headerlink" title="8 Rijndael"></a>8 Rijndael</h1><h1 id="9-本章小结"><a href="#9-本章小结" class="headerlink" title="9 本章小结"></a>9 本章小结</h1><h1 id="10-小测验"><a href="#10-小测验" class="headerlink" title="10 小测验"></a>10 小测验</h1>
+        <h1 id="1-炒鸡蛋与对称密码"><a href="#1-炒鸡蛋与对称密码" class="headerlink" title="1 炒鸡蛋与对称密码"></a>1 炒鸡蛋与对称密码</h1><p>鸡蛋炒好之后就完全分不清原来的蛋黄和蛋白了，使用对称密码进行加密，和炒鸡蛋有着异曲同工之妙。炒鸡蛋搅拌的是鸡蛋，而密文打乱的则是比特序列。
+然后，它们最大的不同是，炒鸡蛋无法还原成原来的鸡蛋，但密文却必须能够让接收者正确解密才行。
+因此，如果只是随意地搅拌和混合，则不能称之为加密，而必须仔细设计出一种能够还原的混合方式。</p>
+<h1 id="2-本章概要"><a href="#2-本章概要" class="headerlink" title="2 本章概要"></a>2 本章概要</h1><p>学习比特序列运算和 XOR 运算。以及介绍一种称为一次性密码本的密码系统。<br>具体介绍几种对称密码算法，包括 DES、三重DES、AES以及其它一些密码算法。<br>需要注意的是，密码算法有时候会设计开发者的专利和授权等问题，记得先调查一下该算法的专利和授权信息。</p>
+<h1 id="3-从文字密码到比特序列密码"><a href="#3-从文字密码到比特序列密码" class="headerlink" title="3 从文字密码到比特序列密码"></a>3 从文字密码到比特序列密码</h1><h2 id="3-1-编码"><a href="#3-1-编码" class="headerlink" title="3.1 编码"></a>3.1 编码</h2><p>计算机操作对象并不是文字，而是由 0 和 1 排列而成的<strong>比特序列</strong>。执行加密操作的程序，就是将表示明文的比特序列转换为表示密文的比特序列。</p>
+<h2 id="3-2-XOR"><a href="#3-2-XOR" class="headerlink" title="3.2 XOR"></a>3.2 XOR</h2><p>XOR 的全称是 exclusive or ，中文叫作<strong>异或</strong>。</p>
+<h3 id="1-一个比特的-XOR"><a href="#1-一个比特的-XOR" class="headerlink" title="1. 一个比特的 XOR"></a>1. 一个比特的 XOR</h3><p>0 XOR 0 = 0<br>0 XOR 1 = 1<br>1 XOR 0 = 1<br>1 XOR 1 = 0<br>可以理解为硬币翻转：<br>不翻转 + 不翻转 = 不翻转
+不翻转 + 翻转   = 翻转
+翻转   + 不翻转 = 翻转
+翻转   + 翻转   = 不翻转</p>
+<h3 id="2-比特序列的-XOR"><a href="#2-比特序列的-XOR" class="headerlink" title="2. 比特序列的 XOR"></a>2. 比特序列的 XOR</h3><p>A  XOR B = AB<br>AB XOR B = A<br>这是因为两个相同的数进行 XOR 运算的结果一定为 0 ，因此 A XOR B XOR B = A。这不就和加密、界面的步骤非常相似么，如下：  </p>
+<ul>
+<li>将明文 A 用密钥 B 进行加密，得到密文 AB。  </li>
+<li>将密文 AB 用密钥 B 进行解密，得到明文 A。  </li>
+</ul>
+<p>实际上，只要选择一个合适的 B，仅仅使用 XOR 就可以实现一个高强度的密码。<br>对同一个比特序列进行两次 XOR 之后就会回到最初的状态。我们不妨来看看一副由很多点组成的图像。如果将白色的点作为 0 ，黑色的点作为 1 ，
+那么一副黑白图像就可以表示为 0 和 1 的比特序列。我们转呗两幅图像，一幅画是英文字母 D，另一幅是用 0 和 1 交替排列形成的图像（蒙版），
+并进行如下操作：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_1.png" alt=""><br>如果所使用的蒙版是完全随机的比特序列，则使用 XOR 就可以将原来的图像掩盖起来。但如果蒙版中的比特序列是可以被推测出来的，那么实质上图像就
+没有被真正的掩盖。对于密码技术来说，“是否可以预测”是非常重要的一点。能够产生不可预测的比特序列，对于密码技术的贡献是巨大的。这种不可预测的比特
+序列就称为<strong>随机数</strong>。将在第十二章详解。</p>
+<h1 id="4-一次性密码本——绝对不会被破译的密码"><a href="#4-一次性密码本——绝对不会被破译的密码" class="headerlink" title="4 一次性密码本——绝对不会被破译的密码"></a>4 一次性密码本——绝对不会被破译的密码</h1><h2 id="4-1-什么是一次性密码本"><a href="#4-1-什么是一次性密码本" class="headerlink" title="4.1 什么是一次性密码本"></a>4.1 什么是一次性密码本</h2><p>只要通过暴力破解对密钥空间进行遍历，无论任何密文总有一天都能够被破译。然后，本节中将要介绍的一次性密码本（one-time pad）却是一个例外。
+即便用暴力破解法遍历整个密钥空间，一次性密码本也绝对无法被破译。</p>
+<h2 id="4-2-一次性密码本的加密"><a href="#4-2-一次性密码本的加密" class="headerlink" title="4.2 一次性密码本的加密"></a>4.2 一次性密码本的加密</h2><p>它的原理是“将明文与一串随机的比特序列进行 XOR 运算”。如果将硬币的正面设为 0 ，反面设为 1 ，则通过不断掷硬币就能够产生这样一串随机的比特序列。<br>下面我们将明文 midnight 这个字符串通过 ASCII 进行编码并产生一串比特序列。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_2.png" alt="">  </p>
+<p>接着，我们掷 64 次硬币产生 64 比特的随机比特序列：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_3.png" alt="">  </p>
+<p>下面我们将明文与密钥的比特序列进行 XOR 运算，并得到一串新的比特序列，这次运算的结构也就是一次性密码本的密文。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_4.png" alt="">  </p>
+<p>这样产生的比特序列如果硬要显示在计算上，那么显示结果看上去就像是乱码一样（其实是加密），因此密文通常不会被还原为字符，而是被作为二进制数据来处理。</p>
+<h2 id="4-3-一次性密码本的解密"><a href="#4-3-一次性密码本的解密" class="headerlink" title="4.3 一次性密码本的解密"></a>4.3 一次性密码本的解密</h2><p>用密文和密钥进行 XOR 运算，就可以得到明文：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_5.png" alt=""><br>这样显示在计算上就会是正常的文本： midnight。</p>
+<h2 id="4-4-一次性密码本是无法破译的"><a href="#4-4-一次性密码本是无法破译的" class="headerlink" title="4.4 一次性密码本是无法破译的"></a>4.4 一次性密码本是无法破译的</h2><p>为什么一次性密码本是绝对无法破译的呢？我们假设对一次性密码本的密文尝试进行暴力破解，那么总有一天我们会尝试到和加密时相同的密钥，但是，
+即便我们能够解密出 midnight 这个字符串，我们也<strong>无法判断它是否是正确的明文</strong>。  </p>
+<p>因为在解密过程中，所有的 64 比特的排列组合都会出现，包括像 aaaaaaaa、bbbbbbbb、ZZZZZZZZ 这样的规则字符串，也会包含 midnight、onenight、
+mistress 等英文单词，还会包含乱码看不懂的组合。由于明文中又有的可能排列组合都会出现，因此我们无法判断其中哪一个才是正确的明文（也就是用哪个
+密钥才能够正确解密）。  </p>
+<p>所谓暴力破解，就是按顺序将所有的密钥都尝试一遍，并判断所得到的是不是正确的明文的方法。然而，在一次性密码本中，由于我们无法判断得到的是不是正确的明文，
+因此一次性密码本是无法破译的。  </p>
+<p>一次性密码本无法破译的这一特性是由香农于 1949 年通过数学方法加以证明的。<strong>一次性密码本是无条件安全（unconditionally secure）的，
+在理论上是无法破译的（theoretically unbreakable）</strong>。</p>
+<h2 id="4-5-一次性密码本为什么没有被使用"><a href="#4-5-一次性密码本为什么没有被使用" class="headerlink" title="4.5 一次性密码本为什么没有被使用"></a>4.5 一次性密码本为什么没有被使用</h2><h3 id="1-秘钥的配送"><a href="#1-秘钥的配送" class="headerlink" title="1. 秘钥的配送"></a>1. 秘钥的配送</h3><p>最大的问题在于秘钥的配送。<br>接受者 Bob 收到了 Alice 发来的密文。 Bob 要想进行解密，就必须使用和 Alice 进行加密时相同的秘钥，因此 Alice 必须将秘钥也发送给 Bob ，
+且该秘钥的长度和密文是相等的。但这样就产生了一个矛盾——如果能够有一种方法将秘钥安全地发送出去，那么岂不是也可以用同样的方法来安全地发送明文了吗？</p>
+<h3 id="2-秘钥的保存"><a href="#2-秘钥的保存" class="headerlink" title="2. 秘钥的保存"></a>2. 秘钥的保存</h3><p>既然能保存和明文一样长度的秘钥，那么不也就有办法安全保存明文本身了吗？也就是说，从一开始我们根本就不需要密码。也就是说，我们只是将“保护明文”
+这一命题替换成了“保护和明文一样的秘钥”而已，问题并没有得到实质性的解决。</p>
+<h3 id="3-秘钥的重用"><a href="#3-秘钥的重用" class="headerlink" title="3. 秘钥的重用"></a>3. 秘钥的重用</h3><p>此外，在一次性密码本中是绝对不能重用过去用过的随机比特序列的，一次性密码本中的“一次性”也正是由此而来。这是因为作为秘钥的比特序列一旦泄露，
+过去所有的机密通信内容将全部被解密（假设窃听者 Eve 保存了过去所有的通信内容）。</p>
+<h3 id="4-秘钥的同步"><a href="#4-秘钥的同步" class="headerlink" title="4. 秘钥的同步"></a>4. 秘钥的同步</h3><p>如果明文是一个大小为 100MB 的文件，则秘钥的大小也一定是 100MB 。而且在通信过程中，发送者和接受者的秘钥的比特序列不允许有任何错位，否则错位
+后的比特的所有信息都将无法解密。</p>
+<h3 id="5-秘钥的生成"><a href="#5-秘钥的生成" class="headerlink" title="5. 秘钥的生成"></a>5. 秘钥的生成</h3><p>在一次性密码本中，需要生成大量的随机数。这里的随机数必须是无重现性的真正随机数。因此，能够使用一次性密码本的，只有那些机密性重过一切，且可以
+话费大量财力和人力来生成并配送秘钥的场合。  </p>
+<p>综上所述，一次性密码本是一种几乎没有实用性的密码。但是，一次性密码本的思路却孕育出了流密码（stream cipher）。流密码使用的不是真正的随机比特序列，
+而是伪随机数生成器产生的比特序列。流密码虽然不是无法破译的，但只要使用高性能的伪随机数生成器，就能够构建出强度较高的密码系统。</p>
+<h1 id="5-DES"><a href="#5-DES" class="headerlink" title="5 DES"></a>5 DES</h1><h1 id="6-三重-DES"><a href="#6-三重-DES" class="headerlink" title="6 三重 DES"></a>6 三重 DES</h1><h1 id="7-AES-的选定过程"><a href="#7-AES-的选定过程" class="headerlink" title="7 AES 的选定过程"></a>7 AES 的选定过程</h1><h1 id="8-Rijndael"><a href="#8-Rijndael" class="headerlink" title="8 Rijndael"></a>8 Rijndael</h1><h1 id="9-本章小结"><a href="#9-本章小结" class="headerlink" title="9 本章小结"></a>9 本章小结</h1><h1 id="10-小测验"><a href="#10-小测验" class="headerlink" title="10 小测验"></a>10 小测验</h1>
       
     </div>
     
@@ -545,7 +599,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-炒鸡蛋与对称密码"><span class="nav-text">1 炒鸡蛋与对称密码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-本章概要"><span class="nav-text">2 本章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-从文字密码到比特序列密码"><span class="nav-text">3 从文字密码到比特序列密码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-一次性密码本——绝对不会被破译的密码"><span class="nav-text">4 一次性密码本——绝对不会被破译的密码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-DES"><span class="nav-text">5 DES</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-三重-DES"><span class="nav-text">6 三重 DES</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-AES-的选定过程"><span class="nav-text">7 AES 的选定过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-Rijndael"><span class="nav-text">8 Rijndael</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-本章小结"><span class="nav-text">9 本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-小测验"><span class="nav-text">10 小测验</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-炒鸡蛋与对称密码"><span class="nav-text">1 炒鸡蛋与对称密码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-本章概要"><span class="nav-text">2 本章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-从文字密码到比特序列密码"><span class="nav-text">3 从文字密码到比特序列密码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-编码"><span class="nav-text">3.1 编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-XOR"><span class="nav-text">3.2 XOR</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-一个比特的-XOR"><span class="nav-text">1. 一个比特的 XOR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-比特序列的-XOR"><span class="nav-text">2. 比特序列的 XOR</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-一次性密码本——绝对不会被破译的密码"><span class="nav-text">4 一次性密码本——绝对不会被破译的密码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-什么是一次性密码本"><span class="nav-text">4.1 什么是一次性密码本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-一次性密码本的加密"><span class="nav-text">4.2 一次性密码本的加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-一次性密码本的解密"><span class="nav-text">4.3 一次性密码本的解密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-一次性密码本是无法破译的"><span class="nav-text">4.4 一次性密码本是无法破译的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-一次性密码本为什么没有被使用"><span class="nav-text">4.5 一次性密码本为什么没有被使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-秘钥的配送"><span class="nav-text">1. 秘钥的配送</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-秘钥的保存"><span class="nav-text">2. 秘钥的保存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-秘钥的重用"><span class="nav-text">3. 秘钥的重用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-秘钥的同步"><span class="nav-text">4. 秘钥的同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-秘钥的生成"><span class="nav-text">5. 秘钥的生成</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-DES"><span class="nav-text">5 DES</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-三重-DES"><span class="nav-text">6 三重 DES</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-AES-的选定过程"><span class="nav-text">7 AES 的选定过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-Rijndael"><span class="nav-text">8 Rijndael</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-本章小结"><span class="nav-text">9 本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-小测验"><span class="nav-text">10 小测验</span></a></li></ol></div>
             
 
           </div>
