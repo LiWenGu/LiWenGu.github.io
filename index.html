@@ -776,7 +776,7 @@ Mallory
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/07/concurrent-art/5.html/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/07/concurrent-art/6.html/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="TheOhters">
@@ -795,7 +795,7 @@ Mallory
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/11/07/concurrent-art/5.html/" itemprop="url">五、Java中的锁</a></h1>
+                <a class="post-title-link" href="/2017/11/07/concurrent-art/6.html/" itemprop="url">六、Java并发容器和框架</a></h1>
         
 
         <div class="post-meta">
@@ -880,13 +880,13 @@ Mallory
       
         
           
-          1 Lock 接口2. 队列同步器队列同步器 AbstractQueueSynchronizer （简称同步器），是用来构建锁或者其它同步组件的基础框架，它使用了一个 int 成员变量表示同步状态，
-通过内置的 FIFO 队列完成资源获取线程的排队工作。  
-2.1 队列同步器的接口与示例同步器是实
+          1 ConcurrentHashMap 的实现原理与使用1.1 为什么要使用 ConcurrentHashMap
+线程不安全的 HashMap ，在多线程下 HashMap 的 Entry 链表导致形成环形数据结构， Entry 的 next 节点永远不为空，就会产生死循环获取 Entry 。
+效率
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/11/07/concurrent-art/5.html/#more" rel="contents">
+            <a class="btn" href="/2017/11/07/concurrent-art/6.html/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1097,7 +1097,7 @@ Mallory
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/07/concurrent-art/6.html/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/07/concurrent-art/5.html/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="TheOhters">
@@ -1116,7 +1116,7 @@ Mallory
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/11/07/concurrent-art/6.html/" itemprop="url">六、Java并发容器和框架</a></h1>
+                <a class="post-title-link" href="/2017/11/07/concurrent-art/5.html/" itemprop="url">五、Java中的锁</a></h1>
         
 
         <div class="post-meta">
@@ -1201,13 +1201,13 @@ Mallory
       
         
           
-          1 ConcurrentHashMap 的实现原理与使用1.1 为什么要使用 ConcurrentHashMap
-线程不安全的 HashMap ，在多线程下 HashMap 的 Entry 链表导致形成环形数据结构， Entry 的 next 节点永远不为空，就会产生死循环获取 Entry 。
-效率
+          1 Lock 接口2. 队列同步器队列同步器 AbstractQueueSynchronizer （简称同步器），是用来构建锁或者其它同步组件的基础框架，它使用了一个 int 成员变量表示同步状态，
+通过内置的 FIFO 队列完成资源获取线程的排队工作。  
+2.1 队列同步器的接口与示例同步器是实
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/11/07/concurrent-art/6.html/#more" rel="contents">
+            <a class="btn" href="/2017/11/07/concurrent-art/5.html/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

@@ -91,6 +91,13 @@
 <meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_3.png">
 <meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_4.png">
 <meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_5.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_6.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_7.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_8.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_9.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_10.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_11.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_12.png">
 <meta property="og:updated_time" content="2017-11-12T08:14:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="三、对称密码">
@@ -416,7 +423,69 @@ mistress 等英文单词，还会包含乱码看不懂的组合。由于明文�
 话费大量财力和人力来生成并配送秘钥的场合。  </p>
 <p>综上所述，一次性密码本是一种几乎没有实用性的密码。但是，一次性密码本的思路却孕育出了流密码（stream cipher）。流密码使用的不是真正的随机比特序列，
 而是伪随机数生成器产生的比特序列。流密码虽然不是无法破译的，但只要使用高性能的伪随机数生成器，就能够构建出强度较高的密码系统。</p>
-<h1 id="5-DES"><a href="#5-DES" class="headerlink" title="5 DES"></a>5 DES</h1><h1 id="6-三重-DES"><a href="#6-三重-DES" class="headerlink" title="6 三重 DES"></a>6 三重 DES</h1><h1 id="7-AES-的选定过程"><a href="#7-AES-的选定过程" class="headerlink" title="7 AES 的选定过程"></a>7 AES 的选定过程</h1><h1 id="8-Rijndael"><a href="#8-Rijndael" class="headerlink" title="8 Rijndael"></a>8 Rijndael</h1><h1 id="9-本章小结"><a href="#9-本章小结" class="headerlink" title="9 本章小结"></a>9 本章小结</h1><h1 id="10-小测验"><a href="#10-小测验" class="headerlink" title="10 小测验"></a>10 小测验</h1>
+<h1 id="5-DES"><a href="#5-DES" class="headerlink" title="5 DES"></a>5 DES</h1><h2 id="5-1-什么是-DES"><a href="#5-1-什么是-DES" class="headerlink" title="5.1 什么是 DES"></a>5.1 什么是 DES</h2><p>DES（Data Encryption Standard）是 1977 年美国联邦信息处理标准（FIPS）中所采用的一种对称密码。由于其在 1999 年只用了 22 小时就可破译，
+因此除了用它来解密以前的密文以外，现在我们不应该再使用 DES 了。</p>
+<h2 id="5-2-加密和解密"><a href="#5-2-加密和解密" class="headerlink" title="5.2 加密和解密"></a>5.2 加密和解密</h2><p>DES 是一种将 64 比特的明文加密成 64 比特的密文的对称密码算法，它的密钥长度是 56 比特。尽管从规格上来说，DES 的密钥长度是 64 比特，但由于
+每隔 7 比特 会设置一个用于错误检查的比特，因此实质上其密钥长度是 56 比特。  </p>
+<p>DES 是以 64 比特的明文（比特序列）为一个单位来进行加密的，这个 64 比特的单位称为分组。一般来说，以分组为单位进行处理的算法密码称为分组密码
+（block cipher），DES 就是分组密码的一种。  </p>
+<p>DES 每次只能加密 64 比特的数据，如果要加密的明文比较长，就需要对 DES 加密进行迭代（反复），而迭代的具体方式就称为模式（mode），关于模式会在第四章详解。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_6.png" alt=""></p>
+<h2 id="5-3-DES-的结构（Feistel网络）"><a href="#5-3-DES-的结构（Feistel网络）" class="headerlink" title="5.3 DES 的结构（Feistel网络）"></a>5.3 DES 的结构（Feistel网络）</h2><p>在 Feistel 网络中，加密的各个步骤称为轮（round），整个加密过程就是进行若干次轮的循环。如下是 Feistel 网络中一轮的计算流程。而 DES 是
+一种 16 轮循环的 Feistel 网络。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_7.png" alt="">  </p>
+<h3 id="1-Feistel-网络的加密"><a href="#1-Feistel-网络的加密" class="headerlink" title="1. Feistel 网络的加密"></a>1. Feistel 网络的加密</h3><p>输入的数据被分为左右两半分别进行处理，中间的“子密钥”指的是本轮加密所使用的密钥。在 Feistel 网络中，每一轮都需要使用一个不同的子密钥。
+由于子密钥只在一轮中使用，它只是一个局部密钥，因此才成为<strong>子密钥</strong>。<br><strong>轮函数</strong>的作用是根据“右侧”和子密钥一起生成中间密钥，这个中间密钥对“左侧”进行加密，轮函数是该密码系统的核心。一轮的步骤总结如下：  </p>
+<ol>
+<li>将输入的数据等分位左右两部分</li>
+<li>将输入的右侧直接发送到输入的右侧</li>
+<li>将输入的右侧发送到轮函数</li>
+<li>轮函数根据右侧数据和子密钥，计算出一串看上去是随机的比特序列</li>
+<li>将上一步得到的比特序列与左侧数据进行 XOR 运算，并将结果作为加密后的左侧  </li>
+</ol>
+<p>这样一来，“右侧”根本就没有被加密，因此我们需要用不同的子密钥对一轮的处理重复若干次，并在每两轮处理之间将左侧和右侧的数据对调</p>
+<h3 id="2-Feistel-网路的解密"><a href="#2-Feistel-网路的解密" class="headerlink" title="2. Feistel 网路的解密"></a>2. Feistel 网路的解密</h3><p>我们尝试一次下将一轮加密的输出结果用相同的子密钥重新运行一次，结果可能非常令人意外，无论轮函数的具体算法是什么，通过上述操作都能够将密文
+正确地还原为明文。关于这一点，可以从 XOR 的性质（两个相同的数进行 XOR 的结果一定为 0 ）进行思考。  </p>
+<p>有多个轮的情况下也是一样的。也就是说， Feistel 网络的解密操作只要按照相反的熟悉怒来使用子密钥就可以完成了。下图是三轮加密图：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_8.png" alt=""><br>下图是解密示意图：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_9.png" alt=""></p>
+<h3 id="3-Feistel-网络的性质"><a href="#3-Feistel-网络的性质" class="headerlink" title="3. Feistel 网络的性质"></a>3. Feistel 网络的性质</h3><p>Feistel 网络的轮数可以任意增加。无论运行多少轮的加密计算，都不会发生无法解密的情况。以及加密时无论使用任何函数作为轮函数都可以正确解密。
+最后是加密和解密可以用完全相同的结构来实现。在 Feistel 网络的一轮中，右半部分实际上没有任何处理，这在加密算法中看起来是一种浪费，
+但却保证了可解密性。 </p>
+<h1 id="6-三重-DES"><a href="#6-三重-DES" class="headerlink" title="6 三重 DES"></a>6 三重 DES</h1><p>现在 DES 已经可以在限时的时间内被暴力破解，因此我们需要一种用来替代 DES 的分组密码，三重 DES 就是出于这个目的被开发出来的。</p>
+<h2 id="6-1-什么是三重-DES"><a href="#6-1-什么是三重-DES" class="headerlink" title="6.1 什么是三重 DES"></a>6.1 什么是三重 DES</h2><p>三重 DES（triple-DES）是为了增加 DES 的强度，将 DES 重复 3 次所得到的一种密码算法。</p>
+<h2 id="6-2-三重-DES-的加密"><a href="#6-2-三重-DES-的加密" class="headerlink" title="6.2 三重 DES 的加密"></a>6.2 三重 DES 的加密</h2><p><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_10.png" alt=""><br>经过三次 DES 处理CIA能变成最后的密文，由于 DES 秘钥的长度实质上是 56 比特，因此三重 DES 的秘钥长度就是 56 * 3 = 168 比特。<br>从上图中，我们发现，三重 DES 并不是进行三次 DES 加密，而是加密-解密-加密的过程，实际上这是 IBM 公司设计出来的，目的是为了让三重 DES 
+能够兼容普通的 DES。当三重 DES 所有秘钥都相同的时候就相当于普通的 DES 了。因此，以前用 DES 加密的密文，就可以通过这种方式用三重 DES
+来进行解密。也就是说三重 DES 对 DES 具备向下兼容性。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_11.png" alt=""></p>
+<h2 id="6-3-三重-DES-的解密"><a href="#6-3-三重-DES-的解密" class="headerlink" title="6.3 三重 DES 的解密"></a>6.3 三重 DES 的解密</h2><p>解密过程与加密过程顺序相反。</p>
+<h2 id="6-4-三重-DES-的现状"><a href="#6-4-三重-DES-的现状" class="headerlink" title="6.4 三重 DES 的现状"></a>6.4 三重 DES 的现状</h2><p>其处理速度不高，而且在安全性方面也逐渐显现了一些问题，但还被银行等机构使用。</p>
+<h1 id="7-AES-的选定过程"><a href="#7-AES-的选定过程" class="headerlink" title="7 AES 的选定过程"></a>7 AES 的选定过程</h1><h2 id="7-1-什么是-AES"><a href="#7-1-什么是-AES" class="headerlink" title="7.1 什么是 AES"></a>7.1 什么是 AES</h2><p>AES（Advanced Encryption Standard）是取代其前任标准（DES）而成为新标准的一种对称密码。全世界的企业和密码学家提交了多个对称密码算法
+作为 AES 的候选，最终在 2000 年选出了一种名为 Rijndael 的对称密码算法，并将其确定为了 AES。</p>
+<h2 id="7-2-AES-的选定过程"><a href="#7-2-AES-的选定过程" class="headerlink" title="7.2 AES 的选定过程"></a>7.2 AES 的选定过程</h2><p>组织 AES 公开竞选活动的，是美国的一个标准化机构——NIST，参加 AES 竞选的条件是：被选为 AES 的密码算法必须无条件地免费供全世界使用。<br>此外，参与者还必须提交密码算法的详细规格书、以 ANSIC 和 Java 编写的实现代码以及抗密码破译强度的评估等材料。因此，在提交了详细设计和程序代码
+完全公开的情况下，就杜绝了隐蔽式安全性（security by obscurity）。  </p>
+<p>评审者也是参与者，通过发现别人的弱点，实现竞争，最终实现标准化，正是密码算法选定的正确方式。只有由世界最高水平的密码学家共同尝试破译，依然未能
+找到弱点，这样才能够证明一种密码算法的强度。</p>
+<h2 id="7-3-AES-最终候选算法的确定与-AES-的最终确定"><a href="#7-3-AES-最终候选算法的确定与-AES-的最终确定" class="headerlink" title="7.3 AES 最终候选算法的确定与 AES 的最终确定"></a>7.3 AES 最终候选算法的确定与 AES 的最终确定</h2><p><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/3_12.png" alt=""></p>
+<h1 id="8-Rijndael"><a href="#8-Rijndael" class="headerlink" title="8 Rijndael"></a>8 Rijndael</h1><h2 id="8-1-什么是-Rijndael"><a href="#8-1-什么是-Rijndael" class="headerlink" title="8.1 什么是 Rijndael"></a>8.1 什么是 Rijndael</h2><p>由比利时密码学家 Joan Daemon 和 Vincent Rijmen 设计的分组密码算法。</p>
+<h2 id="8-2-Rijndael-的加密和解密"><a href="#8-2-Rijndael-的加密和解密" class="headerlink" title="8.2 Rijndael 的加密和解密"></a>8.2 Rijndael 的加密和解密</h2><p>和 DES 一样， Rijndael 算法也是由多个轮所构成，但是 Rijndael 使用了 SPN 结构，Rijndael 的输入分组为 128 比特，也就是 16字节。
+首先，需要逐个字节地对 16 字节地输入数据进行 SubBytes 处理，即将一个 1 字节地值替换成另一个 1 字节地值，可以想象成简单替换密码。<br>SubBytes 之后进行 ShiftRows处理，即将 SubBytes 的输出以字节单位进行打乱处理，这种打乱是有规律的。然后进行 MixColumns 处理，即对
+一个 4 字节地值进行比特运算，将其变成另一个 4 字节值，最后与轮秘钥进行 XOR ，进行 AddRoundkey处理。这就是一轮。<br>实际上，在 Rijndael 需要重复进行 10 ~ 14 次计算。<br>![][14]<br>它在一轮使用了 SubBytes、ShiftRows、MixColumns 分别存在反向运算 InvSubBytes、InvShiftRows、InvMixColumns，分别按字节、行、列进行并行计算。</p>
+<h2 id="8-3-Rijndael-的破译"><a href="#8-3-Rijndael-的破译" class="headerlink" title="8.3 Rijndael 的破译"></a>8.3 Rijndael 的破译</h2><p>对 Rijndael 来说，可能会出现以前并不存在的新的攻击方法。它的算法背后有着严谨的数学结构，也就是说从明文到密文的计算过程可以全部用公司来表达。  </p>
+<p>这只是一种假设而已，到现在为止，还没有出现针对 Rijndael 的有效攻击。</p>
+<h2 id="8-4-应该使用哪种对称密码呢"><a href="#8-4-应该使用哪种对称密码呢" class="headerlink" title="8.4 应该使用哪种对称密码呢"></a>8.4 应该使用哪种对称密码呢</h2><p>介绍了 DES、三重 DES、和 AES 等对称密码。那么我们到底用哪种呢？<br>一般来说不应该使用任何<strong>任何自制的密码算法</strong>，而是应该使用 AES。</p>
+<h1 id="9-本章小结"><a href="#9-本章小结" class="headerlink" title="9 本章小结"></a>9 本章小结</h1><p>本章介绍了对称密码，以及 DES、三重 DES、AES密码算法。  </p>
+<p>使用一种秘钥空间巨大，且在算法上没有弱点的对称密码，就可以通过密文来确保明文的机密性。巨大的秘钥空间能够抵御暴力破解，算法上没有弱点可以抵御其他
+类型的攻击。  </p>
+<p>然后用对称密码进行通信时，还会出现秘钥的配送问题。为了解决秘钥配送问题，我们需要公钥密码技术，将在第五章详解。<br>本章所介绍的几乎所有的密码算法，都只能讲一个固定长度的分组进行加密。当需要加密的明文长度超过分组长度时，就需要对密码算法进行迭代。下一章将
+探讨对分组密码进行迭代的方法。</p>
+<h1 id="10-小测验"><a href="#10-小测验" class="headerlink" title="10 小测验"></a>10 小测验</h1><ol>
+<li>一次性密码本的秘钥可以进行压缩变短。</li>
+<li>对称密码中，加密的秘钥和解密的秘钥是相等的。</li>
+<li>如果秘钥长度为 56 比特，那么用暴力破解找到正确秘钥需要平均尝试约 2^28 次。</li>
+<li>三重 DES 的秘钥空间是 DES 秘钥空间的三倍大。</li>
+<li>现在 DES 可以在限时的时间内被破译。</li>
+<li>AES 标准选定的密码算法叫 Rijndael。  </li>
+</ol>
+<blockquote>
+<p>注：秘钥长度为 56 比特，则秘钥空间（秘钥总数）是 2^56，平均时间除以 2 ，为 2^55。<br>压缩算法在于：重复。  </p>
+</blockquote>
+
       
     </div>
     
@@ -599,7 +668,7 @@ mistress 等英文单词，还会包含乱码看不懂的组合。由于明文�
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-炒鸡蛋与对称密码"><span class="nav-text">1 炒鸡蛋与对称密码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-本章概要"><span class="nav-text">2 本章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-从文字密码到比特序列密码"><span class="nav-text">3 从文字密码到比特序列密码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-编码"><span class="nav-text">3.1 编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-XOR"><span class="nav-text">3.2 XOR</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-一个比特的-XOR"><span class="nav-text">1. 一个比特的 XOR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-比特序列的-XOR"><span class="nav-text">2. 比特序列的 XOR</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-一次性密码本——绝对不会被破译的密码"><span class="nav-text">4 一次性密码本——绝对不会被破译的密码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-什么是一次性密码本"><span class="nav-text">4.1 什么是一次性密码本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-一次性密码本的加密"><span class="nav-text">4.2 一次性密码本的加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-一次性密码本的解密"><span class="nav-text">4.3 一次性密码本的解密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-一次性密码本是无法破译的"><span class="nav-text">4.4 一次性密码本是无法破译的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-一次性密码本为什么没有被使用"><span class="nav-text">4.5 一次性密码本为什么没有被使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-秘钥的配送"><span class="nav-text">1. 秘钥的配送</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-秘钥的保存"><span class="nav-text">2. 秘钥的保存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-秘钥的重用"><span class="nav-text">3. 秘钥的重用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-秘钥的同步"><span class="nav-text">4. 秘钥的同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-秘钥的生成"><span class="nav-text">5. 秘钥的生成</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-DES"><span class="nav-text">5 DES</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-三重-DES"><span class="nav-text">6 三重 DES</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-AES-的选定过程"><span class="nav-text">7 AES 的选定过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-Rijndael"><span class="nav-text">8 Rijndael</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-本章小结"><span class="nav-text">9 本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-小测验"><span class="nav-text">10 小测验</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-炒鸡蛋与对称密码"><span class="nav-text">1 炒鸡蛋与对称密码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-本章概要"><span class="nav-text">2 本章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-从文字密码到比特序列密码"><span class="nav-text">3 从文字密码到比特序列密码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-编码"><span class="nav-text">3.1 编码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-XOR"><span class="nav-text">3.2 XOR</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-一个比特的-XOR"><span class="nav-text">1. 一个比特的 XOR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-比特序列的-XOR"><span class="nav-text">2. 比特序列的 XOR</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-一次性密码本——绝对不会被破译的密码"><span class="nav-text">4 一次性密码本——绝对不会被破译的密码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-什么是一次性密码本"><span class="nav-text">4.1 什么是一次性密码本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-一次性密码本的加密"><span class="nav-text">4.2 一次性密码本的加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-一次性密码本的解密"><span class="nav-text">4.3 一次性密码本的解密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-一次性密码本是无法破译的"><span class="nav-text">4.4 一次性密码本是无法破译的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-5-一次性密码本为什么没有被使用"><span class="nav-text">4.5 一次性密码本为什么没有被使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-秘钥的配送"><span class="nav-text">1. 秘钥的配送</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-秘钥的保存"><span class="nav-text">2. 秘钥的保存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-秘钥的重用"><span class="nav-text">3. 秘钥的重用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-秘钥的同步"><span class="nav-text">4. 秘钥的同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-秘钥的生成"><span class="nav-text">5. 秘钥的生成</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-DES"><span class="nav-text">5 DES</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-什么是-DES"><span class="nav-text">5.1 什么是 DES</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-加密和解密"><span class="nav-text">5.2 加密和解密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-DES-的结构（Feistel网络）"><span class="nav-text">5.3 DES 的结构（Feistel网络）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Feistel-网络的加密"><span class="nav-text">1. Feistel 网络的加密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Feistel-网路的解密"><span class="nav-text">2. Feistel 网路的解密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Feistel-网络的性质"><span class="nav-text">3. Feistel 网络的性质</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-三重-DES"><span class="nav-text">6 三重 DES</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-什么是三重-DES"><span class="nav-text">6.1 什么是三重 DES</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-三重-DES-的加密"><span class="nav-text">6.2 三重 DES 的加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3-三重-DES-的解密"><span class="nav-text">6.3 三重 DES 的解密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-4-三重-DES-的现状"><span class="nav-text">6.4 三重 DES 的现状</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-AES-的选定过程"><span class="nav-text">7 AES 的选定过程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-什么是-AES"><span class="nav-text">7.1 什么是 AES</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2-AES-的选定过程"><span class="nav-text">7.2 AES 的选定过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-3-AES-最终候选算法的确定与-AES-的最终确定"><span class="nav-text">7.3 AES 最终候选算法的确定与 AES 的最终确定</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-Rijndael"><span class="nav-text">8 Rijndael</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#8-1-什么是-Rijndael"><span class="nav-text">8.1 什么是 Rijndael</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-2-Rijndael-的加密和解密"><span class="nav-text">8.2 Rijndael 的加密和解密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-3-Rijndael-的破译"><span class="nav-text">8.3 Rijndael 的破译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-4-应该使用哪种对称密码呢"><span class="nav-text">8.4 应该使用哪种对称密码呢</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-本章小结"><span class="nav-text">9 本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-小测验"><span class="nav-text">10 小测验</span></a></li></ol></div>
             
 
           </div>
