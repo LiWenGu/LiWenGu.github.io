@@ -81,7 +81,7 @@
 
 <meta name="description" content="1 本章概要针对计算机所处理的消息，有时候我们也需要用到“指纹”。当需要比较两条消息是否一致时，我们不必直接对比消息本身的内容，只要对比它们的“指纹”即可。本章中，使用单向散列函数就可以获取消息的“指纹”，通过对比“指纹”，就能够知道两条消息是否一致。我们将详细介绍现在使用非常广泛的 SHA-1 单向散列函数，并思考对单向散列函数的攻击方法。 2 什么是单向散列函数2.1 这个文件是不是真的呢Al">
 <meta property="og:type" content="article">
-<meta property="og:title" content="七、单向散列函数">
+<meta property="og:title" content="七、单向散列函数（获取消息的“指纹”）">
 <meta property="og:url" content="http://www.liwenguang.cn/2017/11/19/graphic2cryptography/7.html/index.html">
 <meta property="og:site_name" content="Hello">
 <meta property="og:description" content="1 本章概要针对计算机所处理的消息，有时候我们也需要用到“指纹”。当需要比较两条消息是否一致时，我们不必直接对比消息本身的内容，只要对比它们的“指纹”即可。本章中，使用单向散列函数就可以获取消息的“指纹”，通过对比“指纹”，就能够知道两条消息是否一致。我们将详细介绍现在使用非常广泛的 SHA-1 单向散列函数，并思考对单向散列函数的攻击方法。 2 什么是单向散列函数2.1 这个文件是不是真的呢Al">
@@ -93,9 +93,9 @@
 <meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_5.png">
 <meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_6.png">
 <meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_7.png">
-<meta property="og:updated_time" content="2017-11-19T07:16:00.000Z">
+<meta property="og:updated_time" content="2017-11-19T15:09:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="七、单向散列函数">
+<meta name="twitter:title" content="七、单向散列函数（获取消息的“指纹”）">
 <meta name="twitter:description" content="1 本章概要针对计算机所处理的消息，有时候我们也需要用到“指纹”。当需要比较两条消息是否一致时，我们不必直接对比消息本身的内容，只要对比它们的“指纹”即可。本章中，使用单向散列函数就可以获取消息的“指纹”，通过对比“指纹”，就能够知道两条消息是否一致。我们将详细介绍现在使用非常广泛的 SHA-1 单向散列函数，并思考对单向散列函数的攻击方法。 2 什么是单向散列函数2.1 这个文件是不是真的呢Al">
 <meta name="twitter:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_1.png">
 
@@ -133,7 +133,7 @@
 
 
 
-  <title>七、单向散列函数 | Hello</title>
+  <title>七、单向散列函数（获取消息的“指纹”） | Hello</title>
   
 
 
@@ -277,7 +277,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">七、单向散列函数</h1>
+          <h1 class="post-title" itemprop="name headline">七、单向散列函数（获取消息的“指纹”）</h1>
         
 
         <div class="post-meta">
@@ -359,7 +359,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3,783
+                  4,210
                 </span>
               
 
@@ -375,7 +375,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  13
+                  15
                 </span>
               
             </div>
@@ -428,8 +428,16 @@
 <p>不过，不仅要修改合同内容，还要不能改变散列值。<br>Mallory 可以从文档文件所具有的<strong>冗余性</strong>入手。所谓文档文件的冗余性，是指在不改变文档意思的前提下能够对文件的内容进行修改的程度。<br>举个例子，下面的这些句子基本上说的都是一个意思：<br>Alice 要支付的金额为 1 亿元。<br>Alice 要支付的金额为壹亿元。<br>Alice 要支付的金额为 100000000 元。<br>Alice 应支付 1 亿元。<br>作为报酬， Alice 需要支付 1 亿元。<br><br>除此之外，还有一些通过机器来进行修改的方法。例如，可以在文件的末尾添加 1 个、2 个、3 个甚至更多的空格，或者还可以对文档中的每一个字稍微改变一些颜色，这都不会影响文档的意思。在这里需要注意的是，即便我们对文件所进行的修改是无法被人类察觉的，但只要是对文件进行了修改，单向散列函数就会产生不同的散列值。  </p>
 <p>于是，Mallory 利用文档的冗余性，通过机器生成了一大推“支付一亿元的合同”。如果在这一大推合同中，能够找到一个合同和 Alice 原本的“100 万元合同”恰好产生相同的散列值，那 Mallory 就算是成功了。<br>在这里，Mallory 所进行的攻击就是<strong>暴力攻击</strong>。正如对密码可以进行暴力破解一样，对单向散列函数也可以进行暴力破解。这相当于一种<strong>试图破解单向散列函数的“弱抗碰撞性”的攻击</strong>。在这种情况下，暴力破解需要尝试的次数可以根据散列值得长度计算出来。以 SHA-1 为例，由于它的散列值长度为 160 比特，因此最多只要尝试 2160 次就能够找到目标消息了。（这里不懂为什么是 2160 次）</p>
 <h2 id="6-2-生日攻击（攻击故事-2-）"><a href="#6-2-生日攻击（攻击故事-2-）" class="headerlink" title="6.2 生日攻击（攻击故事 2 ）"></a>6.2 生日攻击（攻击故事 2 ）</h2><p>编写合同的人不是 Alice 而是主动攻击者 Mallory 。 Mallory 事先准备两份具备相同散列值的“100 万元合同”和“一亿元合同”，然后将“100 万元合同”交给 Alice 让她计算散列值。随后， Mallory 再像故事 1 中一样， 掉包合同。<br>这里 Mallory 所进行的攻击不是寻找生成特定散列值的消息，而是要找到散列值相同的两条消息，而散列值可以是任意值。这样的攻击，一般称为<strong>生日攻击（birthday attack）</strong>，这是一种<strong>试图破解单向散列函数的“强抗碰撞性”的攻击。</strong><br>这里存在一个生日驳论的数学思想，有兴趣的请自行谷歌。</p>
-<h1 id="7-单向散列函数无法解决的问题"><a href="#7-单向散列函数无法解决的问题" class="headerlink" title="7 单向散列函数无法解决的问题"></a>7 单向散列函数无法解决的问题</h1><p>假如，攻击者 Mallory 伪装成 Alice ，向 Bob 同时发送了消息和散列值。Bob 通过单向散列函数检查消息的完整性，但是无法检查出发送者的身份是否被 Mallory 进行了伪装。也就是说，<strong>单向散列函数能够辨别出“篡改”，但无法辨别出“伪装”。</strong></p>
-<h1 id="8-本章小结"><a href="#8-本章小结" class="headerlink" title="8 本章小结"></a>8 本章小结</h1><h1 id="9-小测验"><a href="#9-小测验" class="headerlink" title="9 小测验"></a>9 小测验</h1>
+<h1 id="7-单向散列函数无法解决的问题"><a href="#7-单向散列函数无法解决的问题" class="headerlink" title="7 单向散列函数无法解决的问题"></a>7 单向散列函数无法解决的问题</h1><p>假如，攻击者 Mallory 伪装成 Alice ，向 Bob 同时发送了消息和散列值。Bob 通过单向散列函数检查消息的完整性，但是无法检查出发送者的身份是否被 Mallory 进行了伪装。也就是说，<strong>单向散列函数能够辨别出“篡改”，但无法辨别出“伪装”。</strong><br>因此我们还需要进行<strong>认证</strong>，用于认证的技术包括<strong>消息认证码</strong>和<strong>数字签名</strong>。消息认证码能够向通信对象保证消息没有被篡改，而数字签名不仅能够向通信对象保证消息没有被篡改，还能够向所有第三方作出这样的保证。<br>认证需要使用秘钥，也就是通过对消息附加 Alice 的秘钥（只有 Alice 才知道的密码信息）来确保消息真的属于 Alice。</p>
+<h1 id="8-本章小结"><a href="#8-本章小结" class="headerlink" title="8 本章小结"></a>8 本章小结</h1><p>本章学习了用于确认消息完整性的单向散列函数，其能够根据任意长度的消息计算出固定长度的散列值，通过对比散列值就可以判断两条消息是否一致。这种技术对辨别篡改非常有效。<br>以及学习了代表性的单向散列函数——SHA-1的实现方法以及破解方法——暴力破解和生日攻击。<br>但是，单向散列函数，虽然可以辨别出篡改，但无法辨别伪装。要解决这个问题，我们需要消息验证码和数字签名。将在下一章介绍消息验证码。</p>
+<h1 id="9-小测验"><a href="#9-小测验" class="headerlink" title="9 小测验"></a>9 小测验</h1><ol>
+<li>MD5 是一种能够将任意长度的数据转换为 128 比特的对称密码算法。</li>
+<li>要找出和某条消息具备相同散列值的另一条消息是非常困难的。</li>
+<li>要找出具有相同散列值但互不相同的两条消息是非常困难的。</li>
+<li>SHA-1 的散列值长度为 20字节。</li>
+<li>如果消息仅被改写了 1 比特，则散列值也仅发生 1 比特的改变。</li>
+</ol>
+
       
     </div>
     
@@ -449,13 +457,13 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://www.liwenguang.cn/2017/11/19/graphic2cryptography/7.html/" title="七、单向散列函数">http://www.liwenguang.cn/2017/11/19/graphic2cryptography/7.html/</a>
+    <a href="http://www.liwenguang.cn/2017/11/19/graphic2cryptography/7.html/" title="七、单向散列函数（获取消息的“指纹”）">http://www.liwenguang.cn/2017/11/19/graphic2cryptography/7.html/</a>
   </li>
   <li class="post-copyright-date">
       <strong>发布时间：</strong>2017年11月19日 - 15时11分
   </li>
   <li class="post-copyright-date">
-      <strong>最后更新时间：</strong>2017年11月19日 - 15时11分
+      <strong>最后更新时间：</strong>2017年11月19日 - 23时11分
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -486,6 +494,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/19/graphic2cryptography/8.html/" rel="prev" title="八、消息认证码">
+                八、消息认证码 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -566,7 +578,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -670,7 +682,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">34.0k</span>
+    <span title="Site words total count">34.5k</span>
   
 </div>
 
