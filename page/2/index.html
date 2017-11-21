@@ -252,7 +252,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/11/07/concurrent-art/4.html/">
+    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/11/07/concurrent-art/8.html/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="TheOhters">
@@ -271,7 +271,7 @@
         
           <h2 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/11/07/concurrent-art/4.html/" itemprop="url">四、Java并发编程基础</a></h2>
+                <a class="post-title-link" href="/2017/11/07/concurrent-art/8.html/" itemprop="url">八、Java中的并发工具类</a></h2>
         
 
         <div class="post-meta">
@@ -348,7 +348,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3,837
+                  1,742
                 </span>
               
 
@@ -364,7 +364,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  17
+                  8
                 </span>
               
             </div>
@@ -387,12 +387,12 @@
       
         
           
-          1 线程简介1.1 什么是线程操作系统运行一个程序时，会为其创建一个进程。而操作系统调度的最小单元是线程，也叫轻量级进程（ Light Weight Process），
-在一个进程里可以创建多个线程，这些线程都拥有各自的计数器、堆栈和局部变量等属性，并且能够访问共享的内存变量。处理器在这些线程上高速
+          1 等待多线程完成的 CountDownLatch例如：解析一个 Excel 里多个 sheet 的数据，如果使用多线程，每个线程解析一个 sheet 里的数据，等到所有的 sheet 都解析完之后，程序提示解析完成。  
+即，需要主线程等待所有线程完成 sheet 的解析操作，最简单的做法是使用 
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/11/07/concurrent-art/4.html/#more" rel="contents">
+            <a class="btn" href="/2017/11/07/concurrent-art/8.html/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -635,7 +635,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/11/07/concurrent-art/5.html/">
+    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/11/07/concurrent-art/4.html/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="TheOhters">
@@ -654,7 +654,7 @@
         
           <h2 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/11/07/concurrent-art/5.html/" itemprop="url">五、Java中的锁</a></h2>
+                <a class="post-title-link" href="/2017/11/07/concurrent-art/4.html/" itemprop="url">四、Java并发编程基础</a></h2>
         
 
         <div class="post-meta">
@@ -731,7 +731,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  2,807
+                  3,837
                 </span>
               
 
@@ -747,7 +747,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  11
+                  17
                 </span>
               
             </div>
@@ -770,13 +770,12 @@
       
         
           
-          1 Lock 接口2. 队列同步器队列同步器 AbstractQueueSynchronizer （简称同步器），是用来构建锁或者其它同步组件的基础框架，它使用了一个 int 成员变量表示同步状态，
-通过内置的 FIFO 队列完成资源获取线程的排队工作。  
-2.1 队列同步器的接口与示例同步器是实
+          1 线程简介1.1 什么是线程操作系统运行一个程序时，会为其创建一个进程。而操作系统调度的最小单元是线程，也叫轻量级进程（ Light Weight Process），
+在一个进程里可以创建多个线程，这些线程都拥有各自的计数器、堆栈和局部变量等属性，并且能够访问共享的内存变量。处理器在这些线程上高速
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/11/07/concurrent-art/5.html/#more" rel="contents">
+            <a class="btn" href="/2017/11/07/concurrent-art/4.html/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -920,7 +919,7 @@
                   </li>
                 
                   <li class="links-of-blogroll-item">
-                    <a href="blog.how2u.cn" title="视频大佬" target="_blank">视频大佬</a>
+                    <a href="http://blog.how2u.cn" title="视频大佬" target="_blank">视频大佬</a>
                   </li>
                 
               </ul>
@@ -960,7 +959,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">37.9k</span>
+    <span title="Site words total count">38.5k</span>
   
 </div>
 
