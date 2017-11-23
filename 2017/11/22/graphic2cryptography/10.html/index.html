@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/uploads/favicon.ico?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1 本章概要第五章学习了公钥密码；第九章学习了数字签名。其中公钥都扮演了重要的角色。然后，如果不能判断自己手上的公钥是否合法，就有可能遭到中间人攻击。证书，就是用来对公钥合法性提供证明的技术。   我们先介绍什么是证书，以及证书的应用场景，然后介绍 X.509 证书规范，以及利用证书来进行公钥传输的公钥基础设施（PKI）和认证机构。 2 证书2.1 什么是证书公钥证书（Public-Key Cer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="十、证书——为公钥加上数字签名">
+<meta property="og:url" content="http://www.liwenguang.cn/2017/11/22/graphic2cryptography/10.html/index.html">
+<meta property="og:site_name" content="Hello">
+<meta property="og:description" content="1 本章概要第五章学习了公钥密码；第九章学习了数字签名。其中公钥都扮演了重要的角色。然后，如果不能判断自己手上的公钥是否合法，就有可能遭到中间人攻击。证书，就是用来对公钥合法性提供证明的技术。   我们先介绍什么是证书，以及证书的应用场景，然后介绍 X.509 证书规范，以及利用证书来进行公钥传输的公钥基础设施（PKI）和认证机构。 2 证书2.1 什么是证书公钥证书（Public-Key Cer">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/10_1.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/10_2.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/10_3.png">
+<meta property="og:updated_time" content="2017-11-22T13:48:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="十、证书——为公钥加上数字签名">
+<meta name="twitter:description" content="1 本章概要第五章学习了公钥密码；第九章学习了数字签名。其中公钥都扮演了重要的角色。然后，如果不能判断自己手上的公钥是否合法，就有可能遭到中间人攻击。证书，就是用来对公钥合法性提供证明的技术。   我们先介绍什么是证书，以及证书的应用场景，然后介绍 X.509 证书规范，以及利用证书来进行公钥传输的公钥基础设施（PKI）和认证机构。 2 证书2.1 什么是证书公钥证书（Public-Key Cer">
+<meta name="twitter:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/10_1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.liwenguang.cn/2017/11/22/graphic2cryptography/10.html/"/>
+
+
+
+
+
+  <title>十、证书——为公钥加上数字签名 | Hello</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hello</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">严律己，宽待人</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/11/22/graphic2cryptography/10.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TheOhters">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">十、证书——为公钥加上数字签名</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-22T21:48:00+08:00">
+                2017-11-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/图解密码技术/" itemprop="url" rel="index">
+                    <span itemprop="name">图解密码技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,421
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1-本章概要"><a href="#1-本章概要" class="headerlink" title="1 本章概要"></a>1 本章概要</h1><p>第五章学习了公钥密码；第九章学习了数字签名。其中公钥都扮演了重要的角色。然后，如果不能判断自己手上的公钥是否合法，就有可能遭到中间人攻击。证书，就是用来对公钥合法性提供证明的技术。  </p>
+<p>我们先介绍什么是证书，以及证书的应用场景，然后介绍 X.509 证书规范，以及利用证书来进行公钥传输的公钥基础设施（PKI）和认证机构。</p>
+<h1 id="2-证书"><a href="#2-证书" class="headerlink" title="2 证书"></a>2 证书</h1><h1 id="2-1-什么是证书"><a href="#2-1-什么是证书" class="headerlink" title="2.1 什么是证书"></a>2.1 什么是证书</h1><p>公钥证书（Public-Key Certificate，PKC）其实和驾照很相似，里面记有姓名、组织、邮箱、地址等个人信息，以及属于此人的公钥，并由<strong>认证机构（Certification Authority、Certifying Authority，CA）</strong>施加数字签名。只要看到公钥证书，我们就可以知道认证机构认定该公钥的确属于此人。公钥证书也简称为<strong>证书</strong>（certificate）。<br>认证机构就是能够认定“公钥确实属于此人”并能够生成数字签名的个人或者组织。既有国际性组织和政府所设立的组织，也有通过认证服务来盈利的一般企业，此外个人也可以成立认证机构。世界上最有名的认证机构当属 VeriSign 公司。</p>
+<h1 id="2-2-证书的应用场景"><a href="#2-2-证书的应用场景" class="headerlink" title="2.2 证书的应用场景"></a>2.2 证书的应用场景</h1><p><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/10_1.png" alt="">  </p>
+<ol>
+<li>Bob 生成密钥对。这里秘钥既可以 Bob 自己生成，也可以由认证机构代为生成。</li>
+<li>Bob 在认证机构 Trent 注册自己的公钥。 Bob，需要请认证机构 Trent 对他的公钥加上数字签名（即生成证书）。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/10_2.png" alt=""></li>
+<li>认证机构 Trent 用自己的私钥对 Bob 的公钥施加数字签名并生成证书。</li>
+<li>Alice 得到带有认证机构 Trent 的数字签名的 Bob 的公钥（证书）。</li>
+<li>Alice 使用认证机构 Trent 的公钥验证数字签名，确认 Bob 的公钥的合法性。</li>
+<li>Alice 用 Bob 的公钥加密消息并发送给 Bob。</li>
+<li>Bob 用自己的私钥解密密文得到 Alice 的消息。</li>
+</ol>
+<h1 id="3-证书标准规范-X-509"><a href="#3-证书标准规范-X-509" class="headerlink" title="3 证书标准规范 X.509"></a>3 证书标准规范 X.509</h1><ol>
+<li>签名前的证书——签名对象的信息</li>
+<li>数字签名算法——对证书签名时所使用的算法</li>
+<li>数字签名——对证书施加的数字签名</li>
+</ol>
+<h1 id="4-公钥基础设施（PKI）"><a href="#4-公钥基础设施（PKI）" class="headerlink" title="4 公钥基础设施（PKI）"></a>4 公钥基础设施（PKI）</h1><h2 id="4-1-什么是公钥基础设施"><a href="#4-1-什么是公钥基础设施" class="headerlink" title="4.1 什么是公钥基础设施"></a>4.1 什么是公钥基础设施</h2><p><strong>公钥基础设施</strong>（Public-Key Infrastructure）是为了能够更有效地运用公钥而制定的一些列规范和规格的总称，简称 PKI。它只是一个总称。</p>
+<h2 id="4-2-PKI-的组成要素"><a href="#4-2-PKI-的组成要素" class="headerlink" title="4.2 PKI 的组成要素"></a>4.2 PKI 的组成要素</h2><ol>
+<li>用户——使用 PKI 的人</li>
+<li>认证机构——颁发证书的人</li>
+<li>仓库——保存证书的数据</li>
+</ol>
+<h2 id="4-3-认证机构的工作"><a href="#4-3-认证机构的工作" class="headerlink" title="4.3 认证机构的工作"></a>4.3 认证机构的工作</h2><ol>
+<li>生成密钥对</li>
+<li>注册证书</li>
+<li>作废证书与 CRL（证书作废清单 Certificate Revocation List）</li>
+</ol>
+<h2 id="4-4-证书的层级结构"><a href="#4-4-证书的层级结构" class="headerlink" title="4.4 证书的层级结构"></a>4.4 证书的层级结构</h2><p>证书颁发：根CA -&gt; 分公司认证机构 -&gt; 办事处认证机构 -&gt; 用户。
+验证证书：根CA -&gt; 分公司认证机构 -&gt; 办事处认证机构 -&gt; 用户。如果连根CA都无法验证说明证书是存在问题的。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/10_3.png" alt=""></p>
+<h1 id="5-对证书的攻击"><a href="#5-对证书的攻击" class="headerlink" title="5. 对证书的攻击"></a>5. 对证书的攻击</h1><h2 id="5-1-在公钥注册之前进行攻击"><a href="#5-1-在公钥注册之前进行攻击" class="headerlink" title="5.1 在公钥注册之前进行攻击"></a>5.1 在公钥注册之前进行攻击</h2><h2 id="5-2-注册相似人名进行攻击"><a href="#5-2-注册相似人名进行攻击" class="headerlink" title="5.2 注册相似人名进行攻击"></a>5.2 注册相似人名进行攻击</h2><h2 id="5-3-窃取认证机构的私钥进行攻击"><a href="#5-3-窃取认证机构的私钥进行攻击" class="headerlink" title="5.3 窃取认证机构的私钥进行攻击"></a>5.3 窃取认证机构的私钥进行攻击</h2><h2 id="5-4-攻击者伪装成认证机构进行攻击"><a href="#5-4-攻击者伪装成认证机构进行攻击" class="headerlink" title="5.4 攻击者伪装成认证机构进行攻击"></a>5.4 攻击者伪装成认证机构进行攻击</h2><h2 id="5-5-钻-CRL-的空子进行攻击"><a href="#5-5-钻-CRL-的空子进行攻击" class="headerlink" title="5.5 钻 CRL 的空子进行攻击"></a>5.5 钻 CRL 的空子进行攻击</h2><p>Mallory 在晚上入侵 Bob 的电脑，向 Alice 发了邮件。第二天早上， Bob 发现自己电脑被入侵，而且私钥被盗，于是 Bob 赶紧联系认证机构 Trent ，通知自己的公钥被盗，但是已经晚了。同时 Bob 也可以是坏人，利用这个时间差。</p>
+<h1 id="6-关于证书的-Q-amp-A"><a href="#6-关于证书的-Q-amp-A" class="headerlink" title="6. 关于证书的 Q&amp;A"></a>6. 关于证书的 Q&amp;A</h1><h2 id="6-1-为什么需要证书"><a href="#6-1-为什么需要证书" class="headerlink" title="6.1 为什么需要证书"></a>6.1 为什么需要证书</h2><p>疑问：我不理解证书的必要性。通过认证机构的证书来获取公钥，和直接获取公钥到底有什么不一样呢？<br>回答：从认证机构获取公钥，可以降低遭到中间人攻击的风险。因为带有证书的公钥是经过认证机构进行数字签名的，事实上无法被篡改。</p>
+<h2 id="6-2-通过自己的方法进行认证是不是更安全"><a href="#6-2-通过自己的方法进行认证是不是更安全" class="headerlink" title="6.2 通过自己的方法进行认证是不是更安全"></a>6.2 通过自己的方法进行认证是不是更安全</h2><p>疑问：使用公开的技术就等于为攻击者提供了用于攻击的信息，相比之下，还是使用公司自己开发的保密的认证方法更安全吧？<br>回答：靠隐蔽式来保证安全是错误的！</p>
+<h2 id="6-3-为什么要相信认证机构"><a href="#6-3-为什么要相信认证机构" class="headerlink" title="6.3 为什么要相信认证机构"></a>6.3 为什么要相信认证机构</h2><p>？？？</p>
+<h1 id="7-本章小结"><a href="#7-本章小结" class="headerlink" title="7. 本章小结"></a>7. 本章小结</h1><p>从使用证书的场景开始，学习了证书标准规范 X.509、颁发证书的认证机构，以及公钥基础设施（PKI）的相关知识。还介绍了对 PKI 的攻击方法和对策。<br>无论是数字签名、证书。还是认证机构的层级结构，都不可能在完全不可信的状态下创造出信任关系。这是一种社会的实体问题。</p>
+<h1 id="8-小测验"><a href="#8-小测验" class="headerlink" title="8. 小测验"></a>8. 小测验</h1><ol>
+<li>证书是认证机构将用户的公钥加密后的产物</li>
+<li>要确认证书中所包含的公钥是否合法，需要得到认证机构的公钥</li>
+<li>世界上颁发的所有证书，沿着认证机构的层级关系都能够找到唯一的根 CA</li>
+<li>用户发现自己的私钥泄露之后，需要立刻联系注册相应公钥的认证机构</li>
+<li>用户需要定期从认证机构获取 CRL</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    TheOhters
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://www.liwenguang.cn/2017/11/22/graphic2cryptography/10.html/" title="十、证书——为公钥加上数字签名">http://www.liwenguang.cn/2017/11/22/graphic2cryptography/10.html/</a>
+  </li>
+  <li class="post-copyright-date">
+      <strong>发布时间：</strong>2017年11月22日 - 21时11分
+  </li>
+  <li class="post-copyright-date">
+      <strong>最后更新时间：</strong>2017年11月22日 - 21时11分
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/21/graphic2cryptography/9.html/" rel="next" title="九、数字签名——消息到底是谁写的">
+                <i class="fa fa-chevron-left"></i> 九、数字签名——消息到底是谁写的
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/23/talker/2.html/" rel="prev" title="电影《一个叫欧维的男人决定去死》有感~">
+                电影《一个叫欧维的男人决定去死》有感~ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.gif"
+                alt="TheOhters" />
+            
+              <p class="site-author-name" itemprop="name">TheOhters</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/LiWenGu/" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://liwengu.github.io/" title="原博客地址" target="_blank">原博客地址</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.how2u.cn" title="视频大佬" target="_blank">视频大佬</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-本章概要"><span class="nav-text">1 本章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-证书"><span class="nav-text">2 证书</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-1-什么是证书"><span class="nav-text">2.1 什么是证书</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-2-证书的应用场景"><span class="nav-text">2.2 证书的应用场景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-证书标准规范-X-509"><span class="nav-text">3 证书标准规范 X.509</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-公钥基础设施（PKI）"><span class="nav-text">4 公钥基础设施（PKI）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-什么是公钥基础设施"><span class="nav-text">4.1 什么是公钥基础设施</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-PKI-的组成要素"><span class="nav-text">4.2 PKI 的组成要素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-认证机构的工作"><span class="nav-text">4.3 认证机构的工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-证书的层级结构"><span class="nav-text">4.4 证书的层级结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-对证书的攻击"><span class="nav-text">5. 对证书的攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-在公钥注册之前进行攻击"><span class="nav-text">5.1 在公钥注册之前进行攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-注册相似人名进行攻击"><span class="nav-text">5.2 注册相似人名进行攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-窃取认证机构的私钥进行攻击"><span class="nav-text">5.3 窃取认证机构的私钥进行攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-4-攻击者伪装成认证机构进行攻击"><span class="nav-text">5.4 攻击者伪装成认证机构进行攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-5-钻-CRL-的空子进行攻击"><span class="nav-text">5.5 钻 CRL 的空子进行攻击</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-关于证书的-Q-amp-A"><span class="nav-text">6. 关于证书的 Q&A</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-为什么需要证书"><span class="nav-text">6.1 为什么需要证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-通过自己的方法进行认证是不是更安全"><span class="nav-text">6.2 通过自己的方法进行认证是不是更安全</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3-为什么要相信认证机构"><span class="nav-text">6.3 为什么要相信认证机构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-本章小结"><span class="nav-text">7. 本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-小测验"><span class="nav-text">8. 小测验</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017/11/07 &mdash; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">TheOhters</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">43.4k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -86,10 +86,16 @@
 <meta property="og:site_name" content="Hello">
 <meta property="og:description" content="1 羊妈妈的认证大灰狼把黑色的爪子伸进门缝，说道：“我是你们的妈妈，快快开门吧！”七只小羊回答道：“不是不是，妈妈的手是白色的，你的手的黑色的，你不是我们的妈妈！”听了小羊的话，大灰狼把它的爪子染成了白色，于是小羊们就被大灰狼的白爪子给骗了，便打开了门。这是因为小羊们用来认证的“白色的手”是大灰狼也能够模仿出来的。如果有一种“只有羊妈妈才能生成的信息”，那就可以实现更可靠的认证了吧。 2 本章概要">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-20T17:07:00.000Z">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/9_1.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/9_2.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/9_3.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/9_4.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/9_5.png">
+<meta property="og:updated_time" content="2017-11-22T13:48:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="九、数字签名——消息到底是谁写的">
 <meta name="twitter:description" content="1 羊妈妈的认证大灰狼把黑色的爪子伸进门缝，说道：“我是你们的妈妈，快快开门吧！”七只小羊回答道：“不是不是，妈妈的手是白色的，你的手的黑色的，你不是我们的妈妈！”听了小羊的话，大灰狼把它的爪子染成了白色，于是小羊们就被大灰狼的白爪子给骗了，便打开了门。这是因为小羊们用来认证的“白色的手”是大灰狼也能够模仿出来的。如果有一种“只有羊妈妈才能生成的信息”，那就可以实现更可靠的认证了吧。 2 本章概要">
+<meta name="twitter:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/9_1.png">
 
 
 
@@ -351,7 +357,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  720
+                  3,395
                 </span>
               
 
@@ -367,7 +373,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  3
+                  12
                 </span>
               
             </div>
@@ -393,7 +399,134 @@
 <h1 id="3-数字签名"><a href="#3-数字签名" class="headerlink" title="3 数字签名"></a>3 数字签名</h1><h2 id="3-1-Alice-的借条"><a href="#3-1-Alice-的借条" class="headerlink" title="3.1 Alice 的借条"></a>3.1 Alice 的借条</h2><p>假设 Alice 需要向 Bob 借 100 万元。不过 Alice 和 Bob 离得很远，无法直接见面。通过银行汇款， Alice 可以立刻从 Bob 那里收到钱，但是 Alice 的借条应该怎样发送给 Bob 呢？挂号信寄过去，但是会花费时间，能不能用电子邮件来发送借条呢？比如：<br>“Bob，我向你借款 100 万元。”————Alice。<br>显然，Bob 看到这封邮件也不会轻易相信，因为电子邮件容易被伪造也可能被篡改，或者事后 Alice 可以以“我不知道这张借条”为理由来否认。</p>
 <h2 id="3-2-从消息认证码到数字签名"><a href="#3-2-从消息认证码到数字签名" class="headerlink" title="3.2 从消息认证码到数字签名"></a>3.2 从消息认证码到数字签名</h2><h3 id="1-消息认证码的局限性"><a href="#1-消息认证码的局限性" class="headerlink" title="1. 消息认证码的局限性"></a>1. 消息认证码的局限性</h3><p>第八章介绍的消息认证码由局限性，即，无法防止否认，以及无法向第三方证明消息是对方发的。</p>
 <h3 id="2-通过数字签名解决问题"><a href="#2-通过数字签名解决问题" class="headerlink" title="2. 通过数字签名解决问题"></a>2. 通过数字签名解决问题</h3><p>假设 Alice 使用的秘钥是一个只有 Alice 自己才知道的私钥。当 Alice 发送消息时，她用私钥生成一个“签名”。相对的，接收者 Bob 则使用一个和 Alice 不同的秘钥对签名进行验证。使用 Bob 的秘钥无法根据消息生成签名，但是用 Bob 的秘钥却可以对 Alice 所计算的签名进行验证，也就是说可以知道这个签名是否是通过 Alice 的秘钥计算出来的。<br>实际上，这种看似神奇的技术，早就已经问世了，这就是<strong>数字签名</strong>（digital signature）。</p>
-<h2 id="3-3-签名的生成和验证"><a href="#3-3-签名的生成和验证" class="headerlink" title="3.3 签名的生成和验证"></a>3.3 签名的生成和验证</h2><h1 id="4-数字签名的方法"><a href="#4-数字签名的方法" class="headerlink" title="4 数字签名的方法"></a>4 数字签名的方法</h1><h1 id="5-对数字签名的疑问"><a href="#5-对数字签名的疑问" class="headerlink" title="5 对数字签名的疑问"></a>5 对数字签名的疑问</h1><h1 id="6-数字签名的应用实例"><a href="#6-数字签名的应用实例" class="headerlink" title="6 数字签名的应用实例"></a>6 数字签名的应用实例</h1><h1 id="7-通过-RSA-实现数字签名"><a href="#7-通过-RSA-实现数字签名" class="headerlink" title="7 通过 RSA 实现数字签名"></a>7 通过 RSA 实现数字签名</h1><h1 id="8-其它的数字签名"><a href="#8-其它的数字签名" class="headerlink" title="8 其它的数字签名"></a>8 其它的数字签名</h1><h1 id="9-对数字签名的攻击"><a href="#9-对数字签名的攻击" class="headerlink" title="9 对数字签名的攻击"></a>9 对数字签名的攻击</h1><h1 id="10-各种密码技术的对比"><a href="#10-各种密码技术的对比" class="headerlink" title="10 各种密码技术的对比"></a>10 各种密码技术的对比</h1><h1 id="11-数字签名无法解决的问题"><a href="#11-数字签名无法解决的问题" class="headerlink" title="11 数字签名无法解决的问题"></a>11 数字签名无法解决的问题</h1><h1 id="12-本章小结"><a href="#12-本章小结" class="headerlink" title="12 本章小结"></a>12 本章小结</h1><h1 id="13-小测验"><a href="#13-小测验" class="headerlink" title="13 小测验"></a>13 小测验</h1>
+<h2 id="3-3-签名的生成和验证"><a href="#3-3-签名的生成和验证" class="headerlink" title="3.3 签名的生成和验证"></a>3.3 签名的生成和验证</h2><p>在数字签名技术中，出现了下面两种行为：  </p>
+<ul>
+<li>生成消息签名的行为</li>
+<li>验证消息签名的行为</li>
+</ul>
+<p>生成消息签名：由消息发送者 Alice 来完成。表明“我认可该消息的内容”。<br>验证数字签名：由消息接收者 Bob 来完成或者需要验证消息的第三方来完成，即验证者 Victor。  </p>
+<p>Alice 使用“签名秘钥”来生成消息的签名，而 Bob 和 Victor 则使用“验证秘钥”来验证消息的签名。<strong>数字签名对签名秘钥和验证秘钥进行了区分，使用验证秘钥是无法生成签名的。</strong>这一点非常重要。此外，<strong>签名秘钥只能由签名的人持有，而验证秘钥则是任何需要验证签名的人都可以持有。</strong><br>这里和第五章的公钥密码很相似。实际上，数字签名和公钥密码有着非常紧密的联系，简而言之，<strong>数字签名</strong>就是通过将公钥密码“反过来用”而实现的。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/9_1.png" alt=""></p>
+<h2 id="3-4-公钥密码与数字签名"><a href="#3-4-公钥密码与数字签名" class="headerlink" title="3.4 公钥密码与数字签名"></a>3.4 公钥密码与数字签名</h2><p><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/9_2.png" alt=""><br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/9_3.png" alt=""></p>
+<h1 id="4-数字签名的方法"><a href="#4-数字签名的方法" class="headerlink" title="4 数字签名的方法"></a>4 数字签名的方法</h1><p>我们来介绍两种生成和验证数字签名的方法：  </p>
+<ol>
+<li>直接对消息签名的方法</li>
+<li>对消息的散列值签名的方法</li>
+</ol>
+<p>后者虽然复杂，但实际中我们一般都使用这种方法。</p>
+<h2 id="4-1-直接对消息签名的方法"><a href="#4-1-直接对消息签名的方法" class="headerlink" title="4.1 直接对消息签名的方法"></a>4.1 直接对消息签名的方法</h2><p>发送者 Alice 要对消息签名，而接收者 Bob 要对签名进行验证。<br>Alice 需要事先生成一个包括公钥和私钥的密钥对，而需要验证签名签名的 Bob 则需要得到 Alice 公钥。过程如下：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/9_4.png" alt="">  </p>
+<ol>
+<li>Alice 用自己的私钥对消息进行加密。</li>
+<li>Alice 将消息和签名发送给 Bob。</li>
+<li>Bob 用 Alice 的公钥对收到的签名进行解密。如果不是 Alice 的私钥加密的密文，则无法用 Alice 的公钥正确解密。</li>
+<li>Bob 将签名解密后得到的消息与 Alice 直接发送的消息进行对比。</li>
+</ol>
+<h2 id="4-2-对消息的散列值签名的方法"><a href="#4-2-对消息的散列值签名的方法" class="headerlink" title="4.2 对消息的散列值签名的方法"></a>4.2 对消息的散列值签名的方法</h2><p>与对消息签名的不同是，这里的消息变成了消息的散列值。流程参考上图。</p>
+<h1 id="5-对数字签名的疑问"><a href="#5-对数字签名的疑问" class="headerlink" title="5 对数字签名的疑问"></a>5 对数字签名的疑问</h1><h2 id="5-1-密文为什么能作为签名使用"><a href="#5-1-密文为什么能作为签名使用" class="headerlink" title="5.1 密文为什么能作为签名使用"></a>5.1 密文为什么能作为签名使用</h2><p>疑问：为什么密文能够具备签名的意义呢？<br>解答：数字签名是利用了“没有私钥的人事实上无法生成使用该私钥所生成的密文”这一性质来实现的。并非为了保证机密性，而是代表<strong>只有持有该秘钥的人才能够生成的信息</strong>。<br>这样的信息一般称为<strong>认证符号</strong>（authenticator），消息认证码也是认证符号的一种，数字签名也是一样。</p>
+<h2 id="5-2-数字签名不能保证机密性吗"><a href="#5-2-数字签名不能保证机密性吗" class="headerlink" title="5.2 数字签名不能保证机密性吗"></a>5.2 数字签名不能保证机密性吗</h2><p>疑问：从流程图看到，消息没有经过加密就发送了，这样不就无法保证消息的机密性了吗？<br>解答：的确，数字签名的作用本来就不是保证机密性。关于密码和签名的组合方法，将在第十三章 PGP 详解。</p>
+<h2 id="5-3-这种签名可以随意复制吗"><a href="#5-3-这种签名可以随意复制吗" class="headerlink" title="5.3 这种签名可以随意复制吗"></a>5.3 这种签名可以随意复制吗</h2><p>疑问：数字签名貌似可以轻易复制出相同内容，那还能用作签名吗？<br>解答：签名重要的是，<strong>特定的签名者与特定的消息绑定在了一起</strong>这一事实。无论将签名复制了多少份，“是谁对这条消息进行了签名”这一事实是不会发生任何改变的。签名可以被复制，但这并不代表签名会失去意义。</p>
+<h2 id="5-4-消息内容会不不会任意修改"><a href="#5-4-消息内容会不不会任意修改" class="headerlink" title="5.4 消息内容会不不会任意修改"></a>5.4 消息内容会不不会任意修改</h2><p>疑问：消息和签名两者都是可以任意修改的，这样的签名还有意义吗？<br>解答：数字签名所要实现的并不是<strong>防止修改</strong>，而是<strong>识别修改</strong>。修改没问题，但验证签名会失败。</p>
+<h2 id="5-5-删除签名也无法“作废合同”吗"><a href="#5-5-删除签名也无法“作废合同”吗" class="headerlink" title="5.5 删除签名也无法“作废合同”吗"></a>5.5 删除签名也无法“作废合同”吗</h2><p>疑问：带有数字签名的借据只是计算机文件，将其删除也无法保证确实已经作废，因为不知道其它地方是否还留有副本。无法作废的签名是不是非常不方便呢？<br>解答：我们可以在消息中声明该消息的有效期并加上数字签名，例如公钥的证书就属于这种情况，将在第十章详解。</p>
+<h2 id="5-6-如何防止否认"><a href="#5-6-如何防止否认" class="headerlink" title="5.6 如何防止否认"></a>5.6 如何防止否认</h2><p>严格来说，如果数字签名的声称这说“我的私钥被别人窃取了”，也是有可能进行否认的，将在第十章探讨。</p>
+<h2 id="5-7-数字签名真的能够代替签名吗"><a href="#5-7-数字签名真的能够代替签名吗" class="headerlink" title="5.7 数字签名真的能够代替签名吗"></a>5.7 数字签名真的能够代替签名吗</h2><p>不能代替，而是共存。</p>
+<h1 id="6-数字签名的应用实例"><a href="#6-数字签名的应用实例" class="headerlink" title="6 数字签名的应用实例"></a>6 数字签名的应用实例</h1><h2 id="6-1-安全信息公告"><a href="#6-1-安全信息公告" class="headerlink" title="6.1 安全信息公告"></a>6.1 安全信息公告</h2><p>一些信息安全方面的组织会在其网站上发布一些关于安全漏洞的警告，那么这么警告是否真的是该组织所发布的呢？因此，人们可以通过公钥可以排除有人恶意伪装成该组织来发布假消息的风险。</p>
+<h2 id="6-2-软件下载"><a href="#6-2-软件下载" class="headerlink" title="6.2 软件下载"></a>6.2 软件下载</h2><p>保证网络下载的软件是否被篡改过。</p>
+<h2 id="6-3-公钥证书"><a href="#6-3-公钥证书" class="headerlink" title="6.3 公钥证书"></a>6.3 公钥证书</h2><p>在验证数字签名时我们需要合法的公钥，那么怎么才能知道自己得到的公钥是否合法呢？我们可以将公钥当作消息，对它加上数字签名。像这样对公钥施加数字签名所得到的就是<strong>公钥证书</strong>，将在第十章详解。</p>
+<h2 id="6-4-SSL-TLS"><a href="#6-4-SSL-TLS" class="headerlink" title="6.4 SSL/TLS"></a>6.4 SSL/TLS</h2><p>SSL/TLS 在认证服务器身份是否合法时会使用服务器证书，它就是加上了数字签名的服务器公钥。相对的，服务器为了对客户端（用户）进行认证也会使用客户端证书。将在第十四章详解。</p>
+<h1 id="7-通过-RSA-实现数字签名"><a href="#7-通过-RSA-实现数字签名" class="headerlink" title="7 通过 RSA 实现数字签名"></a>7 通过 RSA 实现数字签名</h1><h2 id="7-1-用-RSA-生成签名"><a href="#7-1-用-RSA-生成签名" class="headerlink" title="7.1 用 RSA 生成签名"></a>7.1 用 RSA 生成签名</h2><h2 id="签名-消息-D-mod-N"><a href="#签名-消息-D-mod-N" class="headerlink" title="签名 = 消息 ^ D mod N"></a>签名 = 消息 ^ D mod N</h2><p>这里所使用的 D 和 N 就是签名者的私钥。</p>
+<h2 id="7-2-用-RSA-验证签名"><a href="#7-2-用-RSA-验证签名" class="headerlink" title="7.2 用 RSA 验证签名"></a>7.2 用 RSA 验证签名</h2><h2 id="由签名求得的消息-签名-E-mod-N"><a href="#由签名求得的消息-签名-E-mod-N" class="headerlink" title="由签名求得的消息 = 签名 ^ E mod N"></a>由签名求得的消息 = 签名 ^ E mod N</h2><p>这里所使用的 E 和 N 就是签名者的公钥。</p>
+<h2 id="7-3-具体实践"><a href="#7-3-具体实践" class="headerlink" title="7.3 具体实践"></a>7.3 具体实践</h2><p>假设密钥对：<br>公钥：E = 5; N = 323;
+私钥：D = 29; N = 323;</p>
+<h3 id="1-生成签名"><a href="#1-生成签名" class="headerlink" title="1.生成签名"></a>1.生成签名</h3><p>消息^D mod N = 123^29 mod 323 = 157<br>得到签名是 157，向接收者发送的内容为：(123，157)。</p>
+<h3 id="2-验证签名"><a href="#2-验证签名" class="headerlink" title="2.验证签名"></a>2.验证签名</h3><p>签名^E mod N = 157^5 mod 323 = 123<br>得到的消息 123 与发送者直接发送过来的消息 123 是一致的，因此签名验证成功。</p>
+<h1 id="8-其它的数字签名"><a href="#8-其它的数字签名" class="headerlink" title="8 其它的数字签名"></a>8 其它的数字签名</h1><ol>
+<li>EIGamal 方式：利用了在 mod N 中求离散对数的困难度。</li>
+<li>DSA。</li>
+<li>Rabin 方式：利用了在 mod N 中其平方根的困难度。</li>
+</ol>
+<h1 id="9-对数字签名的攻击"><a href="#9-对数字签名的攻击" class="headerlink" title="9 对数字签名的攻击"></a>9 对数字签名的攻击</h1><h2 id="9-1-中间人攻击"><a href="#9-1-中间人攻击" class="headerlink" title="9.1 中间人攻击"></a>9.1 中间人攻击</h2><h2 id="9-2-对单向散列函数的攻击"><a href="#9-2-对单向散列函数的攻击" class="headerlink" title="9.2 对单向散列函数的攻击"></a>9.2 对单向散列函数的攻击</h2><p>数字签名中所使用的单向散列函数必须具有抗碰撞性，否则攻击者就可以生成另外一条不同的消息，使其与签名所绑定的消息具有相同的散列值。</p>
+<h2 id="9-3-利用数字签名攻击公钥密码"><a href="#9-3-利用数字签名攻击公钥密码" class="headerlink" title="9.3 利用数字签名攻击公钥密码"></a>9.3 利用数字签名攻击公钥密码</h2><p>将密文以邮件方式发送给可以解密者，诱导其帮忙解密。（博主认为，这属于社会工程学范畴）<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/9_5.png" alt=""></p>
+<h1 id="10-各种密码技术的对比"><a href="#10-各种密码技术的对比" class="headerlink" title="10 各种密码技术的对比"></a>10 各种密码技术的对比</h1><h2 id="10-1-消息认证码与数字签名"><a href="#10-1-消息认证码与数字签名" class="headerlink" title="10.1 消息认证码与数字签名"></a>10.1 消息认证码与数字签名</h2><table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">对称密码</th>
+<th style="text-align:left">公钥密码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">发送者</td>
+<td style="text-align:center">用共享秘钥加密</td>
+<td style="text-align:left">用公钥加密</td>
+</tr>
+<tr>
+<td style="text-align:center">接收者</td>
+<td style="text-align:center">用共享秘钥解密</td>
+<td style="text-align:left">用私钥解密</td>
+</tr>
+<tr>
+<td style="text-align:center">秘钥配送问题</td>
+<td style="text-align:center">存在</td>
+<td style="text-align:left">不存在，但公钥需要另外认证</td>
+</tr>
+<tr>
+<td style="text-align:center">机密性</td>
+<td style="text-align:center">✔️</td>
+<td style="text-align:left">✔️</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">消息认证码</th>
+<th style="text-align:left">数字签名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">发送者</td>
+<td style="text-align:center">用共享秘钥计算 MAC 值</td>
+<td style="text-align:left">用私钥生成签名</td>
+</tr>
+<tr>
+<td style="text-align:center">接收者</td>
+<td style="text-align:center">用共享秘钥计算 MAC 值</td>
+<td style="text-align:left">用公钥验证签名</td>
+</tr>
+<tr>
+<td style="text-align:center">秘钥配送问题</td>
+<td style="text-align:center">存在</td>
+<td style="text-align:left">不存在，但公钥需要另外认证</td>
+</tr>
+<tr>
+<td style="text-align:center">完整性</td>
+<td style="text-align:center">✔️</td>
+<td style="text-align:left">✔️</td>
+</tr>
+<tr>
+<td style="text-align:center">认证</td>
+<td style="text-align:center">✔️（仅限通信对象双方）</td>
+<td style="text-align:left">✔️（可适用于任何第三方）</td>
+</tr>
+<tr>
+<td style="text-align:center">防止否认</td>
+<td style="text-align:center">✘</td>
+<td style="text-align:left">✔️</td>
+</tr>
+</tbody>
+</table>
+<h2 id="10-2-混合密码系统与散列值签名"><a href="#10-2-混合密码系统与散列值签名" class="headerlink" title="10.2 混合密码系统与散列值签名"></a>10.2 混合密码系统与散列值签名</h2><p>在混合密码系统中，消息本身是用对称密码加密的，而只有对称密码的秘钥是用公钥密码加密的，即在这里对称密码的秘钥就相当于消息。<br>另一方面，数字签名中也使用了同样的方法，即将消息本身输入单向散列函数求散列值，然后再对散列值进行签名，在这里散列值就相当于消息。<br>即：<strong>对称密码的秘钥是机密性的精华</strong>，<strong>单向散列函数的散列值是完整性的精华</strong>。</p>
+<h1 id="11-数字签名无法解决的问题"><a href="#11-数字签名无法解决的问题" class="headerlink" title="11 数字签名无法解决的问题"></a>11 数字签名无法解决的问题</h1><p>用数字签名既可以识别出篡改和伪装，还可以防止否认。也就是说，我们同时实现了确认消息的完整性、进行认证以及防止否认。<br>然而，要正确使用数字签名，有一个大前提，那就是用于验证签名的<strong>公钥必须属于真正的发送者</strong>。<br>现在由陷入了一个死循环，数字签名是用来识别消息篡改、伪装以及否认的，但是为此我们又必须从没有被伪装的发送者得到没有被篡改的公钥才行。<br>为了能够确认自己得到的公钥是否合法，我们需要使用<strong>证书</strong>。所谓证书，就是讲公钥当作一条消息，由一个可信的第三方对其签名后所得到的公钥。   </p>
+<p>但是这只是把问题转移了。为了对证书上施加的数字签名进行校验，我们必定需要另一个公钥，那么如何才能构建一个可信的数字签名链条呢？又由谁来颁发可信的证书呢？到这一步，我们就已经踏入了社会学的领域。我们需要让公钥以及数字签名技术成为一种社会性的基础设施，即<strong>公钥基础设施（Public Key Intrastructure）</strong>，简称 PKI，关于证书和 PKI 将在第十章详解。</p>
+<h1 id="12-本章小结"><a href="#12-本章小结" class="headerlink" title="12 本章小结"></a>12 本章小结</h1><p>本章介绍了，如何逆向使用公钥密码来实现数字签名，并使用 RSA 具体实践了数字签名的生成和验证。此外讨论了数字签名的攻击方法以及数字签名与消息认证码之间的关系。<br>通过数字签名可以识别篡改和伪装，还可以防止否认，但前提是用于验证严明的发送者的公钥没有被伪造。</p>
+<h1 id="13-小测验"><a href="#13-小测验" class="headerlink" title="13 小测验"></a>13 小测验</h1><ol>
+<li>要验证数字签名，需要使用签名者的私钥。</li>
+<li>RSA 可以用作数字签名算法。</li>
+<li>使用数字签名可以保护消息的机密性，不用担心被窃听。</li>
+</ol>
+
       
     </div>
     
@@ -419,7 +552,7 @@
       <strong>发布时间：</strong>2017年11月21日 - 01时11分
   </li>
   <li class="post-copyright-date">
-      <strong>最后更新时间：</strong>2017年11月21日 - 01时11分
+      <strong>最后更新时间：</strong>2017年11月22日 - 21时11分
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -450,6 +583,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/22/graphic2cryptography/10.html/" rel="prev" title="十、证书——为公钥加上数字签名">
+                十、证书——为公钥加上数字签名 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -530,7 +667,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -604,7 +741,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-羊妈妈的认证"><span class="nav-text">1 羊妈妈的认证</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-本章概要"><span class="nav-text">2 本章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-数字签名"><span class="nav-text">3 数字签名</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-Alice-的借条"><span class="nav-text">3.1 Alice 的借条</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-从消息认证码到数字签名"><span class="nav-text">3.2 从消息认证码到数字签名</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-消息认证码的局限性"><span class="nav-text">1. 消息认证码的局限性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-通过数字签名解决问题"><span class="nav-text">2. 通过数字签名解决问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-签名的生成和验证"><span class="nav-text">3.3 签名的生成和验证</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-数字签名的方法"><span class="nav-text">4 数字签名的方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-对数字签名的疑问"><span class="nav-text">5 对数字签名的疑问</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-数字签名的应用实例"><span class="nav-text">6 数字签名的应用实例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-通过-RSA-实现数字签名"><span class="nav-text">7 通过 RSA 实现数字签名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-其它的数字签名"><span class="nav-text">8 其它的数字签名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-对数字签名的攻击"><span class="nav-text">9 对数字签名的攻击</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-各种密码技术的对比"><span class="nav-text">10 各种密码技术的对比</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-数字签名无法解决的问题"><span class="nav-text">11 数字签名无法解决的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12-本章小结"><span class="nav-text">12 本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#13-小测验"><span class="nav-text">13 小测验</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-羊妈妈的认证"><span class="nav-text">1 羊妈妈的认证</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-本章概要"><span class="nav-text">2 本章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-数字签名"><span class="nav-text">3 数字签名</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-Alice-的借条"><span class="nav-text">3.1 Alice 的借条</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-从消息认证码到数字签名"><span class="nav-text">3.2 从消息认证码到数字签名</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-消息认证码的局限性"><span class="nav-text">1. 消息认证码的局限性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-通过数字签名解决问题"><span class="nav-text">2. 通过数字签名解决问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-签名的生成和验证"><span class="nav-text">3.3 签名的生成和验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-公钥密码与数字签名"><span class="nav-text">3.4 公钥密码与数字签名</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-数字签名的方法"><span class="nav-text">4 数字签名的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-直接对消息签名的方法"><span class="nav-text">4.1 直接对消息签名的方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-对消息的散列值签名的方法"><span class="nav-text">4.2 对消息的散列值签名的方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-对数字签名的疑问"><span class="nav-text">5 对数字签名的疑问</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-密文为什么能作为签名使用"><span class="nav-text">5.1 密文为什么能作为签名使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-数字签名不能保证机密性吗"><span class="nav-text">5.2 数字签名不能保证机密性吗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-这种签名可以随意复制吗"><span class="nav-text">5.3 这种签名可以随意复制吗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-4-消息内容会不不会任意修改"><span class="nav-text">5.4 消息内容会不不会任意修改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-5-删除签名也无法“作废合同”吗"><span class="nav-text">5.5 删除签名也无法“作废合同”吗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-6-如何防止否认"><span class="nav-text">5.6 如何防止否认</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-7-数字签名真的能够代替签名吗"><span class="nav-text">5.7 数字签名真的能够代替签名吗</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-数字签名的应用实例"><span class="nav-text">6 数字签名的应用实例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-安全信息公告"><span class="nav-text">6.1 安全信息公告</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-软件下载"><span class="nav-text">6.2 软件下载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3-公钥证书"><span class="nav-text">6.3 公钥证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-4-SSL-TLS"><span class="nav-text">6.4 SSL/TLS</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-通过-RSA-实现数字签名"><span class="nav-text">7 通过 RSA 实现数字签名</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-用-RSA-生成签名"><span class="nav-text">7.1 用 RSA 生成签名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#签名-消息-D-mod-N"><span class="nav-text">签名 = 消息 ^ D mod N</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2-用-RSA-验证签名"><span class="nav-text">7.2 用 RSA 验证签名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#由签名求得的消息-签名-E-mod-N"><span class="nav-text">由签名求得的消息 = 签名 ^ E mod N</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-3-具体实践"><span class="nav-text">7.3 具体实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-生成签名"><span class="nav-text">1.生成签名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-验证签名"><span class="nav-text">2.验证签名</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-其它的数字签名"><span class="nav-text">8 其它的数字签名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-对数字签名的攻击"><span class="nav-text">9 对数字签名的攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#9-1-中间人攻击"><span class="nav-text">9.1 中间人攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-2-对单向散列函数的攻击"><span class="nav-text">9.2 对单向散列函数的攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-3-利用数字签名攻击公钥密码"><span class="nav-text">9.3 利用数字签名攻击公钥密码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10-各种密码技术的对比"><span class="nav-text">10 各种密码技术的对比</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#10-1-消息认证码与数字签名"><span class="nav-text">10.1 消息认证码与数字签名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-2-混合密码系统与散列值签名"><span class="nav-text">10.2 混合密码系统与散列值签名</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11-数字签名无法解决的问题"><span class="nav-text">11 数字签名无法解决的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12-本章小结"><span class="nav-text">12 本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#13-小测验"><span class="nav-text">13 小测验</span></a></li></ol></div>
             
 
           </div>
@@ -638,7 +775,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">38.5k</span>
+    <span title="Site words total count">43.4k</span>
   
 </div>
 
