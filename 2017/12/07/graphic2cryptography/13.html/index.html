@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="Stay hungry. Stay foolish.    永不满足，大智若愚。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="关于">
-<meta property="og:url" content="http://www.liwenguang.cn/about/index.html">
+<meta name="description" content="1 本章概要本章中，将以密码软件 PGP（Pretty Good Privacy）为题材，思考一下将前面章节中学习的密码技术进行组合的方法。 2 PGP简介PGP 是 1990 年编写的密码软件。 2.1 PGP 的功能1.对称密码2.公钥密码3.数字签名4.单向散列函数5.证书6.压缩7.文本数据8.大文件的拆分和平和9.钥匙串管理3 生成秘钥对4 加密与解密5 生成和验证数字签名6 生成数字签">
+<meta property="og:type" content="article">
+<meta property="og:title" content="十三、PGP——密码技术的完美组合">
+<meta property="og:url" content="http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/index.html">
 <meta property="og:site_name" content="Hello">
-<meta property="og:description" content="Stay hungry. Stay foolish.    永不满足，大智若愚。">
+<meta property="og:description" content="1 本章概要本章中，将以密码软件 PGP（Pretty Good Privacy）为题材，思考一下将前面章节中学习的密码技术进行组合的方法。 2 PGP简介PGP 是 1990 年编写的密码软件。 2.1 PGP 的功能1.对称密码2.公钥密码3.数字签名4.单向散列函数5.证书6.压缩7.文本数据8.大文件的拆分和平和9.钥匙串管理3 生成秘钥对4 加密与解密5 生成和验证数字签名6 生成数字签">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-20T17:50:31.000Z">
+<meta property="og:updated_time" content="2017-12-07T15:44:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于">
-<meta name="twitter:description" content="Stay hungry. Stay foolish.    永不满足，大智若愚。">
+<meta name="twitter:title" content="十三、PGP——密码技术的完美组合">
+<meta name="twitter:description" content="1 本章概要本章中，将以密码软件 PGP（Pretty Good Privacy）为题材，思考一下将前面章节中学习的密码技术进行组合的方法。 2 PGP简介PGP 是 1990 年编写的密码软件。 2.1 PGP 的功能1.对称密码2.公钥密码3.数字签名4.单向散列函数5.证书6.压缩7.文本数据8.大文件的拆分和平和9.钥匙串管理3 生成秘钥对4 加密与解密5 生成和验证数字签名6 生成数字签">
 
 
 
@@ -119,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://www.liwenguang.cn/about/"/>
+  <link rel="canonical" href="http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/"/>
 
 
 
 
 
-  <title>关于 | Hello</title>
+  <title>十三、PGP——密码技术的完美组合 | Hello</title>
   
 
 
@@ -274,36 +274,258 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TheOhters">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h2 class="post-title" itemprop="name headline">关于</h2>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <p>Stay hungry. Stay foolish.  </p>
-<hr>
-<p>永不满足，大智若愚。</p>
-
+          <h2 class="post-title" itemprop="name headline">十三、PGP——密码技术的完美组合</h2>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-07T23:44:00+08:00">
+                2017-12-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/图解密码技术/" itemprop="url" rel="index">
+                    <span itemprop="name">图解密码技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/12/07/graphic2cryptography/13.html/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/12/07/graphic2cryptography/13.html/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  889
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <h1 id="1-本章概要"><a href="#1-本章概要" class="headerlink" title="1 本章概要"></a>1 本章概要</h1><p>本章中，将以密码软件 PGP（Pretty Good Privacy）为题材，思考一下将前面章节中学习的密码技术进行组合的方法。</p>
+<h1 id="2-PGP简介"><a href="#2-PGP简介" class="headerlink" title="2 PGP简介"></a>2 PGP简介</h1><p>PGP 是 1990 年编写的密码软件。</p>
+<h2 id="2-1-PGP-的功能"><a href="#2-1-PGP-的功能" class="headerlink" title="2.1 PGP 的功能"></a>2.1 PGP 的功能</h2><h3 id="1-对称密码"><a href="#1-对称密码" class="headerlink" title="1.对称密码"></a>1.对称密码</h3><h3 id="2-公钥密码"><a href="#2-公钥密码" class="headerlink" title="2.公钥密码"></a>2.公钥密码</h3><h3 id="3-数字签名"><a href="#3-数字签名" class="headerlink" title="3.数字签名"></a>3.数字签名</h3><h3 id="4-单向散列函数"><a href="#4-单向散列函数" class="headerlink" title="4.单向散列函数"></a>4.单向散列函数</h3><h3 id="5-证书"><a href="#5-证书" class="headerlink" title="5.证书"></a>5.证书</h3><h3 id="6-压缩"><a href="#6-压缩" class="headerlink" title="6.压缩"></a>6.压缩</h3><h3 id="7-文本数据"><a href="#7-文本数据" class="headerlink" title="7.文本数据"></a>7.文本数据</h3><h3 id="8-大文件的拆分和平和"><a href="#8-大文件的拆分和平和" class="headerlink" title="8.大文件的拆分和平和"></a>8.大文件的拆分和平和</h3><h3 id="9-钥匙串管理"><a href="#9-钥匙串管理" class="headerlink" title="9.钥匙串管理"></a>9.钥匙串管理</h3><h1 id="3-生成秘钥对"><a href="#3-生成秘钥对" class="headerlink" title="3 生成秘钥对"></a>3 生成秘钥对</h1><h1 id="4-加密与解密"><a href="#4-加密与解密" class="headerlink" title="4 加密与解密"></a>4 加密与解密</h1><h1 id="5-生成和验证数字签名"><a href="#5-生成和验证数字签名" class="headerlink" title="5 生成和验证数字签名"></a>5 生成和验证数字签名</h1><h1 id="6-生成数字签名并加密以及解密并验证数字签名"><a href="#6-生成数字签名并加密以及解密并验证数字签名" class="headerlink" title="6 生成数字签名并加密以及解密并验证数字签名"></a>6 生成数字签名并加密以及解密并验证数字签名</h1><h1 id="7-信任网"><a href="#7-信任网" class="headerlink" title="7 信任网"></a>7 信任网</h1><h2 id="7-1-公钥合法性"><a href="#7-1-公钥合法性" class="headerlink" title="7.1 公钥合法性"></a>7.1 公钥合法性</h2><p>在使用 PGP 时，确认自己所得到的公钥是否真的属于正确的人（公钥合法性）是非常重要的，因为公钥可能会通过中间人攻击被替换（参 5.7.4节）。<br>第十章介绍的证书就是确认公钥合法性的方法之一。证书就是由认证机构对公钥所施加的数字签名，通过验证这个数字签名就可以确认公钥合法性。<br>然而，PGP 中却没有使用认证机构，而是采用了一种叫<strong>信任网</strong>（web of trust）的方法。在这种方法中， PGP 用户会<strong>互相对对方的公钥进行数字签名</strong>。<br>信任网的要点是“不依赖认证机构，而是建立每个人之间的信任关系”。换言之，就是能够自己决定要信任哪些公钥。<br>下面介绍 PGP 的信任网是如何建立起来的。</p>
+<h3 id="1-场景1：通过自己的数字签名进行确认"><a href="#1-场景1：通过自己的数字签名进行确认" class="headerlink" title="1.场景1：通过自己的数字签名进行确认"></a>1.场景1：通过自己的数字签名进行确认</h3><p>Alice 和 Bob 约会，在告别的时候， Bob 给了 Alice 一张存储卡，并说“这是我的公钥”。<br>Alice 回到家中，从存储卡中取出 Bob 的公钥，并存放到自己所使用的 PGP 的公钥串中（导入公钥）。由于 Alice 确信刚刚导入的公钥确实是属于 Bob 本人的，因此 Alice 对这个公钥加上了自己的数字签名。<br>对 Bob 的公钥加上数字签名，就相当于 Alice 生命“这个公钥属于 Bob 本人（即这个公钥是合法的）”。<br>随后，Alice 收到了来自 Bob 的邮件，由于这封邮件带有 Bob 的数字签名，因此 Alice 想用 PGP 来验证 Bob 的数字签名。 PGP 将执行下面这些操作：  </p>
+<ol>
+<li>为了验证 Bob 的数字签名， PGP 需要从 Alice 的公钥串中寻找 Bob 的公钥。</li>
+<li>Alice 的公钥串中包含 Bob 的公钥，因为前几天约会之后 Alice 导入了 Bob 的公钥。</li>
+<li>PGP 发现 Bob 的公钥带有 Alice 的数字签名。</li>
+<li>为了验证 Alice 的数字签名，PGP 需要从 Alice 的公钥串中寻找 Alice 自己的公钥。</li>
+<li>PGP 使用 Alice 的公钥对 Bob 的公钥上的 Alice 的数字签名进行验证。如果验证成功，则可以确认这的确就是 Bob 的公钥。</li>
+<li>PGP 使用合法的 Bob 的公钥对邮件上附带的 Bob 的数字签名进行验证。</li>
+</ol>
+<h3 id="2-场景2：通过自己完全信任的人的数字签名进行确认"><a href="#2-场景2：通过自己完全信任的人的数字签名进行确认" class="headerlink" title="2.场景2：通过自己完全信任的人的数字签名进行确认"></a>2.场景2：通过自己完全信任的人的数字签名进行确认</h3><p>Alice 有一个叫 Trent 的男朋友。在 Alice 的公钥串中，也包含带有 Alice 的数字签名的 Trent 的公钥。 Alice 非常信任 Trent ，她想：<strong>经过他签名的公钥一定是合法的</strong>。<br>假设 Alice 收到了一封来自 Carrol 的邮件</p>
+<h1 id="8-本章小结"><a href="#8-本章小结" class="headerlink" title="8 本章小结"></a>8 本章小结</h1><h1 id="9-小测验"><a href="#9-小测验" class="headerlink" title="9 小测验"></a>9 小测验</h1>
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    TheOhters
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/" title="十三、PGP——密码技术的完美组合">http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/</a>
+  </li>
+  <li class="post-copyright-date">
+      <strong>发布时间：</strong>2017年12月7日 - 23时12分
+  </li>
+  <li class="post-copyright-date">
+      <strong>最后更新时间：</strong>2017年12月7日 - 23时12分
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/06/graphic2cryptography/12.html/" rel="next" title="十二、随机数——不可预测性的源泉">
+                <i class="fa fa-chevron-left"></i> 十二、随机数——不可预测性的源泉
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/13/talker/paddington.html/" rel="prev" title="电影《帕丁顿熊》有感">
+                电影《帕丁顿熊》有感 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -312,6 +534,20 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
 
         </div>
         
@@ -332,8 +568,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -416,6 +661,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-本章概要"><span class="nav-text">1 本章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-PGP简介"><span class="nav-text">2 PGP简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-PGP-的功能"><span class="nav-text">2.1 PGP 的功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-对称密码"><span class="nav-text">1.对称密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-公钥密码"><span class="nav-text">2.公钥密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-数字签名"><span class="nav-text">3.数字签名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-单向散列函数"><span class="nav-text">4.单向散列函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-证书"><span class="nav-text">5.证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-压缩"><span class="nav-text">6.压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-文本数据"><span class="nav-text">7.文本数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-大文件的拆分和平和"><span class="nav-text">8.大文件的拆分和平和</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-钥匙串管理"><span class="nav-text">9.钥匙串管理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-生成秘钥对"><span class="nav-text">3 生成秘钥对</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-加密与解密"><span class="nav-text">4 加密与解密</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-生成和验证数字签名"><span class="nav-text">5 生成和验证数字签名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-生成数字签名并加密以及解密并验证数字签名"><span class="nav-text">6 生成数字签名并加密以及解密并验证数字签名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-信任网"><span class="nav-text">7 信任网</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-公钥合法性"><span class="nav-text">7.1 公钥合法性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-场景1：通过自己的数字签名进行确认"><span class="nav-text">1.场景1：通过自己的数字签名进行确认</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-场景2：通过自己完全信任的人的数字签名进行确认"><span class="nav-text">2.场景2：通过自己完全信任的人的数字签名进行确认</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-本章小结"><span class="nav-text">8 本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-小测验"><span class="nav-text">9 小测验</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -601,6 +862,18 @@
       <script id="dsq-count-scr" src="https://www-liwenguang-cn.disqus.com/count.js" async></script>
     
 
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/';
+          this.page.identifier = '2017/12/07/graphic2cryptography/13.html/';
+          this.page.title = '十三、PGP——密码技术的完美组合';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://www-liwenguang-cn.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
     
 
   

@@ -87,7 +87,11 @@
 <meta property="og:description" content="1 骡子的锁匠铺很久很久之前，骡子开了一家锁匠铺，他说：“我做的锁头很坚固，小偷绝对打不开。”因此动物村里所有的动物都为自己的房子装上了骡子做的锁。骡子做的锁确实很坚固，但是每把锁头上用的钥匙居然都是同一个形状的。因此小偷只要得到了一栋房子的钥匙，就可以打开所有房子的锁了。教训：坚固的锁头固然重要，但不可预测的钥匙更加重要。 2 本章概要 使用随机数的密码技术 随机数的性质 伪随机数生成器 具体的">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/12_1.png">
-<meta property="og:updated_time" content="2017-12-06T15:40:00.000Z">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/12_2.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/12_3.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/12_4.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/12_5.png">
+<meta property="og:updated_time" content="2017-12-07T15:44:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="十二、随机数——不可预测性的源泉">
 <meta name="twitter:description" content="1 骡子的锁匠铺很久很久之前，骡子开了一家锁匠铺，他说：“我做的锁头很坚固，小偷绝对打不开。”因此动物村里所有的动物都为自己的房子装上了骡子做的锁。骡子做的锁确实很坚固，但是每把锁头上用的钥匙居然都是同一个形状的。因此小偷只要得到了一栋房子的钥匙，就可以打开所有房子的锁了。教训：坚固的锁头固然重要，但不可预测的钥匙更加重要。 2 本章概要 使用随机数的密码技术 随机数的性质 伪随机数生成器 具体的">
@@ -398,7 +402,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  575
+                  1,710
                 </span>
               
 
@@ -414,7 +418,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  6
                 </span>
               
             </div>
@@ -463,7 +467,25 @@
 |强伪随机数|✔️|✔️|✘|具备不可预测性|
 |真随机数|✔️|✔️|✔️|具备不可重现性|</p>
 <p><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/12_1.png" alt=""></p>
-<h2 id="4-2-随机性"><a href="#4-2-随机性" class="headerlink" title="4.2 随机性"></a>4.2 随机性</h2><h1 id="5-伪随机数生成器"><a href="#5-伪随机数生成器" class="headerlink" title="5 伪随机数生成器"></a>5 伪随机数生成器</h1><h1 id="6-具体的伪随机数生成器"><a href="#6-具体的伪随机数生成器" class="headerlink" title="6 具体的伪随机数生成器"></a>6 具体的伪随机数生成器</h1><h1 id="7-对伪随机数生成器的攻击"><a href="#7-对伪随机数生成器的攻击" class="headerlink" title="7 对伪随机数生成器的攻击"></a>7 对伪随机数生成器的攻击</h1><h1 id="8-本章小结"><a href="#8-本章小结" class="headerlink" title="8 本章小结"></a>8 本章小结</h1><h1 id="9-小测验"><a href="#9-小测验" class="headerlink" title="9 小测验"></a>9 小测验</h1>
+<h2 id="4-2-随机性"><a href="#4-2-随机性" class="headerlink" title="4.2 随机性"></a>4.2 随机性</h2><p>杂乱无章并不代表不会被看穿，因此本书中将只具备随机性的伪随机数称为“弱伪随机数”。</p>
+<h2 id="4-3-不可预测性"><a href="#4-3-不可预测性" class="headerlink" title="4.3 不可预测性"></a>4.3 不可预测性</h2><p>不可预测性（unpredictability），是一种“不可能事先说中”的性质，及不可预测性。即，攻击者在知道过去生成的为随机数列的前提下，依然无法预测出下一个生成出来的伪随机数的性质。</p>
+<h2 id="4-4-不可重现性"><a href="#4-4-不可重现性" class="headerlink" title="4.4 不可重现性"></a>4.4 不可重现性</h2><p>即，无法重现和某一随机数列完全相同的数列的性质。如果除了将随机数列本身保存下来意外，没有其它方法能够重现该数列，则我们就说该随机数列具备不可重现性。<br>要生成具备不可重现性的随机数列，需要从不可重现的物理现象中获取信息，比如周围的温度和声音的变化、用户移动的鼠标的位置信息、键盘输入的时间间隔、放射线测量仪的输出值等，根据从这些硬件中获取的信息而生成的数列，一般可以认为是具备不可重现性的随机数列。</p>
+<h1 id="5-伪随机数生成器"><a href="#5-伪随机数生成器" class="headerlink" title="5 伪随机数生成器"></a>5 伪随机数生成器</h1><p>仅仅靠软件无法生成真随机数，因此要加上一个“伪”。</p>
+<h2 id="5-1-伪随机数生成器的结构"><a href="#5-1-伪随机数生成器的结构" class="headerlink" title="5.1 伪随机数生成器的结构"></a>5.1 伪随机数生成器的结构</h2><p>伪随机数生成器具有“内部状态”，并根据外部输入的“种子”来生成伪随机数列。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/12_2.png" alt="">  </p>
+<h3 id="1-伪随机数生成器的内部状态"><a href="#1-伪随机数生成器的内部状态" class="headerlink" title="1.伪随机数生成器的内部状态"></a>1.伪随机数生成器的内部状态</h3><p>伪随机数生成器的内部状态，是指伪随机数生成器所管理的内存中的数值。伪随机数生成器会根据内存中的数值进行计算，并将计算的结果作为伪随机数输出。随后，为了响应下一个伪随机数请求。伪随机数生成器会改变自己的内部状态。</p>
+<h3 id="2-伪随机数生成器的种子"><a href="#2-伪随机数生成器的种子" class="headerlink" title="2.伪随机数生成器的种子"></a>2.伪随机数生成器的种子</h3><p>伪随机数的种子是用来对伪随机数生成器的内部状态进行初始化的。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/12_3.png" alt=""></p>
+<h1 id="6-具体的伪随机数生成器"><a href="#6-具体的伪随机数生成器" class="headerlink" title="6 具体的伪随机数生成器"></a>6 具体的伪随机数生成器</h1><h2 id="6-1-杂乱的方法"><a href="#6-1-杂乱的方法" class="headerlink" title="6.1 杂乱的方法"></a>6.1 杂乱的方法</h2><p>用一个程序员都不懂的算法生成，但是这是错误的，不能用于密码技术。因为，周期太短，使用复杂算法所生成的数列大多数都会具有很短的周期（即短数列的不断重复）。另外则是，无法判断所生成的随机数是否具备不可预测性。</p>
+<h2 id="6-2-线性同余法"><a href="#6-2-线性同余法" class="headerlink" title="6.2 线性同余法"></a>6.2 线性同余法</h2><p>线性同余法（linear congruential method）是一种使用很广泛的伪随机数生成器算法。然而，它并不能用于密码技术。<br>A、C、M 都是常量，且 A 和 C 需要小于 M。接下来，根据种子 R0 计算下一个伪随机数 R1：<br>R1 = （A <em> R0 + C） mod M。<br>当前得到的伪随机数即是下一个伪随机数的种子：<br>Rn+1 = (A </em> Rn + C) mod M。<br>但是这具有周期性，而且可以通过上一个种子得到下一个伪随机数。因此不具备不可预测性，不能将线性同余法用于密码技术。<br>很多伪随机数生成器的库函数都是采用线性同余法编写的。包括 C 语言的库函数 rand。 以及 java 的 java.util.Random 类等。</p>
+<h2 id="6-3-单向散列函数法"><a href="#6-3-单向散列函数法" class="headerlink" title="6.3 单向散列函数法"></a>6.3 单向散列函数法</h2><p><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/12_4.png" alt=""><br>攻击者要预测下一个伪随机数，需要知道计数器的当前值，以及，破解单向散列函数的单向性。利用了单向散列函数的单向性。</p>
+<h2 id="6-4-密码法"><a href="#6-4-密码法" class="headerlink" title="6.4 密码法"></a>6.4 密码法</h2><p><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/12_5.png" alt=""><br>密码的机密性是支撑伪随机数生成器不可预测性的基础。</p>
+<h1 id="7-对伪随机数生成器的攻击"><a href="#7-对伪随机数生成器的攻击" class="headerlink" title="7 对伪随机数生成器的攻击"></a>7 对伪随机数生成器的攻击</h1><h2 id="7-1-对种子进行攻击"><a href="#7-1-对种子进行攻击" class="headerlink" title="7.1 对种子进行攻击"></a>7.1 对种子进行攻击</h2><h2 id="7-2-对随机数池进行攻击"><a href="#7-2-对随机数池进行攻击" class="headerlink" title="7.2 对随机数池进行攻击"></a>7.2 对随机数池进行攻击</h2><p>一般不会到了需要的时候才当场生成真随机数，而是会事先在一个名为<strong>随机数池</strong>（random pool）的文件中积累随机比特序列。当密码软件需要伪随机数的种子时，可以从这个随机数池中取出所需长度的随机比特序列来使用。这是不能被攻击所知道的。</p>
+<h1 id="8-本章小结"><a href="#8-本章小结" class="headerlink" title="8 本章小结"></a>8 本章小结</h1><p>由于密码技术的伪随机数生成器，需要使用单向散列函数和密码等技术来确保不可预测性。</p>
+<h1 id="9-小测验"><a href="#9-小测验" class="headerlink" title="9 小测验"></a>9 小测验</h1><ol>
+<li>伪随机数的种子需要对攻击者保密。</li>
+<li>线性同余法可以作为用于密码的伪随机数生成器。</li>
+<li>具备随机性的伪随机数生成器不一定具备不可预测性。</li>
+</ol>
+
       
     </div>
     
@@ -489,7 +511,7 @@
       <strong>发布时间：</strong>2017年12月6日 - 23时12分
   </li>
   <li class="post-copyright-date">
-      <strong>最后更新时间：</strong>2017年12月6日 - 23时12分
+      <strong>最后更新时间：</strong>2017年12月7日 - 23时12分
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -520,6 +542,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/07/graphic2cryptography/13.html/" rel="prev" title="十三、PGP——密码技术的完美组合">
+                十三、PGP——密码技术的完美组合 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -610,7 +636,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -684,7 +710,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-骡子的锁匠铺"><span class="nav-text">1 骡子的锁匠铺</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-本章概要"><span class="nav-text">2 本章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-使用随机数的密码技术"><span class="nav-text">3 使用随机数的密码技术</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-随机数是干什么的"><span class="nav-text">3.1 随机数是干什么的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-随机数的性质"><span class="nav-text">4 随机数的性质</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-对随机数的性质分类"><span class="nav-text">4.1 对随机数的性质分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-随机性"><span class="nav-text">4.2 随机性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-伪随机数生成器"><span class="nav-text">5 伪随机数生成器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-具体的伪随机数生成器"><span class="nav-text">6 具体的伪随机数生成器</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-对伪随机数生成器的攻击"><span class="nav-text">7 对伪随机数生成器的攻击</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-本章小结"><span class="nav-text">8 本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-小测验"><span class="nav-text">9 小测验</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-骡子的锁匠铺"><span class="nav-text">1 骡子的锁匠铺</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-本章概要"><span class="nav-text">2 本章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-使用随机数的密码技术"><span class="nav-text">3 使用随机数的密码技术</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-随机数是干什么的"><span class="nav-text">3.1 随机数是干什么的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-随机数的性质"><span class="nav-text">4 随机数的性质</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-对随机数的性质分类"><span class="nav-text">4.1 对随机数的性质分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-随机性"><span class="nav-text">4.2 随机性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-不可预测性"><span class="nav-text">4.3 不可预测性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-不可重现性"><span class="nav-text">4.4 不可重现性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-伪随机数生成器"><span class="nav-text">5 伪随机数生成器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-伪随机数生成器的结构"><span class="nav-text">5.1 伪随机数生成器的结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-伪随机数生成器的内部状态"><span class="nav-text">1.伪随机数生成器的内部状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-伪随机数生成器的种子"><span class="nav-text">2.伪随机数生成器的种子</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-具体的伪随机数生成器"><span class="nav-text">6 具体的伪随机数生成器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-杂乱的方法"><span class="nav-text">6.1 杂乱的方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-线性同余法"><span class="nav-text">6.2 线性同余法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-3-单向散列函数法"><span class="nav-text">6.3 单向散列函数法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-4-密码法"><span class="nav-text">6.4 密码法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-对伪随机数生成器的攻击"><span class="nav-text">7 对伪随机数生成器的攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-对种子进行攻击"><span class="nav-text">7.1 对种子进行攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-2-对随机数池进行攻击"><span class="nav-text">7.2 对随机数池进行攻击</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-本章小结"><span class="nav-text">8 本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-小测验"><span class="nav-text">9 小测验</span></a></li></ol></div>
             
 
           </div>
@@ -718,7 +744,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">51.7k</span>
+    <span title="Site words total count">54.0k</span>
   
 </div>
 
