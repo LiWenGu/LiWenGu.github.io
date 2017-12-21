@@ -338,7 +338,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/11/07/concurrent-art/8.html/">
+    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/11/07/concurrent-art/4.html/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="TheOhters">
@@ -357,7 +357,7 @@
         
           <h2 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/11/07/concurrent-art/8.html/" itemprop="url">八、Java中的并发工具类</a></h2>
+                <a class="post-title-link" href="/2017/11/07/concurrent-art/4.html/" itemprop="url">四、Java并发编程基础</a></h2>
         
 
         <div class="post-meta">
@@ -421,9 +421,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/11/07/concurrent-art/8.html/#comments" itemprop="discussionUrl">
+                <a href="/2017/11/07/concurrent-art/4.html/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/11/07/concurrent-art/8.html/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2017/11/07/concurrent-art/4.html/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -445,7 +445,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,742
+                  3,837
                 </span>
               
 
@@ -461,7 +461,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  8
+                  17
                 </span>
               
             </div>
@@ -484,12 +484,12 @@
       
         
           
-          1 等待多线程完成的 CountDownLatch例如：解析一个 Excel 里多个 sheet 的数据，如果使用多线程，每个线程解析一个 sheet 里的数据，等到所有的 sheet 都解析完之后，程序提示解析完成。  
-即，需要主线程等待所有线程完成 sheet 的解析操作，最简单的做法是使用 
+          1 线程简介1.1 什么是线程操作系统运行一个程序时，会为其创建一个进程。而操作系统调度的最小单元是线程，也叫轻量级进程（ Light Weight Process），
+在一个进程里可以创建多个线程，这些线程都拥有各自的计数器、堆栈和局部变量等属性，并且能够访问共享的内存变量。处理器在这些线程上高速
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/11/07/concurrent-art/8.html/#more" rel="contents">
+            <a class="btn" href="/2017/11/07/concurrent-art/4.html/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -743,7 +743,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/11/07/concurrent-art/4.html/">
+    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/11/07/concurrent-art/8.html/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="TheOhters">
@@ -762,7 +762,7 @@
         
           <h2 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/11/07/concurrent-art/4.html/" itemprop="url">四、Java并发编程基础</a></h2>
+                <a class="post-title-link" href="/2017/11/07/concurrent-art/8.html/" itemprop="url">八、Java中的并发工具类</a></h2>
         
 
         <div class="post-meta">
@@ -826,9 +826,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/11/07/concurrent-art/4.html/#comments" itemprop="discussionUrl">
+                <a href="/2017/11/07/concurrent-art/8.html/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/11/07/concurrent-art/4.html/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2017/11/07/concurrent-art/8.html/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -850,7 +850,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3,837
+                  1,742
                 </span>
               
 
@@ -866,7 +866,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  17
+                  8
                 </span>
               
             </div>
@@ -889,12 +889,12 @@
       
         
           
-          1 线程简介1.1 什么是线程操作系统运行一个程序时，会为其创建一个进程。而操作系统调度的最小单元是线程，也叫轻量级进程（ Light Weight Process），
-在一个进程里可以创建多个线程，这些线程都拥有各自的计数器、堆栈和局部变量等属性，并且能够访问共享的内存变量。处理器在这些线程上高速
+          1 等待多线程完成的 CountDownLatch例如：解析一个 Excel 里多个 sheet 的数据，如果使用多线程，每个线程解析一个 sheet 里的数据，等到所有的 sheet 都解析完之后，程序提示解析完成。  
+即，需要主线程等待所有线程完成 sheet 的解析操作，最简单的做法是使用 
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/11/07/concurrent-art/4.html/#more" rel="contents">
+            <a class="btn" href="/2017/11/07/concurrent-art/8.html/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1085,7 +1085,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">54.1k</span>
+    <span title="Site words total count">54.2k</span>
   
 </div>
 
