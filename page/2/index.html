@@ -2180,7 +2180,7 @@ Mallory
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/11/07/concurrent-art/6.html/">
+    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/11/07/concurrent-art/8.html/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="TheOhters">
@@ -2199,7 +2199,7 @@ Mallory
         
           <h2 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/11/07/concurrent-art/6.html/" itemprop="url">六、Java并发容器和框架</a></h2>
+                <a class="post-title-link" href="/2017/11/07/concurrent-art/8.html/" itemprop="url">八、Java中的并发工具类</a></h2>
         
 
         <div class="post-meta">
@@ -2263,9 +2263,9 @@ Mallory
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/11/07/concurrent-art/6.html/#comments" itemprop="discussionUrl">
+                <a href="/2017/11/07/concurrent-art/8.html/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/11/07/concurrent-art/6.html/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2017/11/07/concurrent-art/8.html/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -2287,7 +2287,7 @@ Mallory
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3,354
+                  1,742
                 </span>
               
 
@@ -2303,7 +2303,7 @@ Mallory
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  13
+                  8
                 </span>
               
             </div>
@@ -2326,13 +2326,12 @@ Mallory
       
         
           
-          1 ConcurrentHashMap 的实现原理与使用1.1 为什么要使用 ConcurrentHashMap
-线程不安全的 HashMap ，在多线程下 HashMap 的 Entry 链表导致形成环形数据结构， Entry 的 next 节点永远不为空，就会产生死循环获取 Entry 。
-效率
+          1 等待多线程完成的 CountDownLatch例如：解析一个 Excel 里多个 sheet 的数据，如果使用多线程，每个线程解析一个 sheet 里的数据，等到所有的 sheet 都解析完之后，程序提示解析完成。  
+即，需要主线程等待所有线程完成 sheet 的解析操作，最简单的做法是使用 
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/11/07/concurrent-art/6.html/#more" rel="contents">
+            <a class="btn" href="/2017/11/07/concurrent-art/8.html/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
