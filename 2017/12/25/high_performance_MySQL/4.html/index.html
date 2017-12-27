@@ -131,17 +131,17 @@
 
 
 
-<meta name="description" content="1 本章概要本章中，将以密码软件 PGP（Pretty Good Privacy）为题材，思考一下将前面章节中学习的密码技术进行组合的方法。 2 PGP简介PGP 是 1990 年编写的密码软件。 2.1 PGP 的功能1.对称密码2.公钥密码3.数字签名4.单向散列函数5.证书6.压缩7.文本数据8.大文件的拆分和平和9.钥匙串管理3 生成秘钥对4 加密与解密5 生成和验证数字签名6 生成数字签">
+<meta name="description" content="1 选择优化的数据类型 更小的通常更好 简单就好：整型比字符操作代价更低，使用 MySQL 内建的类型而不是字符串来存储日期和时间，以及使用整型存储 IP 地址 尽量避免 NULL：可为 NULL 的列会使用更多的存储空间。 InnoDB 使用单独的位（bit）存储 NULL 值，但这不适用于 MyISAM  在为列选择数据类型时，先确定大类型：数字、字符串、时间等。下一步是选择具体类型，很多数据">
 <meta property="og:type" content="article">
-<meta property="og:title" content="十三、PGP——密码技术的完美组合">
-<meta property="og:url" content="http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/index.html">
+<meta property="og:title" content="四、Schema与数据类型优化">
+<meta property="og:url" content="http://www.liwenguang.cn/2017/12/25/high_performance_MySQL/4.html/index.html">
 <meta property="og:site_name" content="Hello">
-<meta property="og:description" content="1 本章概要本章中，将以密码软件 PGP（Pretty Good Privacy）为题材，思考一下将前面章节中学习的密码技术进行组合的方法。 2 PGP简介PGP 是 1990 年编写的密码软件。 2.1 PGP 的功能1.对称密码2.公钥密码3.数字签名4.单向散列函数5.证书6.压缩7.文本数据8.大文件的拆分和平和9.钥匙串管理3 生成秘钥对4 加密与解密5 生成和验证数字签名6 生成数字签">
+<meta property="og:description" content="1 选择优化的数据类型 更小的通常更好 简单就好：整型比字符操作代价更低，使用 MySQL 内建的类型而不是字符串来存储日期和时间，以及使用整型存储 IP 地址 尽量避免 NULL：可为 NULL 的列会使用更多的存储空间。 InnoDB 使用单独的位（bit）存储 NULL 值，但这不适用于 MyISAM  在为列选择数据类型时，先确定大类型：数字、字符串、时间等。下一步是选择具体类型，很多数据">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-07T15:44:00.000Z">
+<meta property="og:updated_time" content="2017-12-27T16:28:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="十三、PGP——密码技术的完美组合">
-<meta name="twitter:description" content="1 本章概要本章中，将以密码软件 PGP（Pretty Good Privacy）为题材，思考一下将前面章节中学习的密码技术进行组合的方法。 2 PGP简介PGP 是 1990 年编写的密码软件。 2.1 PGP 的功能1.对称密码2.公钥密码3.数字签名4.单向散列函数5.证书6.压缩7.文本数据8.大文件的拆分和平和9.钥匙串管理3 生成秘钥对4 加密与解密5 生成和验证数字签名6 生成数字签">
+<meta name="twitter:title" content="四、Schema与数据类型优化">
+<meta name="twitter:description" content="1 选择优化的数据类型 更小的通常更好 简单就好：整型比字符操作代价更低，使用 MySQL 内建的类型而不是字符串来存储日期和时间，以及使用整型存储 IP 地址 尽量避免 NULL：可为 NULL 的列会使用更多的存储空间。 InnoDB 使用单独的位（bit）存储 NULL 值，但这不适用于 MyISAM  在为列选择数据类型时，先确定大类型：数字、字符串、时间等。下一步是选择具体类型，很多数据">
 
 
 
@@ -171,13 +171,13 @@
 
 
 
-  <link rel="canonical" href="http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/"/>
+  <link rel="canonical" href="http://www.liwenguang.cn/2017/12/25/high_performance_MySQL/4.html/"/>
 
 
 
 
 
-  <title>十三、PGP——密码技术的完美组合 | Hello</title>
+  <title>四、Schema与数据类型优化 | Hello</title>
   
 
 
@@ -338,7 +338,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/">
+    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/12/25/high_performance_MySQL/4.html/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="TheOhters">
@@ -355,7 +355,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">十三、PGP——密码技术的完美组合</h2>
+          <h2 class="post-title" itemprop="name headline">四、Schema与数据类型优化</h2>
         
 
         <div class="post-meta">
@@ -367,8 +367,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-07T23:44:00+08:00">
-                2017-12-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-25T12:31:00+08:00">
+                2017-12-25
               </time>
             
 
@@ -401,8 +401,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/读书笔记/图解密码技术/" itemprop="url" rel="index">
-                    <span itemprop="name">图解密码技术</span>
+                  <a href="/categories/读书笔记/高性能MySQL/" itemprop="url" rel="index">
+                    <span itemprop="name">高性能MySQL</span>
                   </a>
                 </span>
 
@@ -419,9 +419,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/12/07/graphic2cryptography/13.html/#comments" itemprop="discussionUrl">
+                <a href="/2017/12/25/high_performance_MySQL/4.html/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/12/07/graphic2cryptography/13.html/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2017/12/25/high_performance_MySQL/4.html/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -448,7 +448,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  889
+                  3,192
                 </span>
               
 
@@ -464,7 +464,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  3
+                  12
                 </span>
               
             </div>
@@ -485,20 +485,59 @@
       
 
       
-        <h1 id="1-本章概要"><a href="#1-本章概要" class="headerlink" title="1 本章概要"></a>1 本章概要</h1><p>本章中，将以密码软件 PGP（Pretty Good Privacy）为题材，思考一下将前面章节中学习的密码技术进行组合的方法。</p>
-<h1 id="2-PGP简介"><a href="#2-PGP简介" class="headerlink" title="2 PGP简介"></a>2 PGP简介</h1><p>PGP 是 1990 年编写的密码软件。</p>
-<h2 id="2-1-PGP-的功能"><a href="#2-1-PGP-的功能" class="headerlink" title="2.1 PGP 的功能"></a>2.1 PGP 的功能</h2><h3 id="1-对称密码"><a href="#1-对称密码" class="headerlink" title="1.对称密码"></a>1.对称密码</h3><h3 id="2-公钥密码"><a href="#2-公钥密码" class="headerlink" title="2.公钥密码"></a>2.公钥密码</h3><h3 id="3-数字签名"><a href="#3-数字签名" class="headerlink" title="3.数字签名"></a>3.数字签名</h3><h3 id="4-单向散列函数"><a href="#4-单向散列函数" class="headerlink" title="4.单向散列函数"></a>4.单向散列函数</h3><h3 id="5-证书"><a href="#5-证书" class="headerlink" title="5.证书"></a>5.证书</h3><h3 id="6-压缩"><a href="#6-压缩" class="headerlink" title="6.压缩"></a>6.压缩</h3><h3 id="7-文本数据"><a href="#7-文本数据" class="headerlink" title="7.文本数据"></a>7.文本数据</h3><h3 id="8-大文件的拆分和平和"><a href="#8-大文件的拆分和平和" class="headerlink" title="8.大文件的拆分和平和"></a>8.大文件的拆分和平和</h3><h3 id="9-钥匙串管理"><a href="#9-钥匙串管理" class="headerlink" title="9.钥匙串管理"></a>9.钥匙串管理</h3><h1 id="3-生成秘钥对"><a href="#3-生成秘钥对" class="headerlink" title="3 生成秘钥对"></a>3 生成秘钥对</h1><h1 id="4-加密与解密"><a href="#4-加密与解密" class="headerlink" title="4 加密与解密"></a>4 加密与解密</h1><h1 id="5-生成和验证数字签名"><a href="#5-生成和验证数字签名" class="headerlink" title="5 生成和验证数字签名"></a>5 生成和验证数字签名</h1><h1 id="6-生成数字签名并加密以及解密并验证数字签名"><a href="#6-生成数字签名并加密以及解密并验证数字签名" class="headerlink" title="6 生成数字签名并加密以及解密并验证数字签名"></a>6 生成数字签名并加密以及解密并验证数字签名</h1><h1 id="7-信任网"><a href="#7-信任网" class="headerlink" title="7 信任网"></a>7 信任网</h1><h2 id="7-1-公钥合法性"><a href="#7-1-公钥合法性" class="headerlink" title="7.1 公钥合法性"></a>7.1 公钥合法性</h2><p>在使用 PGP 时，确认自己所得到的公钥是否真的属于正确的人（公钥合法性）是非常重要的，因为公钥可能会通过中间人攻击被替换（参 5.7.4节）。<br>第十章介绍的证书就是确认公钥合法性的方法之一。证书就是由认证机构对公钥所施加的数字签名，通过验证这个数字签名就可以确认公钥合法性。<br>然而，PGP 中却没有使用认证机构，而是采用了一种叫<strong>信任网</strong>（web of trust）的方法。在这种方法中， PGP 用户会<strong>互相对对方的公钥进行数字签名</strong>。<br>信任网的要点是“不依赖认证机构，而是建立每个人之间的信任关系”。换言之，就是能够自己决定要信任哪些公钥。<br>下面介绍 PGP 的信任网是如何建立起来的。</p>
-<h3 id="1-场景1：通过自己的数字签名进行确认"><a href="#1-场景1：通过自己的数字签名进行确认" class="headerlink" title="1.场景1：通过自己的数字签名进行确认"></a>1.场景1：通过自己的数字签名进行确认</h3><p>Alice 和 Bob 约会，在告别的时候， Bob 给了 Alice 一张存储卡，并说“这是我的公钥”。<br>Alice 回到家中，从存储卡中取出 Bob 的公钥，并存放到自己所使用的 PGP 的公钥串中（导入公钥）。由于 Alice 确信刚刚导入的公钥确实是属于 Bob 本人的，因此 Alice 对这个公钥加上了自己的数字签名。<br>对 Bob 的公钥加上数字签名，就相当于 Alice 生命“这个公钥属于 Bob 本人（即这个公钥是合法的）”。<br>随后，Alice 收到了来自 Bob 的邮件，由于这封邮件带有 Bob 的数字签名，因此 Alice 想用 PGP 来验证 Bob 的数字签名。 PGP 将执行下面这些操作：  </p>
-<ol>
-<li>为了验证 Bob 的数字签名， PGP 需要从 Alice 的公钥串中寻找 Bob 的公钥。</li>
-<li>Alice 的公钥串中包含 Bob 的公钥，因为前几天约会之后 Alice 导入了 Bob 的公钥。</li>
-<li>PGP 发现 Bob 的公钥带有 Alice 的数字签名。</li>
-<li>为了验证 Alice 的数字签名，PGP 需要从 Alice 的公钥串中寻找 Alice 自己的公钥。</li>
-<li>PGP 使用 Alice 的公钥对 Bob 的公钥上的 Alice 的数字签名进行验证。如果验证成功，则可以确认这的确就是 Bob 的公钥。</li>
-<li>PGP 使用合法的 Bob 的公钥对邮件上附带的 Bob 的数字签名进行验证。</li>
+        <h1 id="1-选择优化的数据类型"><a href="#1-选择优化的数据类型" class="headerlink" title="1 选择优化的数据类型"></a>1 选择优化的数据类型</h1><ol>
+<li>更小的通常更好</li>
+<li>简单就好：整型比字符操作代价更低，使用 MySQL 内建的类型而不是字符串来存储日期和时间，以及使用整型存储 IP 地址</li>
+<li>尽量避免 NULL：可为 NULL 的列会使用更多的存储空间。 InnoDB 使用单独的位（bit）存储 NULL 值，但这不适用于 MyISAM</li>
 </ol>
-<h3 id="2-场景2：通过自己完全信任的人的数字签名进行确认"><a href="#2-场景2：通过自己完全信任的人的数字签名进行确认" class="headerlink" title="2.场景2：通过自己完全信任的人的数字签名进行确认"></a>2.场景2：通过自己完全信任的人的数字签名进行确认</h3><p>Alice 有一个叫 Trent 的男朋友。在 Alice 的公钥串中，也包含带有 Alice 的数字签名的 Trent 的公钥。 Alice 非常信任 Trent ，她想：<strong>经过他签名的公钥一定是合法的</strong>。<br>假设 Alice 收到了一封来自 Carrol 的邮件</p>
-<h1 id="8-本章小结"><a href="#8-本章小结" class="headerlink" title="8 本章小结"></a>8 本章小结</h1><h1 id="9-小测验"><a href="#9-小测验" class="headerlink" title="9 小测验"></a>9 小测验</h1>
+<p>在为列选择数据类型时，先确定大类型：数字、字符串、时间等。下一步是选择具体类型，很多数据类型可以存储相同类型的数据，只是存储的长度和范围不一样、允许的精度不同，或者需要的物理空间（磁盘和内存空间）不同。例如， TIMESTAMP 只使用 DATETIME 一半的存储空间，并且会根据时区变化，具有特殊的自动更新能力，另一方面， TIMESTAMP 允许的时间范围要小得多。  </p>
+<p>本章只讨论基本的数据类型。 MySQL 为了兼容性支持很多别名，例如 INTEGER、BOOL 以及 NUMERIC ，它们只是别名，使用 SHOW CREATE TABLE 检查， MYSQL 报告的是基本类型，而不是别名。</p>
+<h2 id="1-1-整数类型"><a href="#1-1-整数类型" class="headerlink" title="1.1 整数类型"></a>1.1 整数类型</h2><p>TINYINT，SMALLINT，MEDIUMINT，INT，BIGINT。分别使用8、16、24、32、64 位存储空间。它们可以存储的值得范围 -2^(N-1) ~ 2^(N-1) - 1，其中 N 是存储空间的位数。整数类型有可选的 UNSIGNED 属性，表示不允许负数，这样可以提高一倍的正数上限。  </p>
+<p>整数计算一般使用 64 位的 BIGINT 整数。整数类型指定宽度，例如 INT(11)，对大多数应用这是没有意义的：它不会限制值得合法范围，只是规定了 MySQL 的一些交互工具（例如 MySQL命令行客户端）用来显示字符的个数。对于存储和计算来说，INT(1) 和 INT(20) 是相同的。</p>
+<h2 id="1-2-实数类型"><a href="#1-2-实数类型" class="headerlink" title="1.2 实数类型"></a>1.2 实数类型</h2><p>实数是带有小数部分的数字。然而，它们不只是为了存储小数部分，也可以使用 DECIMAL 存储比 BIGINT 还大的整数。 MySQL 既支持精确类型，也不支持不精确类型。
+因为 CPU 不支持对 DECIMAL 的直接计算，所以在 MySQL5.0+ MySQL 服务器自身实现了 DECIMAL 的高精度计算，相对而言，CPU 直接支持原生浮点计算，所以浮点运算明显更快。<br>DECIMAL 的字节存储：每四个字节存储 9 个数字，例：DECIMAL(18,9) 小数点两边将各存储 9 个数字，一共使用 9 个字节：小数点前的数字用 4 个字节，小数点后的数字用 4 个字节，小数点本身占 1 个字节。<br>浮点类型在存储同样范围的值时，通常比 DECIMAL 使用更少的空间。 FLOAT 使用 4 个字节存储。 DOUBLE 占用 8 个字节。MySQL 使用 DOUBLE 作为内部浮点计算的类型。<br>将结果存储在 BIGINT 里，这样可以同时避免浮点存储计算不精确和 DECIMAL 精确计算代价高的问题。（根据小数的位数乘以相应的倍数）</p>
+<h2 id="1-3-字符串类型"><a href="#1-3-字符串类型" class="headerlink" title="1.3 字符串类型"></a>1.3 字符串类型</h2><h3 id="1-VARCHAR-和-CHAR-类型"><a href="#1-VARCHAR-和-CHAR-类型" class="headerlink" title="1.VARCHAR 和 CHAR 类型"></a>1.VARCHAR 和 CHAR 类型</h3><h4 id="VARCHAR"><a href="#VARCHAR" class="headerlink" title="VARCHAR"></a>VARCHAR</h4><p>VARCHAR 类型用于存储可变长字符串，如果 MySQL 表使用 ROW_FORMAT = FIXED 创建的话，每一行都会使用定长存储，这会很浪费空间。<br>VARCHAR 在列最大长度 &lt;=255 字节的时候，额外用 1 个字节用于记录字符串的长度。例：VARCHAR(10) 的列需要 11 个字节的存储空间。VARCHAR(1000) 的列则需要 1002 个字节，因为需要 2 个字节存储长度信息。<br>MySQL5.0+ 在存储和检索时会保留末尾空格。<br>但是，由于行是变长的，在 UPDATE 时可能使行变得比原来长，这就导致需要额外的工作。<br>另外，InnoDB 可以把过长的 VARCHAR 存储为 BLOB，稍后讨论该问题。</p>
+<h4 id="CHAR"><a href="#CHAR" class="headerlink" title="CHAR"></a>CHAR</h4><p>CHAR 类型是定长的，MySQL 总是根据定义的字符串长度分配足够的空间。<br>存储 CHAR 值时，MySQL 会删除所有的末尾空格。</p>
+<h4 id="CHAR-VS-VARCHAR"><a href="#CHAR-VS-VARCHAR" class="headerlink" title="CHAR VS VARCHAR"></a>CHAR VS VARCHAR</h4><p>CHAR 适合存储很短的字符串，或者所有值都接近同一个长度。例：存储密码的 MD5 值，因为这是一个定长的值。<br>对于经常变更的数据， CHAR 也比 VARCHAR 更好，因为定长的 CHAR 类型不容易产生碎片。<br>对于非常短的值， CHAR(1) 比 VARCHAR(1) 在存储空间上也更有效率（后者需要额外一个字节存储长度）。<br>VARCHAR(100) 和 VARCHAR(200) 虽然在存储空间相同，但是在内存消耗不同，后者更大。尤其在排序和临时表（中间表）时。<br>摘自：<a href="http://tech.it168.com/a2011/0426/1183/000001183173.shtml" target="_blank" rel="external">http://tech.it168.com/a2011/0426/1183/000001183173.shtml</a></p>
+<h3 id="2-BLOB-和-TEXT-类型"><a href="#2-BLOB-和-TEXT-类型" class="headerlink" title="2. BLOB 和 TEXT 类型"></a>2. BLOB 和 TEXT 类型</h3><p>BLOB 采用二进制存储、TEXT 采用字符存储。<br>与其它类型不同，MySQL 把每个 BLOB 和 TEXT 值当做一个独立的对象处理。当其太大时， InnoDB 会使用专门的“外部”存储区域进行存储。此时每个值在行内需要 1~4 个字节存储一个指针，然后再外部存储区域实际的值。<br>排序：MySQL 只对每个列的最前 max_sort_length 字节而不是整个字符串做排序。可以减少 max_sort_length 的值或者使用 ORDER BY SUBSTRING(column, length)。<br>MySQL 不能讲 BLOB 和 TEXT 列全部长度的字符串进行索引，也不能使用这些索引消除排序。<br>进行 ORDER BY 为了防止临时表过大，可以使用 SUBSTRING(column, length) 进行长度切割。</p>
+<h3 id="3-使用枚举（ENUM）-代替字符串类型"><a href="#3-使用枚举（ENUM）-代替字符串类型" class="headerlink" title="3. 使用枚举（ENUM） 代替字符串类型"></a>3. 使用枚举（ENUM） 代替字符串类型</h3><p>MySQL 在存储枚举时非常紧凑，会根据列表值得数量压缩到一个或者两个字节中。 MySQL 在内部会将每个值在列表中的位置保存为整数，并且在表的 .frm 文件中保存 “数字-字符串”映射关系的“查找表”。<br>在 VARCHAR 与 ENUM 互相 JOIN 关联时，ENUM 与 ENUM 最快。因此如果不是必须和 VARCHAR 列进行关联，那么转换这些列为 ENUM 就是个好主意。这是一个通用的设计实践，在“查找表”时采用整数主键而避免采用基于字符串的值进行关联。</p>
+<h2 id="1-4-日期和时间类型"><a href="#1-4-日期和时间类型" class="headerlink" title="1.4 日期和时间类型"></a>1.4 日期和时间类型</h2><h3 id="1-DATETIME"><a href="#1-DATETIME" class="headerlink" title="1.DATETIME"></a>1.DATETIME</h3><p>这个类型能保存大范围的值，精度为秒。使用 8 个字节的存储空间。</p>
+<h3 id="2-TIMESTAMP"><a href="#2-TIMESTAMP" class="headerlink" title="2.TIMESTAMP"></a>2.TIMESTAMP</h3><p>保存了从 1970年1月1日~2038年，MySQL 提供了 FROM_UNIXTIME() 和 UNIX_TIMESTAMP() 函数将日期和 Unix 时间戳转换。使用 4 个字节存储。</p>
+<h2 id="1-5-位数据类型"><a href="#1-5-位数据类型" class="headerlink" title="1.5 位数据类型"></a>1.5 位数据类型</h2><h3 id="1-BIT"><a href="#1-BIT" class="headerlink" title="1.BIT"></a>1.BIT</h3><p>尽量少用。</p>
+<h3 id="2-SET"><a href="#2-SET" class="headerlink" title="2.SET"></a>2.SET</h3><p>如果需要保存很多 true/false 值，可以考虑合并这些列到一个 SET 数据类型，它在 MySQL 内部是以一系列打包的位的集合来表示的。这样就有效的利用了存储空间。缺点是改变列的定义代价较高：需要 ALTER TABLE（这对大表是非常昂贵的操作，但是后面给出了解决方法）。一般来说，也无法再 SET 列上通过索引查找。</p>
+<blockquote>
+<p>在整数列进行按位操作
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&gt;SET @CAN_READ   := 1 &lt;&lt; 0,</div><div class="line">&gt;     @CAN_WRITE  := 1 &lt;&lt; 1,</div><div class="line">&gt;     @CAN_DELETE := 1 &lt;&lt; 2;</div><div class="line">&gt;CREATE TABLE acl (</div><div class="line">&gt;     perms TINYINT UNSIGNED NOT NULL DEFAULT 0    </div><div class="line">&gt;);</div><div class="line">&gt;INSERT INTO acl(perms) VALUES (@CAN_READ+@CAN_DELETE);</div><div class="line">&gt;SELECT perms FROM acl WHERE perms &amp; @CAN_READ;</div><div class="line">&gt;</div></pre></td></tr></table></figure></p>
+<p>当然，也可以使用代码变量而不是 MySQL 变量。</p>
+</blockquote>
+<h2 id="1-6-选择标识符（identifier）"><a href="#1-6-选择标识符（identifier）" class="headerlink" title="1.6 选择标识符（identifier）"></a>1.6 选择标识符（identifier）</h2><p>标识列与其它值进行比较（例，在关联操作中），或通过标识列寻找其它列。标识列也可能在另外的表中作为外键使用。<br>选择标识列的类型时，不仅仅需要考虑存储类型，还需要考虑 MySQL 对这种类型怎么执行计算和比较。例， MySQL 在内部使用整数存储 ENUM 和 SET 类型，然后在做比较操作时转换为字符串。<br>在可以满足值得范围的需求，并且预留未来增长空间的前提下，应该选择最小的数据类型。例如，TINYINT 比 INT 少了 3 个字节，但是可能导致很大的性能差异。<br>尽量使用整数。如果存储 UUID 值，用 UNHEX() 函数转换为 16 字节的数字存储，并且存储在一个 BINARY(16) 列中。</p>
+<h2 id="1-7-特殊类型数据"><a href="#1-7-特殊类型数据" class="headerlink" title="1.7 特殊类型数据"></a>1.7 特殊类型数据</h2><p>例，IPv4 地址人们通常使用 VARCHAR(15) 列来存储 IP 地址。然而，它们实际上是 32 位无符号整数，不是字符串。所以应该用无符号整数存储 IP 地址。 MySQL 提供 INET_ATON() 和 INET_NTOA() 函数在这两种表示方法之间转换。</p>
+<h1 id="2-MySQL-schema-设计中的陷阱"><a href="#2-MySQL-schema-设计中的陷阱" class="headerlink" title="2 MySQL schema 设计中的陷阱"></a>2 MySQL schema 设计中的陷阱</h1><h2 id="2-1-太多的列"><a href="#2-1-太多的列" class="headerlink" title="2.1 太多的列"></a>2.1 太多的列</h2><p>MySQL 的存储引擎 API 工作时需要在服务器层和存储引擎层之间通过行缓冲格式拷贝数据，然后再服务器层将缓冲内容解码成各个列。列转行的操作代价是非常高的。</p>
+<h2 id="2-2-太多的关联"><a href="#2-2-太多的关联" class="headerlink" title="2.2 太多的关联"></a>2.2 太多的关联</h2><p>阿里手册规定单次关联不能超过 3 张表。</p>
+<h2 id="2-3-全能的枚举"><a href="#2-3-全能的枚举" class="headerlink" title="2.3 全能的枚举"></a>2.3 全能的枚举</h2><p>CREATE TABLE … ( country enum(‘’, ‘0’, ‘1’, … , ‘31’))<br>当需要在枚举列表中增加一个新的国家时就要做一次 ALTER TABLE 操作，在 MySQL5.0- 这是一种阻塞操作，即使在 MySQL5.0+ ，如果不是在列表的末尾增加值也会一样需要 ALTER TABLE。</p>
+<h2 id="2-4-变相的枚举"><a href="#2-4-变相的枚举" class="headerlink" title="2.4 变相的枚举"></a>2.4 变相的枚举</h2><p>枚举列允许在列中存储一组定义值中的单个值，集合（SET）列则允许在列中存储一组定义值的一个或多个值。这会导致混乱。</p>
+<h2 id="2-5-非此发明（Not-Invent-Here）的-NULL"><a href="#2-5-非此发明（Not-Invent-Here）的-NULL" class="headerlink" title="2.5 非此发明（Not Invent Here）的 NULL"></a>2.5 非此发明（Not Invent Here）的 NULL</h2><p>CREATE TABLE … (dt DATETIME NOT NULL DEFAULT ‘0000-00-00 00:00:00’)<br>伪造的全 0 值可能导致很多问题。（可以配置 MySQL 的 SQL_MODE 来禁止不可能的日期，对于新应用这是个非常好的实践经验）。</p>
+<h1 id="3-缓存表和汇总表"><a href="#3-缓存表和汇总表" class="headerlink" title="3 缓存表和汇总表"></a>3 缓存表和汇总表</h1><p>有时提升性能最好的方法是在同一张表中保存衍生的冗余数据。然而，有时也需要创建一张完全独立的汇总表或缓存表</p>
+<h2 id="3-1-计数器表"><a href="#3-1-计数器表" class="headerlink" title="3.1 计数器表"></a>3.1 计数器表</h2><p>创建一张独立的表存储计数器通常是个好主意。例，有一个计数器表，只有一行数据，记录网站的点击次数：  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> hit_counter (</div><div class="line">    cnt <span class="built_in">int</span> <span class="keyword">unsigned</span> <span class="keyword">not</span> <span class="literal">null</span></div><div class="line">) <span class="keyword">engine</span>=<span class="keyword">InnoDB</span>;</div></pre></td></tr></table></figure>
+<p>每次点击：<code>UPDATE hit_counter SET cnt = cnt + 1;</code><br>问题在于，对于任何想要更新这一行的事务来说，这条记录上都有一个全局的互斥锁（mutex）。这会使得这些事务只能串行执行。要获得更高的并发更新性能，也可以将计数器保存在多行中，每次随机选择一行进行更新。<br>要获得统计结果：<code>SELECT SUM(cnt) FROM hit_count;</code>。<br>一个常见的需求是每隔一段时间开始一个新的计数器（例，每天一个）。如果需要这么做，则可以再简单地修改一下表设计：  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> hit_counter (</div><div class="line">    <span class="keyword">day</span> <span class="built_in">date</span> <span class="keyword">not</span> <span class="literal">null</span>,</div><div class="line">    slot tinyint <span class="keyword">unsigned</span> <span class="keyword">not</span> <span class="literal">null</span>,</div><div class="line">    cnt <span class="built_in">int</span> <span class="keyword">unsigned</span> <span class="keyword">not</span> <span class="literal">null</span>,</div><div class="line">    primary <span class="keyword">key</span>(<span class="keyword">day</span>, slot)</div><div class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span>;</div><div class="line">```  </div><div class="line"></div><div class="line">在这个场景下，可以不用像前面的例子那样预先生成行，而是`ON DUPLICATE KEY <span class="keyword">UPDATE</span><span class="string">`代替。  </span></div><div class="line"><span class="string"></span></div><div class="line"><span class="string">`</span><span class="string">``</span><span class="keyword">sql</span></div><div class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> daily_hit_counter(<span class="keyword">day</span>, slot, cnt)</div><div class="line">    <span class="keyword">VALUES</span> (<span class="keyword">CURRENT_DATE</span>, <span class="keyword">RAND</span>() * <span class="number">100</span>, <span class="number">1</span>)</div><div class="line">    <span class="keyword">ON</span> <span class="keyword">DUPLICATE</span> <span class="keyword">KEY</span> <span class="keyword">UPDATE</span> cnt = cnt + <span class="number">1</span>;</div></pre></td></tr></table></figure>
+<p>如果希望减少表的行数，以避免表变得太大，可以写一个周期执行的任务，合并所有结果到 0 号槽，并删除所有其它的槽：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">UPDATE</span> daily_hit_counter <span class="keyword">as</span> c</div><div class="line">    <span class="keyword">INNER</span> <span class="keyword">JOIN</span> (</div><div class="line">        <span class="keyword">SELECT</span> <span class="keyword">day</span>, <span class="keyword">SUM</span>(cnt) <span class="keyword">AS</span> cnt, <span class="keyword">MIN</span>(slot) <span class="keyword">AS</span> mslot</div><div class="line">        <span class="keyword">FROM</span> daily_hit_counter</div><div class="line">        <span class="keyword">GROUP</span> <span class="keyword">BY</span> <span class="keyword">day</span></div><div class="line">    ) <span class="keyword">AS</span> x <span class="keyword">USING</span>(<span class="keyword">day</span>)</div><div class="line"><span class="keyword">SET</span> c.cnt  = <span class="keyword">IF</span>(c.slot = x.mslot, x.cnt, <span class="number">0</span>),</div><div class="line">    c.slot = <span class="keyword">IF</span>(c.slot = x.mslot, <span class="number">0</span>, c.slot); </div><div class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> daily_hit_counter <span class="keyword">WHERE</span> slot &lt;&gt; <span class="number">0</span> <span class="keyword">AND</span> cnt = <span class="number">0</span>;</div></pre></td></tr></table></figure>
+<h1 id="4-加快-ALTER-TABLE-操作的速度"><a href="#4-加快-ALTER-TABLE-操作的速度" class="headerlink" title="4 加快 ALTER TABLE 操作的速度"></a>4 加快 ALTER TABLE 操作的速度</h1><p>假如要修改电影的默认租赁期限，从三天改到五天，下面是很慢的方式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> film </div><div class="line"><span class="keyword">MODIFY</span> <span class="keyword">COLUMN</span> rental_duration tinyint(<span class="number">3</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">default</span> <span class="number">5</span>;</div></pre></td></tr></table></figure>
+<p><code>show status</code>语句显示这个语句做了 1000 次读和 1000 次插入操作。换句话说，它拷贝了整张表到一张新表。<br>理论上，MySQL 可以跳过创建新表的步骤，即直接修改 .frm 文件而不设计表数据：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> film</div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">COLUMN</span> rental_duraion <span class="keyword">SET</span> <span class="keyword">DEFAULT</span> <span class="number">5</span>;</div></pre></td></tr></table></figure>
+<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5 总结"></a>5 总结</h1><ol>
+<li>避免过度设计</li>
+<li>使用小而简单的合适数据类型，避免使用 NULL 值</li>
+<li>关联标识符尽量使用相同的数据类型</li>
+<li>注意可变长字符串，其在临时表和排序时可能导致悲观的按最大长度分配内存</li>
+<li>尽量使用整型定义标识列</li>
+<li>小心使用 ENUM 和 SET</li>
+<li><code>ALTER TABLE</code>在大部分情况下都会锁表并且重建整张表。建议先在备库执行<code>ALTER</code>完成后将其切换为主库</li>
+</ol>
+
       
     </div>
     
@@ -518,13 +557,13 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/" title="十三、PGP——密码技术的完美组合">http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/</a>
+    <a href="http://www.liwenguang.cn/2017/12/25/high_performance_MySQL/4.html/" title="四、Schema与数据类型优化">http://www.liwenguang.cn/2017/12/25/high_performance_MySQL/4.html/</a>
   </li>
   <li class="post-copyright-date">
-      <strong>发布时间：</strong>2017年12月7日 - 23时12分
+      <strong>发布时间：</strong>2017年12月25日 - 12时12分
   </li>
   <li class="post-copyright-date">
-      <strong>最后更新时间：</strong>2017年12月7日 - 23时12分
+      <strong>最后更新时间：</strong>2017年12月28日 - 00时12分
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -546,8 +585,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/06/graphic2cryptography/12.html/" rel="next" title="十二、随机数——不可预测性的源泉">
-                <i class="fa fa-chevron-left"></i> 十二、随机数——不可预测性的源泉
+              <a href="/2017/12/22/tech/threadlocal_1.html/" rel="next" title="ThreadLocal 的心得">
+                <i class="fa fa-chevron-left"></i> ThreadLocal 的心得
               </a>
             
           </div>
@@ -556,8 +595,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/12/13/talker/paddington.html/" rel="prev" title="电影《帕丁顿熊》有感">
-                电影《帕丁顿熊》有感 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/12/26/netty_in_action/1.html/" rel="prev" title="Netty实战笔记">
+                Netty实战笔记 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -730,7 +769,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-本章概要"><span class="nav-text">1 本章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-PGP简介"><span class="nav-text">2 PGP简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-PGP-的功能"><span class="nav-text">2.1 PGP 的功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-对称密码"><span class="nav-text">1.对称密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-公钥密码"><span class="nav-text">2.公钥密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-数字签名"><span class="nav-text">3.数字签名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-单向散列函数"><span class="nav-text">4.单向散列函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-证书"><span class="nav-text">5.证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-压缩"><span class="nav-text">6.压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-文本数据"><span class="nav-text">7.文本数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-大文件的拆分和平和"><span class="nav-text">8.大文件的拆分和平和</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-钥匙串管理"><span class="nav-text">9.钥匙串管理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-生成秘钥对"><span class="nav-text">3 生成秘钥对</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-加密与解密"><span class="nav-text">4 加密与解密</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-生成和验证数字签名"><span class="nav-text">5 生成和验证数字签名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-生成数字签名并加密以及解密并验证数字签名"><span class="nav-text">6 生成数字签名并加密以及解密并验证数字签名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-信任网"><span class="nav-text">7 信任网</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-公钥合法性"><span class="nav-text">7.1 公钥合法性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-场景1：通过自己的数字签名进行确认"><span class="nav-text">1.场景1：通过自己的数字签名进行确认</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-场景2：通过自己完全信任的人的数字签名进行确认"><span class="nav-text">2.场景2：通过自己完全信任的人的数字签名进行确认</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-本章小结"><span class="nav-text">8 本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-小测验"><span class="nav-text">9 小测验</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-选择优化的数据类型"><span class="nav-text">1 选择优化的数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-整数类型"><span class="nav-text">1.1 整数类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-实数类型"><span class="nav-text">1.2 实数类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-字符串类型"><span class="nav-text">1.3 字符串类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-VARCHAR-和-CHAR-类型"><span class="nav-text">1.VARCHAR 和 CHAR 类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#VARCHAR"><span class="nav-text">VARCHAR</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CHAR"><span class="nav-text">CHAR</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CHAR-VS-VARCHAR"><span class="nav-text">CHAR VS VARCHAR</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-BLOB-和-TEXT-类型"><span class="nav-text">2. BLOB 和 TEXT 类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-使用枚举（ENUM）-代替字符串类型"><span class="nav-text">3. 使用枚举（ENUM） 代替字符串类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-4-日期和时间类型"><span class="nav-text">1.4 日期和时间类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-DATETIME"><span class="nav-text">1.DATETIME</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-TIMESTAMP"><span class="nav-text">2.TIMESTAMP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-5-位数据类型"><span class="nav-text">1.5 位数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-BIT"><span class="nav-text">1.BIT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-SET"><span class="nav-text">2.SET</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-6-选择标识符（identifier）"><span class="nav-text">1.6 选择标识符（identifier）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-7-特殊类型数据"><span class="nav-text">1.7 特殊类型数据</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-MySQL-schema-设计中的陷阱"><span class="nav-text">2 MySQL schema 设计中的陷阱</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-太多的列"><span class="nav-text">2.1 太多的列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-太多的关联"><span class="nav-text">2.2 太多的关联</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-全能的枚举"><span class="nav-text">2.3 全能的枚举</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-变相的枚举"><span class="nav-text">2.4 变相的枚举</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-非此发明（Not-Invent-Here）的-NULL"><span class="nav-text">2.5 非此发明（Not Invent Here）的 NULL</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-缓存表和汇总表"><span class="nav-text">3 缓存表和汇总表</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-计数器表"><span class="nav-text">3.1 计数器表</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-加快-ALTER-TABLE-操作的速度"><span class="nav-text">4 加快 ALTER TABLE 操作的速度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-总结"><span class="nav-text">5 总结</span></a></li></ol></div>
             
 
           </div>
@@ -924,9 +963,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/';
-          this.page.identifier = '2017/12/07/graphic2cryptography/13.html/';
-          this.page.title = '十三、PGP——密码技术的完美组合';
+          this.page.url = 'http://www.liwenguang.cn/2017/12/25/high_performance_MySQL/4.html/';
+          this.page.identifier = '2017/12/25/high_performance_MySQL/4.html/';
+          this.page.title = '四、Schema与数据类型优化';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://www-liwenguang-cn.disqus.com/embed.js';
