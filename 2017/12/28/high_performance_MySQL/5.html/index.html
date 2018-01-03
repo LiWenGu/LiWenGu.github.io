@@ -131,25 +131,22 @@
 
 
 
-<meta name="description" content="1 本章概要针对计算机所处理的消息，有时候我们也需要用到“指纹”。当需要比较两条消息是否一致时，我们不必直接对比消息本身的内容，只要对比它们的“指纹”即可。本章中，使用单向散列函数就可以获取消息的“指纹”，通过对比“指纹”，就能够知道两条消息是否一致。我们将详细介绍现在使用非常广泛的 SHA-1 单向散列函数，并思考对单向散列函数的攻击方法。 2 什么是单向散列函数2.1 这个文件是不是真的呢Al">
+<meta name="description" content="索引能够轻易将查询性能提高几个数量级，“最优”的索引有时比一个“好的”索引性能要好两个数量级。创建一个真正“最优”的索引经常需要重写查询。 1 索引基础1.1 索引的类型在 MySQL 中，索引是在存储引擎层而不是服务器层实现的。所以，并没有统一的索引标准。即使多个存储引擎支持同一种类型的索引，其底层的事先也可能不同。 1. B-Tree 索引InnoDB 本质是“B+Tree”。假设有如下数据表">
 <meta property="og:type" content="article">
-<meta property="og:title" content="七、单向散列函数（获取消息的“指纹”）">
-<meta property="og:url" content="http://www.liwenguang.cn/2017/11/19/graphic2cryptography/7.html/index.html">
+<meta property="og:title" content="五、创建高性能的索引">
+<meta property="og:url" content="http://www.liwenguang.cn/2017/12/28/high_performance_MySQL/5.html/index.html">
 <meta property="og:site_name" content="Hello">
-<meta property="og:description" content="1 本章概要针对计算机所处理的消息，有时候我们也需要用到“指纹”。当需要比较两条消息是否一致时，我们不必直接对比消息本身的内容，只要对比它们的“指纹”即可。本章中，使用单向散列函数就可以获取消息的“指纹”，通过对比“指纹”，就能够知道两条消息是否一致。我们将详细介绍现在使用非常广泛的 SHA-1 单向散列函数，并思考对单向散列函数的攻击方法。 2 什么是单向散列函数2.1 这个文件是不是真的呢Al">
+<meta property="og:description" content="索引能够轻易将查询性能提高几个数量级，“最优”的索引有时比一个“好的”索引性能要好两个数量级。创建一个真正“最优”的索引经常需要重写查询。 1 索引基础1.1 索引的类型在 MySQL 中，索引是在存储引擎层而不是服务器层实现的。所以，并没有统一的索引标准。即使多个存储引擎支持同一种类型的索引，其底层的事先也可能不同。 1. B-Tree 索引InnoDB 本质是“B+Tree”。假设有如下数据表">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_1.png">
-<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_2.png">
-<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_3.png">
-<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_4.png">
-<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_5.png">
-<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_6.png">
-<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_7.png">
-<meta property="og:updated_time" content="2017-11-19T15:09:00.000Z">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/High_Performance_MySQL/5_1.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/High_Performance_MySQL/5_2.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/High_Performance_MySQL/5_3.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/High_Performance_MySQL/5_4.png">
+<meta property="og:updated_time" content="2017-12-27T16:28:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="七、单向散列函数（获取消息的“指纹”）">
-<meta name="twitter:description" content="1 本章概要针对计算机所处理的消息，有时候我们也需要用到“指纹”。当需要比较两条消息是否一致时，我们不必直接对比消息本身的内容，只要对比它们的“指纹”即可。本章中，使用单向散列函数就可以获取消息的“指纹”，通过对比“指纹”，就能够知道两条消息是否一致。我们将详细介绍现在使用非常广泛的 SHA-1 单向散列函数，并思考对单向散列函数的攻击方法。 2 什么是单向散列函数2.1 这个文件是不是真的呢Al">
-<meta name="twitter:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_1.png">
+<meta name="twitter:title" content="五、创建高性能的索引">
+<meta name="twitter:description" content="索引能够轻易将查询性能提高几个数量级，“最优”的索引有时比一个“好的”索引性能要好两个数量级。创建一个真正“最优”的索引经常需要重写查询。 1 索引基础1.1 索引的类型在 MySQL 中，索引是在存储引擎层而不是服务器层实现的。所以，并没有统一的索引标准。即使多个存储引擎支持同一种类型的索引，其底层的事先也可能不同。 1. B-Tree 索引InnoDB 本质是“B+Tree”。假设有如下数据表">
+<meta name="twitter:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/High_Performance_MySQL/5_1.png">
 
 
 
@@ -179,13 +176,13 @@
 
 
 
-  <link rel="canonical" href="http://www.liwenguang.cn/2017/11/19/graphic2cryptography/7.html/"/>
+  <link rel="canonical" href="http://www.liwenguang.cn/2017/12/28/high_performance_MySQL/5.html/"/>
 
 
 
 
 
-  <title>七、单向散列函数（获取消息的“指纹”） | Hello</title>
+  <title>五、创建高性能的索引 | Hello</title>
   
 
 
@@ -346,7 +343,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/11/19/graphic2cryptography/7.html/">
+    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/12/28/high_performance_MySQL/5.html/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="TheOhters">
@@ -363,7 +360,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">七、单向散列函数（获取消息的“指纹”）</h2>
+          <h2 class="post-title" itemprop="name headline">五、创建高性能的索引</h2>
         
 
         <div class="post-meta">
@@ -375,8 +372,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-19T15:16:00+08:00">
-                2017-11-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-28T00:28:00+08:00">
+                2017-12-28
               </time>
             
 
@@ -409,8 +406,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/读书笔记/图解密码技术/" itemprop="url" rel="index">
-                    <span itemprop="name">图解密码技术</span>
+                  <a href="/categories/读书笔记/高性能MySQL/" itemprop="url" rel="index">
+                    <span itemprop="name">高性能MySQL</span>
                   </a>
                 </span>
 
@@ -427,9 +424,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/11/19/graphic2cryptography/7.html/#comments" itemprop="discussionUrl">
+                <a href="/2017/12/28/high_performance_MySQL/5.html/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/11/19/graphic2cryptography/7.html/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2017/12/28/high_performance_MySQL/5.html/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -456,7 +453,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  4,210
+                  3,026
                 </span>
               
 
@@ -472,7 +469,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  15
+                  11
                 </span>
               
             </div>
@@ -493,48 +490,85 @@
       
 
       
-        <h1 id="1-本章概要"><a href="#1-本章概要" class="headerlink" title="1 本章概要"></a>1 本章概要</h1><p>针对计算机所处理的消息，有时候我们也需要用到“指纹”。当需要比较两条消息是否一致时，我们不必直接对比消息本身的内容，只要对比它们的“指纹”即可。<br>本章中，使用单向散列函数就可以获取消息的“指纹”，通过对比“指纹”，就能够知道两条消息是否一致。<br>我们将详细介绍现在使用非常广泛的 SHA-1 单向散列函数，并思考对单向散列函数的攻击方法。</p>
-<h1 id="2-什么是单向散列函数"><a href="#2-什么是单向散列函数" class="headerlink" title="2 什么是单向散列函数"></a>2 什么是单向散列函数</h1><h2 id="2-1-这个文件是不是真的呢"><a href="#2-1-这个文件是不是真的呢" class="headerlink" title="2.1 这个文件是不是真的呢"></a>2.1 这个文件是不是真的呢</h2><p>Alice 终于完成了一个软件开发，接下来只要把文件从 Alice 的硬盘中拷贝到 CD 上就可以了。不过，把文件写到 CD 上非常耗时， Alice 已经很累了，她决定今天晚上早上回家休息，明天再继续弄。<br>第二天， Alice 来到公司准备把文件写入 CD ，但她忽然产生了这样的疑问：<br>“这个文件和我昨天晚上生成的文件是一样的吗？”<br>Alice 的疑问是这样的——会不会有人操作 Alice 的计算机，将文件改写了呢？也有可能通过网络入侵 Alice 的计算机。或者，也许 Alice 的计算机感染了病毒，造成文件被篡改……在这里，我们姑且把篡改文件的这个主体称为“主动攻击者 Mallory”。总而言之，Alice 需要知道从昨天到今天这段时间内， Mallor有 是否篡改了文件的内容。  </p>
-<p>也就是说，Alice 需要确定自己的文件的完整性（integrity）。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_1.png" alt=""><br>稍微想一想我们就能找一种确认文件完整性的简单方法——在回家之前先把文件拷贝到一个安全的地方保存，第二天在用这个文件工作之前，先将其和事先保存的文件进行对比就可以了。如果两者一致，那就说明文件没有被篡改。<br>不过，下图这种确认完整性的方法，其实是毫无意义的。因为如果可以事先把文件保存在一个安全的地方，那根本就不需要确认完整性，直接用事先保存的文件来工作不就行了吗？<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_2.png" alt=""><br>这里还存在一个效率问题。如果需需要确认完整性的文件非常巨大，那么文件的拷贝、保存以及比较都将非常耗时。<br>我们能不能获取到 Alice 所生成的文件的“指纹”呢？如果我们不需要对整个巨大的文件进行对比，只需要对比一个较小的指纹就能够检查完整性的话，那该多方便：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_3.png" alt=""><br>本章要介绍的单向散列函数，就是一种采集文件指纹的技术。单向散列函数所生成的散列值，就相当于消息的指纹。</p>
-<h2 id="2-2-什么是单向散列函数"><a href="#2-2-什么是单向散列函数" class="headerlink" title="2.2 什么是单向散列函数"></a>2.2 什么是单向散列函数</h2><p>单向散列函数（one-way hash function）有一个输入和一个输出，其中输入称为消息（message），输出称为散列值（hash value）。单向散列函数可以根据消息的内容计算出散列值，而散列值就可以被用来检查消息的完整性。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_4.png" alt=""><br>这里的消息可以是任何形式的消息，图像、声音、视频。因为无论任何消息，单向散列函数都会将它作为单纯的比特序列来处理，即根据比特序列计算出散列值。<br>散列值的长度和消息的长度无关。以 SHA-1 单向散列函数为例，它所计算出的散列值的长度永远是 160 比特（20字节）。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_5.png" alt=""><br>由于散列值很短，因此很容易处理和使用。  </p>
-<p>回家之前，Alice 用单向散列函数计算文件的散列值：<br>35 36 37 38 39 A1 D2 F4 J5 5B 9J 35 36 37 38 39 A1 D2 F4 J5<br>单向散列函数所输出的散列值的长度是固定的（在这个例子中是 20 字节），无论 Alice 的文件大小是多大，散列值永远都是 20 字节（160比特）。Alice 可以将这个值打印出来，保存，或者拿回家藏在枕头下面~<br>第二天早上，Alice 再次计算硬盘中文件的散列值，如果再次计算出的散列值和昨晚的散列值相同，就可以判断这个文件是真的，否则就是不一样的。</p>
-<h2 id="2-3-单向散列函数的性质"><a href="#2-3-单向散列函数的性质" class="headerlink" title="2.3 单向散列函数的性质"></a>2.3 单向散列函数的性质</h2><h3 id="1-根据任意长度的消息计算出固定长度的散列值"><a href="#1-根据任意长度的消息计算出固定长度的散列值" class="headerlink" title="1. 根据任意长度的消息计算出固定长度的散列值"></a>1. 根据任意长度的消息计算出固定长度的散列值</h3><h3 id="2-能够快速计算出散列值"><a href="#2-能够快速计算出散列值" class="headerlink" title="2.能够快速计算出散列值"></a>2.能够快速计算出散列值</h3><h3 id="3-消息不同散列值也不同"><a href="#3-消息不同散列值也不同" class="headerlink" title="3.消息不同散列值也不同"></a>3.消息不同散列值也不同</h3><p>如果单向散列函数计算出的散列值没有发生变化，那么消息很容易就会被篡改，这个单向散列函数也就无法被用于完整性的检查。两个不同的消息产生同一个散列值的情况称为<strong>碰撞（collision）</strong>。如果要将单向散列函数用于完整性的检查，则需要确保在事实上不可能被认为地发现碰撞。<br>难以发现碰撞的性质称为<strong>抗碰撞性（collision resistance）</strong>。密码技术中所使用的单向散列函数，都需要具备抗碰撞性。<br>我们以 Alice 用单向散列函数来检查文件完整性的场景为例，现在，我们假设 Alice 所使用的单向散列函数不具备抗碰撞性。<br>Alice 在回家之前得到了散列值，Alice 在睡觉的时候，Mallory 入侵了 Alice 的计算机，并改写了 Alice 的文件。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_6.png" alt=""><br>由于假设 Alice 的单向散列函数不具备抗碰撞性，因此 Mallory 能够找到一种改写文件的方法，使得改写后文件的散列值不会发生变化，因此 Alice 将 Mallory 改写后的文件写入了 CD。  </p>
-<p>这里所说的抗碰撞性，指的是难以找到另外一条具备特定散列值的消息。当给定某条消息的散列值时，单向散列函数必须确保<strong>要找到和该条消息具有相同散列值的另外一条消息是非常困难的</strong>。这一性质称为<strong>弱抗碰撞性</strong>。单向散列函数都必须具备弱抗碰撞性。  </p>
-<p>和弱抗碰撞性相对的，还有<strong>强抗碰撞性</strong>。所谓强抗碰撞性，是指<strong>要找到散列值相同的两条不同的消息是非常困难的</strong>这一性质。在这里，散列值可以是任意值。  </p>
-<p>密码技术中所使用的单向散列函数，不仅要具备弱抗碰撞性，还必须具备强抗碰撞性。</p>
-<h3 id="4-具备单向性"><a href="#4-具备单向性" class="headerlink" title="4. 具备单向性"></a>4. 具备单向性</h3><h2 id="2-4-关于术语"><a href="#2-4-关于术语" class="headerlink" title="2.4 关于术语"></a>2.4 关于术语</h2><p><strong>单向散列函数</strong>也称为<strong>消息摘要函数（message digest function）</strong>、<strong>哈希函数</strong>或者<strong>杂凑函数</strong>。<br>输入单向散列函数的消息也称为<strong>原像（pre-image）</strong>。<br>单向散列函数输出的<strong>散列值</strong>也称为<strong>消息摘要（message digest）</strong>或者指纹（fingerprint）**。<br>完整性也称为一致性。<br>“散列”的英文 “hash” 一词，原意是“斧子”，后来被引申为“剁碎的肉末”。单向散列函数的作用，实际上就是将很长的消息剁碎，然后再混合成固定长度的散列值。</p>
-<h1 id="3-单向散列函数的实际应用"><a href="#3-单向散列函数的实际应用" class="headerlink" title="3 单向散列函数的实际应用"></a>3 单向散列函数的实际应用</h1><h2 id="3-1-检测软件是否被篡改"><a href="#3-1-检测软件是否被篡改" class="headerlink" title="3.1 检测软件是否被篡改"></a>3.1 检测软件是否被篡改</h2><p><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/7_7.png" alt=""></p>
-<h2 id="3-2-基于口令的加密"><a href="#3-2-基于口令的加密" class="headerlink" title="3.2 基于口令的加密"></a>3.2 基于口令的加密</h2><p>单向散列函数也被用于基于口令的加密（Password Based Encryption，PBE）。<br>PBE 的原理是将口令和盐（salt，通过伪随机数生成器产生的随机值）混合后计算起散列值，然后将这个散列值用作加密的秘钥。通过这样的方法能够防御针对口令的字典攻击，将在第十一章详解。</p>
-<h2 id="3-3-消息认证码"><a href="#3-3-消息认证码" class="headerlink" title="3.3 消息认证码"></a>3.3 消息认证码</h2><p>使用单向散列函数可以构造消息认证码。<br>消息认证码是将“发送者和消息接收者之间的共享秘钥”和“消息”进行混合后计算出的散列值，使用消息认证码可以检测并防止通信过程中的错误、篡改以及伪装。<br>消息认证码在 SSL/TLS 中也得到了运用，将在第十四章详解。</p>
-<h2 id="3-4-数字签名"><a href="#3-4-数字签名" class="headerlink" title="3.4 数字签名"></a>3.4 数字签名</h2><p>数字签名是现实社会中的签名（sign）和盖章这样的行为在数字世界中的实现。数字签名的处理过程非常耗时，因此一般不会对整个消息内容直接施加数字签名，而是先通过单向散列函数计算出消息的散列值，然后再对这个散列值施加数字签名，将在第九章详解。</p>
-<h2 id="3-5-伪随机数生成器"><a href="#3-5-伪随机数生成器" class="headerlink" title="3.5 伪随机数生成器"></a>3.5 伪随机数生成器</h2><p>使用单向散列函数可以构造伪随机数生成器。<br>密码技术中所使用的随机数需要具备“事实上不可能根据过去的随机数列预测未来的随机数列”这样的性质。为了保证不可预测性，可以利用单向散列函数的单向性，将在第十二章详解。</p>
-<h2 id="3-6-一次性口令"><a href="#3-6-一次性口令" class="headerlink" title="3.6 一次性口令"></a>3.6 一次性口令</h2><p>一次性口令（one-time password），经常被用于服务器对客户端的合法性认证，在这种方式中，通过使用单向散列函数可以保证口令只在通信链路上传送一次（one-time），因此即使窃听者窃取了口令，也无法使用。</p>
-<h1 id="4-单向散列函数的具体例子"><a href="#4-单向散列函数的具体例子" class="headerlink" title="4 单向散列函数的具体例子"></a>4 单向散列函数的具体例子</h1><h2 id="4-1-MD4、MD5"><a href="#4-1-MD4、MD5" class="headerlink" title="4.1 MD4、MD5"></a>4.1 MD4、MD5</h2><p>MD4 是由 Rivest 于 1990 年设计的单向散列函数，能够产生 128 比特的散列值，由于寻找到了 MD4 散列碰撞的方法，因此现在它已经不安全了。<br>MD5 是由 Rivest 于 1991 年设计的单向散列函数，能够产生 128 比特的散列值，由于 MD5 的强抗碰撞性已经被攻破，也就是说，现在已经能够产生具有相同散列值的两条不同的消息，因此它也已经不安全了。<br>MD 是消息摘要（Message Digest）的缩写。</p>
-<h2 id="4-2-SHA-1、SHA-256、SHA-384、SHA-512"><a href="#4-2-SHA-1、SHA-256、SHA-384、SHA-512" class="headerlink" title="4.2 SHA-1、SHA-256、SHA-384、SHA-512"></a>4.2 SHA-1、SHA-256、SHA-384、SHA-512</h2><p>SHA-1 是由 NIST（National Institute of Standards and Technology，美国国家标准技术研究所）设计的一种能够产生 160 比特的散列值的单向散列函数。<br>SHA-256、SHA-384、SHA-512 都是由 NIST 设计的单向散列函数，它们的散列值长度分别为 256 比特、384 比特、512 比特。统称为 SHA-2。<br>它们的消息长度都存在上限。SHA-1 的强抗碰撞性已于 2005 年被攻破，也就是说，现在已经能够产生具备相同散列值的两条不同的消息。不过，SHA-2 还尚未被攻破。</p>
-<h2 id="4-3-RIPEMD-160"><a href="#4-3-RIPEMD-160" class="headerlink" title="4.3 RIPEMD-160"></a>4.3 RIPEMD-160</h2><p>RIPEMD-160 是 1996 年设计的一种能够产生 160 比特的散列值的单向散列函数。RIPEMD 的强抗碰撞性已于 2004 年被攻破，但 RIPEMD-160 还尚未被攻破。</p>
-<h2 id="4-4-AHS（Advanced-Hash-Standard）与-SHA-3"><a href="#4-4-AHS（Advanced-Hash-Standard）与-SHA-3" class="headerlink" title="4.4 AHS（Advanced Hash Standard）与 SHA-3"></a>4.4 AHS（Advanced Hash Standard）与 SHA-3</h2><p>在 2005 年 SHA-1 的强抗碰撞性被攻破的背景下， NIST 开始着手制定用于取代 SHA-1 的下一代单向散列函数 SHA-3 。SHA-3 和 AES 一样采用公开竞赛的方式进行标准化。</p>
-<h1 id="5-单向散列函数-SHA-1"><a href="#5-单向散列函数-SHA-1" class="headerlink" title="5 单向散列函数 SHA-1"></a>5 单向散列函数 SHA-1</h1><p>此章主要讲解其具体算法，有感兴趣者请看原书。</p>
-<h1 id="6-对单向散列函数的攻击"><a href="#6-对单向散列函数的攻击" class="headerlink" title="6 对单向散列函数的攻击"></a>6 对单向散列函数的攻击</h1><h2 id="6-1-暴力破解（攻击故事-1-）"><a href="#6-1-暴力破解（攻击故事-1-）" class="headerlink" title="6.1 暴力破解（攻击故事 1 ）"></a>6.1 暴力破解（攻击故事 1 ）</h2><p>Alice 在计算机上写了一份合同。晚上，攻击者 Mallory 入侵了计算机，他想将其中的：</p>
-<blockquote>
-<p>Alice 要支付的金额为 100 万元。</p>
-</blockquote>
-<p>改成：</p>
-<blockquote>
-<p>Alice 要支付的金额为 1 亿元。</p>
-</blockquote>
-<p>不过，不仅要修改合同内容，还要不能改变散列值。<br>Mallory 可以从文档文件所具有的<strong>冗余性</strong>入手。所谓文档文件的冗余性，是指在不改变文档意思的前提下能够对文件的内容进行修改的程度。<br>举个例子，下面的这些句子基本上说的都是一个意思：<br>Alice 要支付的金额为 1 亿元。<br>Alice 要支付的金额为壹亿元。<br>Alice 要支付的金额为 100000000 元。<br>Alice 应支付 1 亿元。<br>作为报酬， Alice 需要支付 1 亿元。<br><br>除此之外，还有一些通过机器来进行修改的方法。例如，可以在文件的末尾添加 1 个、2 个、3 个甚至更多的空格，或者还可以对文档中的每一个字稍微改变一些颜色，这都不会影响文档的意思。在这里需要注意的是，即便我们对文件所进行的修改是无法被人类察觉的，但只要是对文件进行了修改，单向散列函数就会产生不同的散列值。  </p>
-<p>于是，Mallory 利用文档的冗余性，通过机器生成了一大推“支付一亿元的合同”。如果在这一大推合同中，能够找到一个合同和 Alice 原本的“100 万元合同”恰好产生相同的散列值，那 Mallory 就算是成功了。<br>在这里，Mallory 所进行的攻击就是<strong>暴力攻击</strong>。正如对密码可以进行暴力破解一样，对单向散列函数也可以进行暴力破解。这相当于一种<strong>试图破解单向散列函数的“弱抗碰撞性”的攻击</strong>。在这种情况下，暴力破解需要尝试的次数可以根据散列值得长度计算出来。以 SHA-1 为例，由于它的散列值长度为 160 比特，因此最多只要尝试 2160 次就能够找到目标消息了。（这里不懂为什么是 2160 次）</p>
-<h2 id="6-2-生日攻击（攻击故事-2-）"><a href="#6-2-生日攻击（攻击故事-2-）" class="headerlink" title="6.2 生日攻击（攻击故事 2 ）"></a>6.2 生日攻击（攻击故事 2 ）</h2><p>编写合同的人不是 Alice 而是主动攻击者 Mallory 。 Mallory 事先准备两份具备相同散列值的“100 万元合同”和“一亿元合同”，然后将“100 万元合同”交给 Alice 让她计算散列值。随后， Mallory 再像故事 1 中一样， 掉包合同。<br>这里 Mallory 所进行的攻击不是寻找生成特定散列值的消息，而是要找到散列值相同的两条消息，而散列值可以是任意值。这样的攻击，一般称为<strong>生日攻击（birthday attack）</strong>，这是一种<strong>试图破解单向散列函数的“强抗碰撞性”的攻击。</strong><br>这里存在一个生日驳论的数学思想，有兴趣的请自行谷歌。</p>
-<h1 id="7-单向散列函数无法解决的问题"><a href="#7-单向散列函数无法解决的问题" class="headerlink" title="7 单向散列函数无法解决的问题"></a>7 单向散列函数无法解决的问题</h1><p>假如，攻击者 Mallory 伪装成 Alice ，向 Bob 同时发送了消息和散列值。Bob 通过单向散列函数检查消息的完整性，但是无法检查出发送者的身份是否被 Mallory 进行了伪装。也就是说，<strong>单向散列函数能够辨别出“篡改”，但无法辨别出“伪装”。</strong><br>因此我们还需要进行<strong>认证</strong>，用于认证的技术包括<strong>消息认证码</strong>和<strong>数字签名</strong>。消息认证码能够向通信对象保证消息没有被篡改，而数字签名不仅能够向通信对象保证消息没有被篡改，还能够向所有第三方作出这样的保证。<br>认证需要使用秘钥，也就是通过对消息附加 Alice 的秘钥（只有 Alice 才知道的密码信息）来确保消息真的属于 Alice。</p>
-<h1 id="8-本章小结"><a href="#8-本章小结" class="headerlink" title="8 本章小结"></a>8 本章小结</h1><p>本章学习了用于确认消息完整性的单向散列函数，其能够根据任意长度的消息计算出固定长度的散列值，通过对比散列值就可以判断两条消息是否一致。这种技术对辨别篡改非常有效。<br>以及学习了代表性的单向散列函数——SHA-1的实现方法以及破解方法——暴力破解和生日攻击。<br>但是，单向散列函数，虽然可以辨别出篡改，但无法辨别伪装。要解决这个问题，我们需要消息验证码和数字签名。将在下一章介绍消息验证码。</p>
-<h1 id="9-小测验"><a href="#9-小测验" class="headerlink" title="9 小测验"></a>9 小测验</h1><ol>
-<li>MD5 是一种能够将任意长度的数据转换为 128 比特的对称密码算法。</li>
-<li>要找出和某条消息具备相同散列值的另一条消息是非常困难的。</li>
-<li>要找出具有相同散列值但互不相同的两条消息是非常困难的。</li>
-<li>SHA-1 的散列值长度为 20字节。</li>
-<li>如果消息仅被改写了 1 比特，则散列值也仅发生 1 比特的改变。</li>
+        <p>索引能够轻易将查询性能提高几个数量级，“最优”的索引有时比一个“好的”索引性能要好两个数量级。创建一个真正“最优”的索引经常需要重写查询。</p>
+<h1 id="1-索引基础"><a href="#1-索引基础" class="headerlink" title="1 索引基础"></a>1 索引基础</h1><h2 id="1-1-索引的类型"><a href="#1-1-索引的类型" class="headerlink" title="1.1 索引的类型"></a>1.1 索引的类型</h2><p>在 MySQL 中，索引是在存储引擎层而不是服务器层实现的。所以，并没有统一的索引标准。即使多个存储引擎支持同一种类型的索引，其底层的事先也可能不同。</p>
+<h3 id="1-B-Tree-索引"><a href="#1-B-Tree-索引" class="headerlink" title="1. B-Tree 索引"></a>1. B-Tree 索引</h3><p>InnoDB 本质是“B+Tree”。假设有如下数据表：  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> People(</div><div class="line">    last_name  <span class="built_in">varchar</span>(<span class="number">50</span>)    <span class="keyword">not</span> <span class="literal">null</span>,</div><div class="line">    first_name <span class="built_in">varchar</span>(<span class="number">50</span>)    <span class="keyword">not</span> <span class="literal">null</span>,</div><div class="line">    dob        <span class="built_in">date</span>           <span class="keyword">not</span> <span class="literal">null</span>,</div><div class="line">    gender     enum(<span class="string">'m'</span>, <span class="string">'f'</span>) <span class="keyword">not</span> <span class="literal">null</span>,</div><div class="line">    <span class="keyword">key</span>(last_name, first_name, dob)</div><div class="line">)</div></pre></td></tr></table></figure>
+<p>对于表中的每一行数据，索引中包含了 last_name、first_name和 dob 列的值，下图显示了该索引是如何组织数据的存储的：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/High_Performance_MySQL/5_1.png" alt=""><br>注：索引对多个值进行排序的依据是<code>CREATE TABLE</code>语句中定义索引时列的顺序。</p>
+<ol>
+<li>全值匹配：指和索引中的所有列进行匹配。</li>
+<li>匹配最左前缀：前面提到的索引可用于查询所有姓为 Allen 的人，即只使用索引的第一列。</li>
+<li>匹配列前缀：例如查找所有以 J 开头的姓的人。这里也只使用了索引的第一列。</li>
+<li>匹配范围值：例如查找姓在 Allen 和 Barrymore 之间的人。</li>
+<li>精确匹配某一列并范围匹配另外一列：查找所有姓为 Allen，并且名字是字母 K 开头的人。即第一列 last_name 全匹配，第二列 first_name 范围匹配。</li>
+<li>只访问索引的查询</li>
 </ol>
-
+<p>因为索引树的节点是有序的，所以除了按值查找之外，索引还可以用于查询中的<code>ORDER BY</code>操作（按顺序查找）。一般来说，如果 B-Tree 可以按照某种方式查找到值，那么也可以按照这种方式用于排序。所以如果<code>ORDER BY</code>子句满足前面列出的几种查询类型，则这个索引也可以满足对应的排序需求。  </p>
+<p>下面是一些关于 B-Tree 索引的限制：</p>
+<ul>
+<li>如果不是按照索引的最左列开始查找，则无法使用索引。例，上面的例子的索引无法查找名字为 Bill 的人，也无法查找某个特定生日的人，因为这两列都不是最左数据列。类似地，也无法查找姓氏以某个字母结尾的人。这是关于<code>like &#39;%关键字&#39;</code>的知乎讨论：<a href="https://www.zhihu.com/question/52718330?sort=created" target="_blank" rel="external">https://www.zhihu.com/question/52718330?sort=created</a></li>
+<li>不能跳过索引中的列。</li>
+<li>如果查询中有某个列的范围查询，则其右边所有列都无法使用索引优化查询。</li>
+</ul>
+<p>有些限制并不是 B-Tree 本身导致的，而是 MySQL 优化器和存储引擎使用索引的方式导致的，这部分限制在未来的版本中可能就不再是限制了。
+</p>
+<h3 id="2-哈希索引"><a href="#2-哈希索引" class="headerlink" title="2. 哈希索引"></a>2. 哈希索引</h3><p>哈希索引（hash index）基于哈希表实现，只有精确匹配索引所有列的查询才有效。对于每一行数据，存储引擎都会对所有的索引列计算一个哈希码（hash code），哈希码是一个较小的值，并且不同键值的行计算出来的哈希码也不一样。哈希索引将所有的哈希码存储在索引中，同时在哈希表中保存指向每个数据行的指针。  </p>
+<ol>
+<li>哈希索引只包含哈希值和行指针，而不存储字段值，所以不能使用索引中的值来避免读取行。不过，访问内存中的行的速度很快，所以大部分情况这一点对性能的影响并不明显。</li>
+<li>哈希索引数据并不是按照索引值顺序存储的，所以也就无法用于排序。</li>
+<li>哈希索引也不支持部分索引列匹配查找，因为哈希索引始终是使用索引列的全部内容来计算哈希值的。例，在（A,B）建立哈希索引，如果查询只有 A ，则无法使用该索引。</li>
+<li>访问哈希索引的数据非常快，除非有很多哈希冲突。当出现哈希冲突的时候，存储引擎必须遍历链表中所有的行指针。</li>
+</ol>
+<p>当字段过大，例如存储 URL 时，可以额外使用一个列，用于存储该列的哈希，用于排序。但为了避免哈希冲突的问题，需要<code>where url = &#39;http://www.mysql.com&#39; AND url_crc=CRC32(&#39;http://www.mysql.com&#39;)</code>，这样的性能会非常高。（可以使用触发器来自身插入哈希列）。</p>
+<h3 id="3-空间数据索引（R-Tree）"><a href="#3-空间数据索引（R-Tree）" class="headerlink" title="3. 空间数据索引（R-Tree）"></a>3. 空间数据索引（R-Tree）</h3><p>MyISAM 表支持空间索引。</p>
+<h3 id="4-全文索引"><a href="#4-全文索引" class="headerlink" title="4. 全文索引"></a>4. 全文索引</h3><p>使用<code>MATCH AGAINST</code>操作，而不是普通的<code>WHERE</code>。</p>
+<h1 id="2-索引的优点"><a href="#2-索引的优点" class="headerlink" title="2 索引的优点"></a>2 索引的优点</h1><p>最常见的 B-Tree 索引，按照顺序存储数据，所以 MySQL 可以用来做 <code>ORDER BY</code> 和 <code>GROUP BY</code> 操作。因为数据时有序的，所以 B-Tree 也就会将相关的列值都存储在一起。最后，因为索引中存储了实际的列值，所以某些查询只使用索引就能够完成全部查询：  </p>
+<ol>
+<li>索引大大减少了服务器需要扫描的数据量。</li>
+<li>索引可以帮助服务器避免排序和临时表。</li>
+<li>索引可以将随机 I/O 变为顺序 I/O。</li>
+</ol>
+<p>对于中到大型表，索引就非常有效。但对于特大型表，需要技术直接区分出查询需要的一组数据，而不是一条记录一条记录地匹配，例，分区技术：建立元数据信息表，例，假如执行那些需要聚合多个应用分布在多个表的数据的查询，则需要记录“哪个用户的信息存储在哪个表中”的元数据，这样在查询时就可以直接忽略那些不包含指定用户信息的表。对于 TB 级别的数据，定位单条记录的意义不大，所以经常会使用块级别元数据技术来替代索引。</p>
+<h1 id="3-高性能索引的索引策略"><a href="#3-高性能索引的索引策略" class="headerlink" title="3 高性能索引的索引策略"></a>3 高性能索引的索引策略</h1><h2 id="3-1-前缀索引和索引选择性"><a href="#3-1-前缀索引和索引选择性" class="headerlink" title="3.1 前缀索引和索引选择性"></a>3.1 前缀索引和索引选择性</h2><p>索引选择性：不重复的索引值/数据表的记录总数，范围在0~1间，越高则查询越快。唯一索引的选择性是1，性能也是最好的。<br>列值过长，可以使用部分字段<code>LEFT(city,3)</code>作为前缀索引，这个值是通过<code>COUNT(DISTINCT LEFT(city,5))/COUNT(*)</code>的值来决定的，结果在 0.031 基本上就可用了。接着创建：<code>ALTER TABLE sakila.city_demo ADD KEY(city(5));</code><br>但是前缀索引虽然使索引更小、更快，但是无法使用前缀索引做<code>ORDER BY</code>和<code>GROUP BY</code>，也无法使用前缀索引做覆盖扫描。</p>
+<blockquote>
+<p>后缀索引（suffix index）也很有用途（电子邮箱），可以使用字符串反转后存储。</p>
+</blockquote>
+<h2 id="3-2-多列索引"><a href="#3-2-多列索引" class="headerlink" title="3.2 多列索引"></a>3.2 多列索引</h2><p>为每个列创建独立的索引，从<code>SHOW CREATE TABLE</code>中很容易看到这种情况：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> t(</div><div class="line">    c1 <span class="built_in">INT</span>,</div><div class="line">    c2 <span class="built_in">INT</span>,</div><div class="line">    c3 <span class="built_in">INT</span>,</div><div class="line">    <span class="keyword">key</span>(c1),</div><div class="line">    <span class="keyword">key</span>(c2),</div><div class="line">    <span class="keyword">key</span>(c3)</div><div class="line">)</div></pre></td></tr></table></figure>
+<p>这种索引策略是由于“把 WHERE 条件里面的列都建上索引”这样模糊的建议导致的。这最多是“一星”索引。例，<code>WHERE c1 = &#39;1&#39; OR c2 = &#39;2&#39;</code>，虽然在 MySQL5.0+ 会优化使用这两个索引，但是在 <code>explain</code> 的 <code>extra</code> 中会有 <code>Using union</code>，因此说明了索引的糟糕：  </p>
+<ol>
+<li>出现多个 <code>AND</code> 条件，则需要一个包含所有相关列的多列索引，而不是多个独立的单列索引。</li>
+<li>多个 <code>OR</code> 或者联合操作时，如果有些索引的选择性不高，需要合并扫描返回的大量数据。</li>
+<li>如果在 <code>EXPLAIN</code> 中看到有索引合并，应该好好检查查询和表的结构，也可以通过参数 <code>optimizer_switch</code> 来关闭索引合并功能，也可以使用 <code>IGNORE INDEX</code> 提示让优化器忽略掉某些索引。</li>
+</ol>
+<h2 id="3-3-选择合适的索引列顺序"><a href="#3-3-选择合适的索引列顺序" class="headerlink" title="3.3 选择合适的索引列顺序"></a>3.3 选择合适的索引列顺序</h2><p>最好通过 <code>pt-query-digest</code> 这样的工具报告重提取“最差”查询，再按照索引顺序进行优化。如果没有类似的具体查询来运行，那么最好还是按照经验法则来做，因为经验法则考虑的是全局性和选择性，而不是某个具体查询：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/High_Performance_MySQL/5_2.png" alt=""><br><code>customer_id</code> 的选择性更高，所以答案是将其作为索引列的第一列。</p>
+<h2 id="3-4-覆盖索引"><a href="#3-4-覆盖索引" class="headerlink" title="3.4 覆盖索引"></a>3.4 覆盖索引</h2><p>如果一个索引包含（覆盖）所有需要查询的字段的值，我们就称为“覆盖索引”。  </p>
+<ol>
+<li>因为索引是按照列值顺序存储的，所以对于 I/O 密集型的范围查询会比随机从磁盘读取每一行数据的 I/O 要少得多。</li>
+<li>并不是所有类型的索引都可以称为覆盖索引。覆盖索引必须要存储索引列的值。</li>
+</ol>
+<p>当发起一个被覆盖的查询，在 <code>EXPLAIN</code> 的 <code>Extra</code> 列可以看到 <code>Using index</code> 的信息。</p>
+<blockquote>
+<p><code>type</code> 列的 <code>index</code> 和 <code>Extra</code> 列的 <code>Using index</code> 是完全不同，前者和覆盖索引毫无关系，它只是表示这个查询访问数据的方式。</p>
+</blockquote>
+<p>索引覆盖查询还有很多陷阱可能导致无法实现优化：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/High_Performance_MySQL/5_3.png" alt="">  </p>
+<ol>
+<li>没有任何索引能够覆盖这个查询。因为查询从表中选择了所有的列，而没有任何索引覆盖了所有的列。</li>
+<li>MySQL 不能再索引中执行 <code>LIKE</code> 操作，MySQL5.5- 只允许在索引中做简单比较操作，MySQL 能在索引中做最左前缀匹配的 <code>LIKE</code> 查询，因为该操作可以转为简单的比较操作，但是如果是通配符开头的 <code>LIKE</code> 查询，存储引擎就无法做比较匹配。这种情况下，MySQL 服务器只能提取数据行的值，而不是索引值来做比较。</li>
+</ol>
+<p>也有办法解决上面说的两个问题，重写查询并巧妙地设计索引。先将索引扩展至三个数据列（artist，title，prod_id），然后按如下方式重写查询：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/High_Performance_MySQL/5_4.png" alt=""></p>
+<h2 id="3-5-使用索引扫描来做排序"><a href="#3-5-使用索引扫描来做排序" class="headerlink" title="3.5 使用索引扫描来做排序"></a>3.5 使用索引扫描来做排序</h2><p>MySQL 有两种方式可以生成有序的结果：通过排序操作；或按索引顺序扫描；如果 <code>EXPLAIN</code> 出来的 type 列的值为 “index”，则说明 MySQL 使用了索引扫描来做排序（不要和 Extra 列的 “Using index” 搞混淆了）。<br>扫描索引本身是很快的，因为只需要从一条索引记录移动到紧接着的下一条记录。但如果索引不能覆盖查询所需的全部列，那就不得不每扫描一条索引记录就回表查询一次对应的行。这基本上都是随机 I/O，因此按索引顺序读取数据的速度通常要比顺序地全表扫描慢。<br>如果查询需要关联多张表，则只有当 <code>ORDER BY</code> 子句引用的字段全部为第一个表时，才能使用索引做排序。</p>
+<p>例： </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> rental(</div><div class="line">    PRIMARY <span class="keyword">KEY</span>(rental_id),</div><div class="line">    <span class="keyword">UNIQUE</span> <span class="keyword">KEY</span> rental_date(rental_date, inventory_id, customer_id),</div><div class="line">    <span class="keyword">KEY</span> idx_fk_inventory_id(inventory_id),</div><div class="line">    <span class="keyword">KEY</span> idx_fk_customer_id(customer_id),</div><div class="line">    <span class="keyword">KEY</span> idx_fk_staff_id(staff_id),</div><div class="line">    ...</div><div class="line">)</div></pre></td></tr></table></figure>
+<p><code>WHERE rental_date = &#39;2015-05-25&#39; ORDER BY inventory_id, customer_id</code> 因为索引第一列被指定为一个常数，所以查询排序。<br><code>WHERE rental_date = &#39;2015-05-25&#39; ORDER BY inventory_id</code> 也可以使用查询排序。<br><code>WHERE rental_date &gt; &#39;2005-05-25 ORDER BY rental_date, inventory_id</code> 也可以。<br>下面是不能使用索引做排序的查询：  </p>
+<ol>
+<li><code>WHERE rental_date = &#39;2015-05-25&#39; ORDER BY inventory_id DESC, customer_id ASC;</code> 因为索引列都是正序排序。</li>
+<li><code>WHERE rental_date = &#39;2015-05-25&#39; ORDER BY inventory_id, staff_id;</code> 因为引用了一个不再索引中的列。</li>
+<li><code>WHERE rental_date = &#39;2015-05-25&#39; ORDER BY customer_id;</code> 无法组成索引的最左前缀。</li>
+<li><code>WHERE rental_date &gt; &#39;2015-05-25&#39; ORDER BY inventory_id, customer_id;</code> 因为第一列上是范围条件。</li>
+<li><code>WHERE rental_date = &#39;2015-05-25&#39; AND inventory_id IN (1,2) ORDER BY customer_id;</code> 还是范围查询。</li>
+</ol>
+<h1 id="4-索引案例学习"><a href="#4-索引案例学习" class="headerlink" title="4 索引案例学习"></a>4 索引案例学习</h1><h1 id="5-维护索引和表"><a href="#5-维护索引和表" class="headerlink" title="5 维护索引和表"></a>5 维护索引和表</h1><h1 id="6-总结"><a href="#6-总结" class="headerlink" title="6 总结"></a>6 总结</h1>
       
     </div>
     
@@ -554,13 +588,13 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://www.liwenguang.cn/2017/11/19/graphic2cryptography/7.html/" title="七、单向散列函数（获取消息的“指纹”）">http://www.liwenguang.cn/2017/11/19/graphic2cryptography/7.html/</a>
+    <a href="http://www.liwenguang.cn/2017/12/28/high_performance_MySQL/5.html/" title="五、创建高性能的索引">http://www.liwenguang.cn/2017/12/28/high_performance_MySQL/5.html/</a>
   </li>
   <li class="post-copyright-date">
-      <strong>发布时间：</strong>2017年11月19日 - 15时11分
+      <strong>发布时间：</strong>2017年12月28日 - 00时12分
   </li>
   <li class="post-copyright-date">
-      <strong>最后更新时间：</strong>2017年11月19日 - 23时11分
+      <strong>最后更新时间：</strong>2017年12月28日 - 00时12分
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -582,8 +616,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/18/graphic2cryptography/6.html/" rel="next" title="六、混合密码系统">
-                <i class="fa fa-chevron-left"></i> 六、混合密码系统
+              <a href="/2017/12/26/netty_in_action/1.html/" rel="next" title="Netty实战笔记">
+                <i class="fa fa-chevron-left"></i> Netty实战笔记
               </a>
             
           </div>
@@ -592,8 +626,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/11/19/graphic2cryptography/8.html/" rel="prev" title="八、消息认证码">
-                八、消息认证码 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/12/28/current/1.html/" rel="prev" title="阻塞队列的低版本实现">
+                阻塞队列的低版本实现 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -766,7 +800,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-本章概要"><span class="nav-text">1 本章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-什么是单向散列函数"><span class="nav-text">2 什么是单向散列函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-这个文件是不是真的呢"><span class="nav-text">2.1 这个文件是不是真的呢</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-什么是单向散列函数"><span class="nav-text">2.2 什么是单向散列函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-单向散列函数的性质"><span class="nav-text">2.3 单向散列函数的性质</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-根据任意长度的消息计算出固定长度的散列值"><span class="nav-text">1. 根据任意长度的消息计算出固定长度的散列值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-能够快速计算出散列值"><span class="nav-text">2.能够快速计算出散列值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-消息不同散列值也不同"><span class="nav-text">3.消息不同散列值也不同</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-具备单向性"><span class="nav-text">4. 具备单向性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-关于术语"><span class="nav-text">2.4 关于术语</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-单向散列函数的实际应用"><span class="nav-text">3 单向散列函数的实际应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-检测软件是否被篡改"><span class="nav-text">3.1 检测软件是否被篡改</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-基于口令的加密"><span class="nav-text">3.2 基于口令的加密</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-消息认证码"><span class="nav-text">3.3 消息认证码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-数字签名"><span class="nav-text">3.4 数字签名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-伪随机数生成器"><span class="nav-text">3.5 伪随机数生成器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-6-一次性口令"><span class="nav-text">3.6 一次性口令</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-单向散列函数的具体例子"><span class="nav-text">4 单向散列函数的具体例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-MD4、MD5"><span class="nav-text">4.1 MD4、MD5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-SHA-1、SHA-256、SHA-384、SHA-512"><span class="nav-text">4.2 SHA-1、SHA-256、SHA-384、SHA-512</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-RIPEMD-160"><span class="nav-text">4.3 RIPEMD-160</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-AHS（Advanced-Hash-Standard）与-SHA-3"><span class="nav-text">4.4 AHS（Advanced Hash Standard）与 SHA-3</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-单向散列函数-SHA-1"><span class="nav-text">5 单向散列函数 SHA-1</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-对单向散列函数的攻击"><span class="nav-text">6 对单向散列函数的攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-暴力破解（攻击故事-1-）"><span class="nav-text">6.1 暴力破解（攻击故事 1 ）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-2-生日攻击（攻击故事-2-）"><span class="nav-text">6.2 生日攻击（攻击故事 2 ）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-单向散列函数无法解决的问题"><span class="nav-text">7 单向散列函数无法解决的问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-本章小结"><span class="nav-text">8 本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-小测验"><span class="nav-text">9 小测验</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-索引基础"><span class="nav-text">1 索引基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-索引的类型"><span class="nav-text">1.1 索引的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-B-Tree-索引"><span class="nav-text">1. B-Tree 索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-哈希索引"><span class="nav-text">2. 哈希索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-空间数据索引（R-Tree）"><span class="nav-text">3. 空间数据索引（R-Tree）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-全文索引"><span class="nav-text">4. 全文索引</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-索引的优点"><span class="nav-text">2 索引的优点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-高性能索引的索引策略"><span class="nav-text">3 高性能索引的索引策略</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-前缀索引和索引选择性"><span class="nav-text">3.1 前缀索引和索引选择性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-多列索引"><span class="nav-text">3.2 多列索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-选择合适的索引列顺序"><span class="nav-text">3.3 选择合适的索引列顺序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-覆盖索引"><span class="nav-text">3.4 覆盖索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-使用索引扫描来做排序"><span class="nav-text">3.5 使用索引扫描来做排序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-索引案例学习"><span class="nav-text">4 索引案例学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-维护索引和表"><span class="nav-text">5 维护索引和表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-总结"><span class="nav-text">6 总结</span></a></li></ol></div>
             
 
           </div>
@@ -960,9 +994,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://www.liwenguang.cn/2017/11/19/graphic2cryptography/7.html/';
-          this.page.identifier = '2017/11/19/graphic2cryptography/7.html/';
-          this.page.title = '七、单向散列函数（获取消息的“指纹”）';
+          this.page.url = 'http://www.liwenguang.cn/2017/12/28/high_performance_MySQL/5.html/';
+          this.page.identifier = '2017/12/28/high_performance_MySQL/5.html/';
+          this.page.title = '五、创建高性能的索引';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://www-liwenguang-cn.disqus.com/embed.js';
