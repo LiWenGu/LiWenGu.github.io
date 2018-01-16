@@ -131,17 +131,17 @@
 
 
 
-<meta name="description" content="1 本章概要本章中，将以密码软件 PGP（Pretty Good Privacy）为题材，思考一下将前面章节中学习的密码技术进行组合的方法。 2 PGP简介PGP 是 1990 年编写的密码软件。 2.1 PGP 的功能1.对称密码2.公钥密码3.数字签名4.单向散列函数5.证书6.压缩7.文本数据8.大文件的拆分和平和9.钥匙串管理3 生成秘钥对4 加密与解密5 生成和验证数字签名6 生成数字签">
+<meta name="description" content="很多时候，我们没有机会重写代码，又要面临需要提高 Java 应用性能的压力，这种情况下对垃圾收集器的调优就变得至关重要。     Serial 收集器（常用于单 CPU环境）。 Throughput（或者 Parallel）收集器。 Concurrent 收集器（CMS）。 G1 收集器。    1 垃圾收集概述简单来说，垃圾收集由两步构成：查找不再使用的对象，以及释放这些对象所管理的内存。 JV">
 <meta property="og:type" content="article">
-<meta property="og:title" content="十三、PGP——密码技术的完美组合">
-<meta property="og:url" content="http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/index.html">
+<meta property="og:title" content="五、垃圾收集入门">
+<meta property="og:url" content="http://www.liwenguang.cn/2017/01/10/java_performance_the_definitive_guide/5.html/index.html">
 <meta property="og:site_name" content="Hello">
-<meta property="og:description" content="1 本章概要本章中，将以密码软件 PGP（Pretty Good Privacy）为题材，思考一下将前面章节中学习的密码技术进行组合的方法。 2 PGP简介PGP 是 1990 年编写的密码软件。 2.1 PGP 的功能1.对称密码2.公钥密码3.数字签名4.单向散列函数5.证书6.压缩7.文本数据8.大文件的拆分和平和9.钥匙串管理3 生成秘钥对4 加密与解密5 生成和验证数字签名6 生成数字签">
+<meta property="og:description" content="很多时候，我们没有机会重写代码，又要面临需要提高 Java 应用性能的压力，这种情况下对垃圾收集器的调优就变得至关重要。     Serial 收集器（常用于单 CPU环境）。 Throughput（或者 Parallel）收集器。 Concurrent 收集器（CMS）。 G1 收集器。    1 垃圾收集概述简单来说，垃圾收集由两步构成：查找不再使用的对象，以及释放这些对象所管理的内存。 JV">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-07T15:44:00.000Z">
+<meta property="og:updated_time" content="2017-01-16T16:50:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="十三、PGP——密码技术的完美组合">
-<meta name="twitter:description" content="1 本章概要本章中，将以密码软件 PGP（Pretty Good Privacy）为题材，思考一下将前面章节中学习的密码技术进行组合的方法。 2 PGP简介PGP 是 1990 年编写的密码软件。 2.1 PGP 的功能1.对称密码2.公钥密码3.数字签名4.单向散列函数5.证书6.压缩7.文本数据8.大文件的拆分和平和9.钥匙串管理3 生成秘钥对4 加密与解密5 生成和验证数字签名6 生成数字签">
+<meta name="twitter:title" content="五、垃圾收集入门">
+<meta name="twitter:description" content="很多时候，我们没有机会重写代码，又要面临需要提高 Java 应用性能的压力，这种情况下对垃圾收集器的调优就变得至关重要。     Serial 收集器（常用于单 CPU环境）。 Throughput（或者 Parallel）收集器。 Concurrent 收集器（CMS）。 G1 收集器。    1 垃圾收集概述简单来说，垃圾收集由两步构成：查找不再使用的对象，以及释放这些对象所管理的内存。 JV">
 
 
 
@@ -171,13 +171,13 @@
 
 
 
-  <link rel="canonical" href="http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/"/>
+  <link rel="canonical" href="http://www.liwenguang.cn/2017/01/10/java_performance_the_definitive_guide/5.html/"/>
 
 
 
 
 
-  <title>十三、PGP——密码技术的完美组合 | Hello</title>
+  <title>五、垃圾收集入门 | Hello</title>
   
 
 
@@ -338,7 +338,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/">
+    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2017/01/10/java_performance_the_definitive_guide/5.html/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="TheOhters">
@@ -355,7 +355,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">十三、PGP——密码技术的完美组合</h2>
+          <h2 class="post-title" itemprop="name headline">五、垃圾收集入门</h2>
         
 
         <div class="post-meta">
@@ -367,8 +367,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-07T23:44:00+08:00">
-                2017-12-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-10T12:00:00+08:00">
+                2017-01-10
               </time>
             
 
@@ -401,8 +401,8 @@
                 
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/读书笔记/图解密码技术/" itemprop="url" rel="index">
-                    <span itemprop="name">图解密码技术</span>
+                  <a href="/categories/读书笔记/Java-性能权威指南/" itemprop="url" rel="index">
+                    <span itemprop="name">Java 性能权威指南</span>
                   </a>
                 </span>
 
@@ -419,9 +419,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/12/07/graphic2cryptography/13.html/#comments" itemprop="discussionUrl">
+                <a href="/2017/01/10/java_performance_the_definitive_guide/5.html/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/12/07/graphic2cryptography/13.html/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2017/01/10/java_performance_the_definitive_guide/5.html/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -448,7 +448,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  889
+                  3,380
                 </span>
               
 
@@ -464,7 +464,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  3
+                  12
                 </span>
               
             </div>
@@ -485,20 +485,61 @@
       
 
       
-        <h1 id="1-本章概要"><a href="#1-本章概要" class="headerlink" title="1 本章概要"></a>1 本章概要</h1><p>本章中，将以密码软件 PGP（Pretty Good Privacy）为题材，思考一下将前面章节中学习的密码技术进行组合的方法。</p>
-<h1 id="2-PGP简介"><a href="#2-PGP简介" class="headerlink" title="2 PGP简介"></a>2 PGP简介</h1><p>PGP 是 1990 年编写的密码软件。</p>
-<h2 id="2-1-PGP-的功能"><a href="#2-1-PGP-的功能" class="headerlink" title="2.1 PGP 的功能"></a>2.1 PGP 的功能</h2><h3 id="1-对称密码"><a href="#1-对称密码" class="headerlink" title="1.对称密码"></a>1.对称密码</h3><h3 id="2-公钥密码"><a href="#2-公钥密码" class="headerlink" title="2.公钥密码"></a>2.公钥密码</h3><h3 id="3-数字签名"><a href="#3-数字签名" class="headerlink" title="3.数字签名"></a>3.数字签名</h3><h3 id="4-单向散列函数"><a href="#4-单向散列函数" class="headerlink" title="4.单向散列函数"></a>4.单向散列函数</h3><h3 id="5-证书"><a href="#5-证书" class="headerlink" title="5.证书"></a>5.证书</h3><h3 id="6-压缩"><a href="#6-压缩" class="headerlink" title="6.压缩"></a>6.压缩</h3><h3 id="7-文本数据"><a href="#7-文本数据" class="headerlink" title="7.文本数据"></a>7.文本数据</h3><h3 id="8-大文件的拆分和平和"><a href="#8-大文件的拆分和平和" class="headerlink" title="8.大文件的拆分和平和"></a>8.大文件的拆分和平和</h3><h3 id="9-钥匙串管理"><a href="#9-钥匙串管理" class="headerlink" title="9.钥匙串管理"></a>9.钥匙串管理</h3><h1 id="3-生成秘钥对"><a href="#3-生成秘钥对" class="headerlink" title="3 生成秘钥对"></a>3 生成秘钥对</h1><h1 id="4-加密与解密"><a href="#4-加密与解密" class="headerlink" title="4 加密与解密"></a>4 加密与解密</h1><h1 id="5-生成和验证数字签名"><a href="#5-生成和验证数字签名" class="headerlink" title="5 生成和验证数字签名"></a>5 生成和验证数字签名</h1><h1 id="6-生成数字签名并加密以及解密并验证数字签名"><a href="#6-生成数字签名并加密以及解密并验证数字签名" class="headerlink" title="6 生成数字签名并加密以及解密并验证数字签名"></a>6 生成数字签名并加密以及解密并验证数字签名</h1><h1 id="7-信任网"><a href="#7-信任网" class="headerlink" title="7 信任网"></a>7 信任网</h1><h2 id="7-1-公钥合法性"><a href="#7-1-公钥合法性" class="headerlink" title="7.1 公钥合法性"></a>7.1 公钥合法性</h2><p>在使用 PGP 时，确认自己所得到的公钥是否真的属于正确的人（公钥合法性）是非常重要的，因为公钥可能会通过中间人攻击被替换（参 5.7.4节）。<br>第十章介绍的证书就是确认公钥合法性的方法之一。证书就是由认证机构对公钥所施加的数字签名，通过验证这个数字签名就可以确认公钥合法性。<br>然而，PGP 中却没有使用认证机构，而是采用了一种叫<strong>信任网</strong>（web of trust）的方法。在这种方法中， PGP 用户会<strong>互相对对方的公钥进行数字签名</strong>。<br>信任网的要点是“不依赖认证机构，而是建立每个人之间的信任关系”。换言之，就是能够自己决定要信任哪些公钥。<br>下面介绍 PGP 的信任网是如何建立起来的。</p>
-<h3 id="1-场景1：通过自己的数字签名进行确认"><a href="#1-场景1：通过自己的数字签名进行确认" class="headerlink" title="1.场景1：通过自己的数字签名进行确认"></a>1.场景1：通过自己的数字签名进行确认</h3><p>Alice 和 Bob 约会，在告别的时候， Bob 给了 Alice 一张存储卡，并说“这是我的公钥”。<br>Alice 回到家中，从存储卡中取出 Bob 的公钥，并存放到自己所使用的 PGP 的公钥串中（导入公钥）。由于 Alice 确信刚刚导入的公钥确实是属于 Bob 本人的，因此 Alice 对这个公钥加上了自己的数字签名。<br>对 Bob 的公钥加上数字签名，就相当于 Alice 生命“这个公钥属于 Bob 本人（即这个公钥是合法的）”。<br>随后，Alice 收到了来自 Bob 的邮件，由于这封邮件带有 Bob 的数字签名，因此 Alice 想用 PGP 来验证 Bob 的数字签名。 PGP 将执行下面这些操作：  </p>
+        <p>很多时候，我们没有机会重写代码，又要面临需要提高 Java 应用性能的压力，这种情况下对垃圾收集器的调优就变得至关重要。  </p>
+<blockquote>
 <ol>
-<li>为了验证 Bob 的数字签名， PGP 需要从 Alice 的公钥串中寻找 Bob 的公钥。</li>
-<li>Alice 的公钥串中包含 Bob 的公钥，因为前几天约会之后 Alice 导入了 Bob 的公钥。</li>
-<li>PGP 发现 Bob 的公钥带有 Alice 的数字签名。</li>
-<li>为了验证 Alice 的数字签名，PGP 需要从 Alice 的公钥串中寻找 Alice 自己的公钥。</li>
-<li>PGP 使用 Alice 的公钥对 Bob 的公钥上的 Alice 的数字签名进行验证。如果验证成功，则可以确认这的确就是 Bob 的公钥。</li>
-<li>PGP 使用合法的 Bob 的公钥对邮件上附带的 Bob 的数字签名进行验证。</li>
+<li>Serial 收集器（常用于单 CPU环境）。</li>
+<li>Throughput（或者 Parallel）收集器。</li>
+<li>Concurrent 收集器（CMS）。</li>
+<li>G1 收集器。</li>
 </ol>
-<h3 id="2-场景2：通过自己完全信任的人的数字签名进行确认"><a href="#2-场景2：通过自己完全信任的人的数字签名进行确认" class="headerlink" title="2.场景2：通过自己完全信任的人的数字签名进行确认"></a>2.场景2：通过自己完全信任的人的数字签名进行确认</h3><p>Alice 有一个叫 Trent 的男朋友。在 Alice 的公钥串中，也包含带有 Alice 的数字签名的 Trent 的公钥。 Alice 非常信任 Trent ，她想：<strong>经过他签名的公钥一定是合法的</strong>。<br>假设 Alice 收到了一封来自 Carrol 的邮件</p>
-<h1 id="8-本章小结"><a href="#8-本章小结" class="headerlink" title="8 本章小结"></a>8 本章小结</h1><h1 id="9-小测验"><a href="#9-小测验" class="headerlink" title="9 小测验"></a>9 小测验</h1>
+</blockquote>
+<hr>
+<h1 id="1-垃圾收集概述"><a href="#1-垃圾收集概述" class="headerlink" title="1 垃圾收集概述"></a>1 垃圾收集概述</h1><p>简单来说，垃圾收集由两步构成：查找不再使用的对象，以及释放这些对象所管理的内存。 JVM 从查找不再使用的对象（垃圾对象）入手。有时，这也被称为查找不再有任何对象引用的对象（暗指采用“引用计数”的方式统计对象引用）。  </p>
+<p>例，如下场景：一个程序要分配大小为 1000 字节的数组，紧接着又分配一个大小为 24 字节的数组，并在一个循环中持续进行这样的分配。最终程序会耗尽整个堆，结果如下图的<strong>第一行</strong>所示：堆空间被沾满，分配的数组间隔地分布于整个堆内：<br>![][1]<br>堆内存用尽会触发 JVM 回收不再使用的数组空间。假设所有大小为 24 字节的数组都不再被使用，而大小为 1000 字节的数组还继续使用，这样就形成了上图的<strong>第二行</strong>的场景。<br>虽然堆内部有足够的空闲空间，却找不到任何一个大于 24 字节的连续空间，除非 JVM 移动所有大小为 1000 字节的数组，让它们连续存储，把空闲的空间整合成一块更大的连续空间，供其他的内存分配使用（如上图的<strong>第三行</strong>）。  </p>
+<p>而垃圾收集的性能就是由这些基本操作所决定的：找到不再使用的对象、回收它们使用的内存、对堆的内存布局进行压缩整理。完成这些操作时不同的收集器采用了不同的方法，这也是不同垃圾收起表现出不同性能特征的原因。<br>通常垃圾收集器自身往往也是多线程的。接下来的讨论中，我们从逻辑上将县城分成了两组，分别是应用程序线程和处理垃圾收集的线程。垃圾收集器回收对象，或者在内存中移动对象时，必须确保应用程序线程不再继续使用这些对象。这一点在收集器移动对象时尤其重要：<strong>在操作过程中，对象的内存地址会发生变化，因此这个过程中任何应用线程都不应再访问该对象。</strong>  </p>
+<p>所有应用线程都停止运行所产生的停顿被称为时空停顿（stop-the-world）。通常这些停顿对应用的性能影响对打，调优垃圾收集时，尽量减少这种停顿是最为关键的考量因素。</p>
+<h2 id="1-1-分代垃圾收集器"><a href="#1-1-分代垃圾收集器" class="headerlink" title="1.1 分代垃圾收集器"></a>1.1 分代垃圾收集器</h2><p>虽然实现的细节千差万别，但所有的垃圾收集器都遵循了同一个方式，即根据情况将堆划分成不同的代（Generation）。这些代被称为“老年代”（Old Generation 或 Tenured Generation）和“新生代”（Young Generation）。新生代又被进一步划分为不同的区段，分别称为 Eden 空间和 survivor 空间（不过 Eden 有时会被错误地用于指代整个新生代）。  </p>
+<p>新生代被填满时，垃圾收集器会暂停所有的应用线程，回收新生代空间。不再使用的对象会被回收，仍然在使用的对象会被移动到其它地方。这种操作被称为 Minor GC。<br>采用这种设计有两个性能上的优势：  </p>
+<ol>
+<li>新生代仅是堆的一部分，这意味着应用线程停顿的时间更短。但是更加频繁。</li>
+<li>对象分配与 Eden 空间，垃圾收集时，新生代空间被清空，Eden 空间的对象要么被移走，要么移动到另一个 Survivor 空间，要么被移动到老年代。这就相当于自动的进行了一次压缩整理。  </li>
+</ol>
+<p>所有的垃圾收集算法在对新生代回收时都存在“时空停顿”现象。  </p>
+<p>JVM 需要找出老年代中不再使用的对象，并对它们进行回收。而这便是垃圾收集算法差异最大的地方。简单的：停掉所有的应用线程，找出不再使用的对象，对其进行回收，接着对对空间进行整理。这个过程称为 Full GC。这通常会导致应用线程长时间的停顿。  </p>
+<p>另，通过更复杂的计算，我们还有可能在应用线程运行的同时找出不再使用的对象；<br>CMS 和 G1 收集器就是通过这种方式进行垃圾收集的。由于它们不需要停止应用线程就能找出不再用的对象， CMS 和 G1 收集器被称为 Concurrent 垃圾收集器。同时，由于它们将停止应用程序的可能降到了最小，也被称为低停顿（Low-Pause）收集器。Concurrent 收集器也使用各种不同的方法对老年代空间进行压缩。  </p>
+<p>使用 CMS 和 G1 收集器时，应用程序经历的停顿会更少（也更短），代价是会消耗更多的 CPU。</p>
+<blockquote>
+<ol>
+<li>所有的 GC 算法都将堆划分成了老年代和新生代。</li>
+<li>所有的 GC 算法在清理新生代对象时，都使用了“时空停顿”（stop-the-world）方式的垃圾收集方法。</li>
+</ol>
+</blockquote>
+<h2 id="1-2-GC-算法"><a href="#1-2-GC-算法" class="headerlink" title="1.2 GC 算法"></a>1.2 GC 算法</h2><p>JVM 提供了以下四种不同的垃圾收集算法。</p>
+<h3 id="1-Serial-垃圾收集器"><a href="#1-Serial-垃圾收集器" class="headerlink" title="1.Serial 垃圾收集器"></a>1.Serial 垃圾收集器</h3><p>它是单线程清理堆的内容。使用 Serial 垃圾收集器，无论是进行 Minor GC 还是 Full GC ，清理堆空间时，所有的应用线程都会被暂停。</p>
+<h3 id="2-Throughput-垃圾收集器"><a href="#2-Throughput-垃圾收集器" class="headerlink" title="2.Throughput 垃圾收集器"></a>2.Throughput 垃圾收集器</h3><p>Throughput 收集器是 Server 级虚拟机（多 CPU）的默认收集器。<br>使用多线程回收新生代空间， Minoc GC 的速度比使用 Serial 收集器快得多。处理老年代在 JDK7 之后默认也是多线程。因为其使用多线程，也被称为 Parallel 收集器。<br>在 Minor GC 和 Full GC 时会暂停所有的应用线程，同时在 Full GC 过程中会对老年代空间进行压缩整理。</p>
+<h3 id="3-CMS-收集器"><a href="#3-CMS-收集器" class="headerlink" title="3.CMS 收集器"></a>3.CMS 收集器</h3><p>CMS 收集器设计的初衷是为了消除 Throughput 收集器和 Serial 收集器 Full GC 周期中的长时间停顿。 CMS 收集器在 Minor GC 时会暂停所有的应用线程，并以多线程的方式进行垃圾回收。<br>它不使用 Throughput 的收集算法（-XX:+UseParallelGC），而是用新的算法（-XX:+UseParNewGC）来收集新生代对象。<br>它在 Full GC 不再暂停应用线程，而是使用若干个后台线程定期地对老年代空间进行扫描，及时回收其中不再使用的对象。这种算法使 CMS 成为一个低延迟的收集器：应用线程只在 Minor GC 以后后台线程扫描老年代时发生极其短暂的停顿。<br>代价是额外的 CPU 使用率。而且后台线程不再进行任何压缩整理的工作，这意味着逐渐碎片化，碎片化一定程度， CMS 会降级为 Serial 收集器：暂停所有应用线程，使用单线程回收。之后再恢复到并发回收。（这种思想在写锁降级为读锁也有体现）。</p>
+<h3 id="4-G1-收集器"><a href="#4-G1-收集器" class="headerlink" title="4.G1 收集器"></a>4.G1 收集器</h3><p>G1 垃圾收集器（垃圾优先收集器）的设计初衷是为了尽量缩短处理超大堆（大于4 GB）时产生的停顿。G1 收集算法将老年堆划分为若干个区域（Region），不过它依旧属于分代收集器。这些区域中的一部分包含新生代，新生代的垃圾收集仍然采用暂停所有应用线程的方法，将存活对象移动到老年代或者 Survivor 空间，这也是多线程完成的。  </p>
+<p>G1 收集器属于 Concurrent 收集器：老年代的垃圾收集工作由后台线程完成，大多数的工作不需要暂停应用线程。由于老年代被划分到不同的区域，G1 收集器通过将对象从一个区域复制到另一个区域，完成对象的清理工作，这也意味着在正常的处理过程中，G1 收集器实现了堆的压缩整理（至少是部分的整理）。因此，使用G1 收集器的堆不大容易发生碎片化——虽然这种问题无法避免。  </p>
+<blockquote>
+<p>通常情况下垃圾收集是由 JVM 在需要的时候触发：新生代用尽时会触发 Minor GC，老年代用尽时会触发 Full GC，或者堆空间即将填满时会触发 Concurrent 垃圾收集。<br><code>System.gc()</code> 让应用程序强制进行 GC， Full GC。应用程序线程会因此而停顿相当长的一段时间。同时，调用这个方法也不会让应用程序更高效，它会让 GC 更早的开始，但那实际只是将性能的影响往后推迟而已。</p>
+</blockquote>
+<h1 id="2-GC-调优基础"><a href="#2-GC-调优基础" class="headerlink" title="2 GC 调优基础"></a>2 GC 调优基础</h1><h2 id="2-1-调整堆的大小"><a href="#2-1-调整堆的大小" class="headerlink" title="2.1 调整堆的大小"></a>2.1 调整堆的大小</h2><p>如果分配的堆过于小，程序的大部分时间可能都消耗在 GC 上。<br>如果分配的过于大也不行，GC 停顿消耗的时间取决于堆的大小，如果增大堆的空间，停顿的持续时间也会变长，这种情况下，停顿的频率会变得更少，但是它们持续的时间会让程序的整体性能变慢。还有一个风险是，操作系统使用虚拟内存机制管理机器的物理内存。一台机器可能有 8G 的物理内存，不过操作系统可能让你感觉有更多的可用内存。虚拟内存的数量取决于操作系统的设置，譬如操作系统可能让你感觉它的内存达到了 16G 。操作系统通过名为“交换”（swapping）（或者称之为分页，虽然两者技术存在差异）。你可以载入需要 16G 内存的应用程序，操作系统在需要时会将程序运行时不活跃的数据由内存复制到磁盘。再次需要这部分内存的内容时，操作系统再将它们由磁盘重新载入到内存（为了腾出空间，通常它会先将另一部分内存的内容复制到磁盘）。  </p>
+<p>系统中运行着大量不同的应用程序时，这个流程工作的很顺畅，因为大多数的应用程序不会同时处于活跃状态。但是，对于 Java 应用，它工作得并不那么好。如果一个 Java 应用使用了这个系统上大约 12G 的堆，操作系统可能在 RAM 上分配了 8G 的堆空间，另外 4G 的空间存在于磁盘。这样操作系统需要将相当一部分的数据由磁盘交换到内存，而发生 Full GC 时，因为 JVM 必须访问整个堆的内容，如果系统发生内存交换，停顿时间会更长。  </p>
+<p>堆的大小由 2 个参数值控制：初始值（-Xms）、最大值（-Xmx）。</p>
+<h2 id="2-2-代空间的调整"><a href="#2-2-代空间的调整" class="headerlink" title="2.2 代空间的调整"></a>2.2 代空间的调整</h2><p>一旦堆的大小确定下来，JVM 就需要决定分配多少堆给新生代空间，多少给老年代空间。<br>必须清楚：如果新生代分配得比较大，垃圾收集发生的频率就比较低，从新生代晋升到老年代的对象也更少。但是老年代相对比较小，容易填满，会更频繁的触发 Full GC。  </p>
+<ol>
+<li>-XX:NewRatio=N：设置新生代与老年代的空间占用比率</li>
+<li>-XX:NewSize=N：设置新生代空间的初始大小</li>
+<li>-XX:MaxNewSize=N:设置新生代空间的最大大小</li>
+<li>-XmnN：将 NewSize 和 MaxNewSize 设定为同一个值的快捷方法。</li>
+</ol>
+<h2 id="2-3-永久代和元空间的调整"><a href="#2-3-永久代和元空间的调整" class="headerlink" title="2.3 永久代和元空间的调整"></a>2.3 永久代和元空间的调整</h2><p>JVM 载入类的时候，它需要记录这些类的元数据。这部分数据被保存在一个单独的堆空间中。在 Java7 里，这部分空间被称为永久代（Permgen），在 Java8 中，它们被称为元空间（Metaspace）。<br>永久代和元空间并不完全一样。Java7 中永久代还保存了一些与类数据无关的杂项对象；这些对象在 Java8 中被挪到了普通的堆空间内。它们保存的信息只对编译器或者 JVM 的运行时有用。<br>通过 -XX:PermSize=N、-XX:MaxPerSize=N 来调整永久代大小。<br>通过 -XX:MetaspaceSize=N、-XX:MaxMetaspaceSize=N 来调整元空间的大小。  </p>
+<p>调整这些区间会触发 Full GC ，所以是一种代价昂贵的操作。如果程序在启动时发生大量的 Full GC（因为需要载入数量巨大的类），通常都是由于永久代或者元空间发生了大小调整。</p>
+<h1 id="3-垃圾回收工具"><a href="#3-垃圾回收工具" class="headerlink" title="3 垃圾回收工具"></a>3 垃圾回收工具</h1><p>开启 GC 的日志功能：使用 -verbose:gc 或 -XX:+PrintGC 的任意一个能创建基本的 GC 日志。使用 -XX:+PrintGCDetails 创建更详细的 GC 日志。</p>
+<h1 id="4-小结"><a href="#4-小结" class="headerlink" title="4 小结"></a>4 小结</h1><p>多说无益，多尝试。</p>
+<p>![1]: <a href="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/Java_performance_definitive_guide/5_1.png" target="_blank" rel="external">http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/Java_performance_definitive_guide/5_1.png</a></p>
+
       
     </div>
     
@@ -518,13 +559,13 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/" title="十三、PGP——密码技术的完美组合">http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/</a>
+    <a href="http://www.liwenguang.cn/2017/01/10/java_performance_the_definitive_guide/5.html/" title="五、垃圾收集入门">http://www.liwenguang.cn/2017/01/10/java_performance_the_definitive_guide/5.html/</a>
   </li>
   <li class="post-copyright-date">
-      <strong>发布时间：</strong>2017年12月7日 - 23时12分
+      <strong>发布时间：</strong>2017年1月10日 - 12时01分
   </li>
   <li class="post-copyright-date">
-      <strong>最后更新时间：</strong>2017年12月7日 - 23时12分
+      <strong>最后更新时间：</strong>2017年1月17日 - 00时01分
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -546,8 +587,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/06/graphic2cryptography/12.html/" rel="next" title="十二、随机数——不可预测性的源泉">
-                <i class="fa fa-chevron-left"></i> 十二、随机数——不可预测性的源泉
+              <a href="/2017/01/10/java_performance_the_definitive_guide/3_4.html/" rel="next" title="三四、Java 性能调优工具箱|JIT编译器：概述">
+                <i class="fa fa-chevron-left"></i> 三四、Java 性能调优工具箱|JIT编译器：概述
               </a>
             
           </div>
@@ -556,8 +597,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/12/13/talker/paddington.html/" rel="prev" title="电影《帕丁顿熊》有感">
-                电影《帕丁顿熊》有感 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/11/07/concurrent-art/4.html/" rel="prev" title="四、Java并发编程基础">
+                四、Java并发编程基础 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -730,7 +771,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-本章概要"><span class="nav-text">1 本章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-PGP简介"><span class="nav-text">2 PGP简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-PGP-的功能"><span class="nav-text">2.1 PGP 的功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-对称密码"><span class="nav-text">1.对称密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-公钥密码"><span class="nav-text">2.公钥密码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-数字签名"><span class="nav-text">3.数字签名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-单向散列函数"><span class="nav-text">4.单向散列函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-证书"><span class="nav-text">5.证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-压缩"><span class="nav-text">6.压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-文本数据"><span class="nav-text">7.文本数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-大文件的拆分和平和"><span class="nav-text">8.大文件的拆分和平和</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-钥匙串管理"><span class="nav-text">9.钥匙串管理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-生成秘钥对"><span class="nav-text">3 生成秘钥对</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-加密与解密"><span class="nav-text">4 加密与解密</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-生成和验证数字签名"><span class="nav-text">5 生成和验证数字签名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-生成数字签名并加密以及解密并验证数字签名"><span class="nav-text">6 生成数字签名并加密以及解密并验证数字签名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-信任网"><span class="nav-text">7 信任网</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-公钥合法性"><span class="nav-text">7.1 公钥合法性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-场景1：通过自己的数字签名进行确认"><span class="nav-text">1.场景1：通过自己的数字签名进行确认</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-场景2：通过自己完全信任的人的数字签名进行确认"><span class="nav-text">2.场景2：通过自己完全信任的人的数字签名进行确认</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-本章小结"><span class="nav-text">8 本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-小测验"><span class="nav-text">9 小测验</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-垃圾收集概述"><span class="nav-text">1 垃圾收集概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-分代垃圾收集器"><span class="nav-text">1.1 分代垃圾收集器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-GC-算法"><span class="nav-text">1.2 GC 算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Serial-垃圾收集器"><span class="nav-text">1.Serial 垃圾收集器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Throughput-垃圾收集器"><span class="nav-text">2.Throughput 垃圾收集器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-CMS-收集器"><span class="nav-text">3.CMS 收集器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-G1-收集器"><span class="nav-text">4.G1 收集器</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-GC-调优基础"><span class="nav-text">2 GC 调优基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-调整堆的大小"><span class="nav-text">2.1 调整堆的大小</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-代空间的调整"><span class="nav-text">2.2 代空间的调整</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-永久代和元空间的调整"><span class="nav-text">2.3 永久代和元空间的调整</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-垃圾回收工具"><span class="nav-text">3 垃圾回收工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-小结"><span class="nav-text">4 小结</span></a></li></ol></div>
             
 
           </div>
@@ -924,9 +965,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/';
-          this.page.identifier = '2017/12/07/graphic2cryptography/13.html/';
-          this.page.title = '十三、PGP——密码技术的完美组合';
+          this.page.url = 'http://www.liwenguang.cn/2017/01/10/java_performance_the_definitive_guide/5.html/';
+          this.page.identifier = '2017/01/10/java_performance_the_definitive_guide/5.html/';
+          this.page.title = '五、垃圾收集入门';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://www-liwenguang-cn.disqus.com/embed.js';
