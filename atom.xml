@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.liwenguang.cn/"/>
-  <updated>2018-12-12T10:37:00.000Z</updated>
+  <updated>2018-04-12T17:00:00.000Z</updated>
   <id>http://www.liwenguang.cn/</id>
   
   <author>
@@ -17,32 +17,7 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>一、Jboot_1</title>
-    <link href="http://www.liwenguang.cn/2018/12/10/tech/%E4%B8%80%E3%80%81Jboot_1.html/"/>
-    <id>http://www.liwenguang.cn/2018/12/10/tech/一、Jboot_1.html/</id>
-    <published>2018-12-10T04:00:00.000Z</published>
-    <updated>2018-12-12T10:37:00.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Jboot的入门demo —— JbooFly。</p><hr><h1 id="1-项目组成"><a href="#1-项目组成" class="headerlink" title="1 项目组成"></a>1 项目组成</h1><p>后端基础框架：Jboot1.2.7<br>前端基础框架：Fly Template 社区模版<br>界面渲染框架：JFinal Template Engine</p><h1 id="2-数据库"><a href="#2-数据库" class="headerlink" title="2 数据库"></a>2 数据库</h1><p>使用 Mysql，一共有七张表，暂时使用的只有六张表，即文章分类表、评论表、文章表、用户表、用户行为表、用户收藏表。用户消息表没有用上。</p><h1 id="3-前端页面"><a href="#3-前端页面" class="headerlink" title="3 前端页面"></a>3 前端页面</h1><p>1. 社区首页：外层架子（_layout.html），分类导航（_navigation.html），置顶文章（_top_posts.html），内容列表（content()），右边四个小页面（_signin_panel/_recommend/_hot_posts/_links）</p><ol><li>个人页面：外层架子，左侧导航（_user_left_menu.html），我的主页（index.html），我的帖子（post.html/collection.html），基本设置（setting.html），我的消息（message.html），账号激活（activate.html）</li></ol><h1 id="4-定时任务"><a href="#4-定时任务" class="headerlink" title="4 定时任务"></a>4 定时任务</h1><ol><li><p>文章浏览量，一分钟一次。使用了 <code>ConcurrentHashMap</code> + <code>AtomicLong</code> 的方式处理线程问题。最后更新缓存（默认缓存开启并有五种）：  </p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * name: io.jboot.core.cache.JbootCacheConfig</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TYPE_EHCACHE = <span class="string">"ehcache"</span>;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TYPE_REDIS = <span class="string">"redis"</span>;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TYPE_EHREDIS = <span class="string">"ehredis"</span>;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TYPE_NONE_CACHE = <span class="string">"none"</span>;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TYPE_J2CACHE = <span class="string">"j2cache"</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keyword">private</span> String type = TYPE_EHCACHE;</div><div class="line">    ......</div></pre></td></tr></table></figure></li><li><p>文章评论量，和文章浏览量一样的业务逻辑。</p></li></ol><h1 id="5-Caffeine-缓存使用"><a href="#5-Caffeine-缓存使用" class="headerlink" title="5 Caffeine 缓存使用"></a>5 Caffeine 缓存使用</h1><ol><li>签到缓存：SigninManager，缓存用户以及签到时间的映射关系，过期时间为两小时。</li><li>消息缓存：MessageManager，作者未开发完，猜测是缓存用户以及用户未读消息的映射关系。</li></ol><h1 id="6-拦截器"><a href="#6-拦截器" class="headerlink" title="6 拦截器"></a>6 拦截器</h1><ol><li>全局强制拦截器 UserIntercepor ，每次请求服务，都会使用解密算法查看存储在 cookie 中的用户信息，并获取该用户的签到缓存以及消息缓存信息。</li><li>ajax api 强制拦截器 ApiNeedUser。</li><li>页面强制拦截器 NeedUser。</li></ol><h1 id="7-本地事件"><a href="#7-本地事件" class="headerlink" title="7 本地事件"></a>7 本地事件</h1><ol><li>用户注册事件监听 UserRegister ，作者未开发完，猜测应该是用户注册后发送邮件或者验证码，抑或是通知版主？</li></ol><h1 id="8-JFinal"><a href="#8-JFinal" class="headerlink" title="8 JFinal"></a>8 JFinal</h1><ol><li>JFinal Template Engine，查看 JFinal 自定义指令文档即可。主要是 directive 下的文件。</li></ol><h1 id="9-目的"><a href="#9-目的" class="headerlink" title="9 目的"></a>9 目的</h1><p>猜测应该是 JBoot 论坛。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;Jboot的入门demo —— JbooFly。&lt;/p&gt;
-&lt;hr&gt;
-&lt;h1 id=&quot;1-项目组成&quot;&gt;&lt;a href=&quot;#1-项目组成&quot; class=&quot;headerlink&quot; title=&quot;1 项目组成&quot;&gt;&lt;/a&gt;1 项目组成&lt;/h1&gt;&lt;p&gt;后端基础框架：Jboot1.2.
-      
-    
-    </summary>
-    
-      <category term="小结" scheme="http://www.liwenguang.cn/categories/%E5%B0%8F%E7%BB%93/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>一、ConcurrentHashMap</title>
+    <title>ConcurrentHashMap</title>
     <link href="http://www.liwenguang.cn/2018/04/12/A2B_Java/1_ConcurrentHashMap.html/"/>
     <id>http://www.liwenguang.cn/2018/04/12/A2B_Java/1_ConcurrentHashMap.html/</id>
     <published>2018-04-12T15:00:00.000Z</published>
@@ -65,7 +40,7 @@
   </entry>
   
   <entry>
-    <title>二、Servlet_Filter_Listener</title>
+    <title>Servlet_Filter_Listener</title>
     <link href="http://www.liwenguang.cn/2018/04/12/A2B_Java/2_Servlet_Filter_Listener.html/"/>
     <id>http://www.liwenguang.cn/2018/04/12/A2B_Java/2_Servlet_Filter_Listener.html/</id>
     <published>2018-04-12T15:00:00.000Z</published>
@@ -88,9 +63,34 @@
   </entry>
   
   <entry>
-    <title>Jboot2</title>
-    <link href="http://www.liwenguang.cn/2018/01/10/tech/Jboot2.html/"/>
-    <id>http://www.liwenguang.cn/2018/01/10/tech/Jboot2.html/</id>
+    <title>Jboot_1</title>
+    <link href="http://www.liwenguang.cn/2018/01/10/tech/Jboot_1.html/"/>
+    <id>http://www.liwenguang.cn/2018/01/10/tech/Jboot_1.html/</id>
+    <published>2018-01-10T04:00:00.000Z</published>
+    <updated>2018-01-12T10:37:00.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Jboot的入门demo —— JbooFly。</p><hr><h1 id="1-项目组成"><a href="#1-项目组成" class="headerlink" title="1 项目组成"></a>1 项目组成</h1><p>后端基础框架：Jboot1.2.7<br>前端基础框架：Fly Template 社区模版<br>界面渲染框架：JFinal Template Engine</p><h1 id="2-数据库"><a href="#2-数据库" class="headerlink" title="2 数据库"></a>2 数据库</h1><p>使用 Mysql，一共有七张表，暂时使用的只有六张表，即文章分类表、评论表、文章表、用户表、用户行为表、用户收藏表。用户消息表没有用上。</p><h1 id="3-前端页面"><a href="#3-前端页面" class="headerlink" title="3 前端页面"></a>3 前端页面</h1><p>1. 社区首页：外层架子（_layout.html），分类导航（_navigation.html），置顶文章（_top_posts.html），内容列表（content()），右边四个小页面（_signin_panel/_recommend/_hot_posts/_links）</p><ol><li>个人页面：外层架子，左侧导航（_user_left_menu.html），我的主页（index.html），我的帖子（post.html/collection.html），基本设置（setting.html），我的消息（message.html），账号激活（activate.html）</li></ol><h1 id="4-定时任务"><a href="#4-定时任务" class="headerlink" title="4 定时任务"></a>4 定时任务</h1><ol><li><p>文章浏览量，一分钟一次。使用了 <code>ConcurrentHashMap</code> + <code>AtomicLong</code> 的方式处理线程问题。最后更新缓存（默认缓存开启并有五种）：  </p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * name: io.jboot.core.cache.JbootCacheConfig</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TYPE_EHCACHE = <span class="string">"ehcache"</span>;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TYPE_REDIS = <span class="string">"redis"</span>;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TYPE_EHREDIS = <span class="string">"ehredis"</span>;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TYPE_NONE_CACHE = <span class="string">"none"</span>;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TYPE_J2CACHE = <span class="string">"j2cache"</span>;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="keyword">private</span> String type = TYPE_EHCACHE;</div><div class="line">    ......</div></pre></td></tr></table></figure></li><li><p>文章评论量，和文章浏览量一样的业务逻辑。</p></li></ol><h1 id="5-Caffeine-缓存使用"><a href="#5-Caffeine-缓存使用" class="headerlink" title="5 Caffeine 缓存使用"></a>5 Caffeine 缓存使用</h1><ol><li>签到缓存：SigninManager，缓存用户以及签到时间的映射关系，过期时间为两小时。</li><li>消息缓存：MessageManager，作者未开发完，猜测是缓存用户以及用户未读消息的映射关系。</li></ol><h1 id="6-拦截器"><a href="#6-拦截器" class="headerlink" title="6 拦截器"></a>6 拦截器</h1><ol><li>全局强制拦截器 UserIntercepor ，每次请求服务，都会使用解密算法查看存储在 cookie 中的用户信息，并获取该用户的签到缓存以及消息缓存信息。</li><li>ajax api 强制拦截器 ApiNeedUser。</li><li>页面强制拦截器 NeedUser。</li></ol><h1 id="7-本地事件"><a href="#7-本地事件" class="headerlink" title="7 本地事件"></a>7 本地事件</h1><ol><li>用户注册事件监听 UserRegister ，作者未开发完，猜测应该是用户注册后发送邮件或者验证码，抑或是通知版主？</li></ol><h1 id="8-JFinal"><a href="#8-JFinal" class="headerlink" title="8 JFinal"></a>8 JFinal</h1><ol><li>JFinal Template Engine，查看 JFinal 自定义指令文档即可。主要是 directive 下的文件。</li></ol><h1 id="9-目的"><a href="#9-目的" class="headerlink" title="9 目的"></a>9 目的</h1><p>猜测应该是 JBoot 论坛。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;Jboot的入门demo —— JbooFly。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h1 id=&quot;1-项目组成&quot;&gt;&lt;a href=&quot;#1-项目组成&quot; class=&quot;headerlink&quot; title=&quot;1 项目组成&quot;&gt;&lt;/a&gt;1 项目组成&lt;/h1&gt;&lt;p&gt;后端基础框架：Jboot1.2.
+      
+    
+    </summary>
+    
+      <category term="小结" scheme="http://www.liwenguang.cn/categories/%E5%B0%8F%E7%BB%93/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Jboot_2</title>
+    <link href="http://www.liwenguang.cn/2018/01/10/tech/Jboot_2.html/"/>
+    <id>http://www.liwenguang.cn/2018/01/10/tech/Jboot_2.html/</id>
     <published>2018-01-10T04:00:00.000Z</published>
     <updated>2018-01-12T10:37:00.000Z</updated>
     
