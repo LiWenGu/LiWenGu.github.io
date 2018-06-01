@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Monda:300,300italic,400,400italic,700,700italic|Monda:300,300italic,400,400italic,700,700italic|Monda:300,300italic,400,400italic,700,700italic|Monda:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/uploads/favicon.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/uploads/favicon.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/uploads/favicon.ico?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Hello" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="分布式服务框架上线运行时都是集群组网，这意味着急群众存在某个服务的多实例部署，消费者如何从服务列表中选择合适的服务提供者进行调用，这就涉及到服务路由。 1 透明化路由1.1 基于服务注册中心的订阅发布在分布式服务框架中，服务注册中心用于存储服务提供者地址信息、服务发布相关的属性信息，消费者通过主动查询和被动通知的方式获取服务提供者的地址信息，而不需要像之前那样在代码中硬编码服务提供者地址信息。消费">
+<meta property="og:type" content="article">
+<meta property="og:title" content="六、服务路由">
+<meta property="og:url" content="http://www.liwenguang.cn/2018/05/29/distributed_principle_prictice/6.html/index.html">
+<meta property="og:site_name" content="Hello">
+<meta property="og:description" content="分布式服务框架上线运行时都是集群组网，这意味着急群众存在某个服务的多实例部署，消费者如何从服务列表中选择合适的服务提供者进行调用，这就涉及到服务路由。 1 透明化路由1.1 基于服务注册中心的订阅发布在分布式服务框架中，服务注册中心用于存储服务提供者地址信息、服务发布相关的属性信息，消费者通过主动查询和被动通知的方式获取服务提供者的地址信息，而不需要像之前那样在代码中硬编码服务提供者地址信息。消费">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/6_1.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/6_2.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/6_3.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/6_4.png">
+<meta property="og:updated_time" content="2018-05-30T15:14:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="六、服务路由">
+<meta name="twitter:description" content="分布式服务框架上线运行时都是集群组网，这意味着急群众存在某个服务的多实例部署，消费者如何从服务列表中选择合适的服务提供者进行调用，这就涉及到服务路由。 1 透明化路由1.1 基于服务注册中心的订阅发布在分布式服务框架中，服务注册中心用于存储服务提供者地址信息、服务发布相关的属性信息，消费者通过主动查询和被动通知的方式获取服务提供者的地址信息，而不需要像之前那样在代码中硬编码服务提供者地址信息。消费">
+<meta name="twitter:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/6_1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.liwenguang.cn/2018/05/29/distributed_principle_prictice/6.html/"/>
+
+
+
+
+
+  <title>六、服务路由 | Hello</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hello</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">严律己，宽待人</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.liwenguang.cn/2018/05/29/distributed_principle_prictice/6.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="TheOhters">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">六、服务路由</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-29T22:58:00+08:00">
+                2018-05-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">读书笔记</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书笔记/分布式服务框架原理与实践/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式服务框架原理与实践</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/05/29/distributed_principle_prictice/6.html/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2018/05/29/distributed_principle_prictice/6.html/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>次
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,303
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>分布式服务框架上线运行时都是集群组网，这意味着急群众存在某个服务的多实例部署，消费者如何从服务列表中选择合适的服务提供者进行调用，这就涉及到服务路由。</p>
+<h1 id="1-透明化路由"><a href="#1-透明化路由" class="headerlink" title="1 透明化路由"></a>1 透明化路由</h1><h2 id="1-1-基于服务注册中心的订阅发布"><a href="#1-1-基于服务注册中心的订阅发布" class="headerlink" title="1.1 基于服务注册中心的订阅发布"></a>1.1 基于服务注册中心的订阅发布</h2><p>在分布式服务框架中，服务注册中心用于存储服务提供者地址信息、服务发布相关的属性信息，消费者通过主动查询和被动通知的方式获取服务提供者的地址信息，而不需要像之前那样在代码中硬编码服务提供者地址信息。消费者只需要知道当前系统发布了哪些服务，而不需要知道服务具体存在于什么位置，这就是透明化路由。它的工作原理就是基于服务注册中心（例如 ZooKeeper）的订阅发布机制。<br>服务注册中心的工作原理如下：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/6_1.png" alt="">  </p>
+<p>由于消费者可能由于服务提供者启动，或者系统运行过程中新增服务提供者，或者某个服务提供者宕机退出，就会导致注册中心发生服务提供者地址变更。注册中心检测到服务提供者列表变更之后，将变更内容主动推送到服务消费者，消费者根据变更列表，动态刷新本地缓存的服务提供者地址。</p>
+<h2 id="1-2-消费者缓存服务提供者地址"><a href="#1-2-消费者缓存服务提供者地址" class="headerlink" title="1.2 消费者缓存服务提供者地址"></a>1.2 消费者缓存服务提供者地址</h2><p>采用客户端缓存服务提供者地址的方案不仅仅能提升服务调用性能，还能保证系统的可靠性。当注册中心全部宕掉后，服务提供者和服务消费者仍能通过本地缓存的地址信息进行通信，只是影响新服务的注册和老服务的下线，不影响已经发布和运行的服务。</p>
+<h1 id="2-负载均衡"><a href="#2-负载均衡" class="headerlink" title="2 负载均衡"></a>2 负载均衡</h1><h2 id="2-1-随机"><a href="#2-1-随机" class="headerlink" title="2.1 随机"></a>2.1 随机</h2><p>缺点：  </p>
+<ol>
+<li>在一个截面上碰撞的概率较高。</li>
+<li>非对等集群组网，或者硬件配置差异较大，会导致各节点负载均匀。</li>
+</ol>
+<h2 id="2-2-轮询"><a href="#2-2-轮询" class="headerlink" title="2.2 轮询"></a>2.2 轮询</h2><p>轮询，按公约后的权重设置轮询比率，到达边界之后，继续绕接。缺点：  </p>
+<ol>
+<li>存在慢的提供者累计请求问题，例如第二台机器很慢，但没挂，当请求调到第二台时就卡在那，久而久之，所有请求都卡在调到第二台上。</li>
+</ol>
+<h1 id="2-3-服务调用时延"><a href="#2-3-服务调用时延" class="headerlink" title="2.3 服务调用时延"></a>2.3 服务调用时延</h1><p>消费者缓存所有服务提供者的服务调用时延，周期性的计算服务调用平均时延，然后计算每个服务提供者服务调用时延与平均时延的差值，根据差值大小动态调整权重，保证服务时延大的服务提供者接收更少的消息，防止消息堆积，  </p>
+<p>该策略的特点就是要保证处理能力强的服务提供者接收到更多的消息，通过动态自动权重调整消除服务调用时延的振荡范围，使所有服务提供者服务调用时延接近平均值，实现负载均衡。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/6_2.png" alt=""> <img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/6_3.png" alt=""></p>
+<h1 id="2-4-一致性哈希"><a href="#2-4-一致性哈希" class="headerlink" title="2.4 一致性哈希"></a>2.4 一致性哈希</h1><p>相同参数的请求总是发到同一个服务提供者，当某一台提供者宕机时，原本发往该提供者的请求，基于虚拟节点，平摊到其它提供者，不会引起剧烈变动。平台提供默认的虚拟节点数，可以通过配置参数进行修改。<br>一致性 Hash 环工作原理如下：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/6_4.png" alt=""></p>
+<h1 id="2-5-粘滞连接"><a href="#2-5-粘滞连接" class="headerlink" title="2.5 粘滞连接"></a>2.5 粘滞连接</h1><p>粘滞连接用于有状态服务，尽可能让客户端总是向同一提供者发起服务调用，除非该提供者宕机，再连接另一台。由于服务通常被强烈建议设计成无状态的，因此，粘滞连接在实际项目中很少使用。<br>粘滞连接的实现比较简单，客户端首次跟服务端创建链路时，将该链路标记为粘滞连接，每次路由时直接选择粘滞连接，不执行负载均衡路由接口，当链路中断时，更新粘滞连接为不可用，重新寻找下一个可用的连接，将其标记为粘滞连接。</p>
+<h1 id="3-本地路由优先策略"><a href="#3-本地路由优先策略" class="headerlink" title="3 本地路由优先策略"></a>3 本地路由优先策略</h1><h2 id="3-1-injvm-模式"><a href="#3-1-injvm-模式" class="headerlink" title="3.1 injvm 模式"></a>3.1 injvm 模式</h2><p>在一些业务场景中，本地 JVM 内部也发布了需要消费的服务。该场景下，从性能、可靠性等角度考虑，需要优先调用本 JVM内部的服务提供者，这种本地优先的路由模式被称为 injvm模式。</p>
+<h2 id="3-2-innative-模式"><a href="#3-2-innative-模式" class="headerlink" title="3.2 innative 模式"></a>3.2 innative 模式</h2><p>如果物理机或者 VM配置较好，多个应用金城往往会选择合设。服务消费者和服务提供者可能会被部署到同一台机器上（VM）。服务路由时优先选择本机的服务提供者，如果找不到再重新发起远程服务调用，该模式被称为 innative模式。</p>
+<ol>
+<li>首先看本进程 JVM内部是否有符合要求的服务提供者。</li>
+<li>JVM 内部没有，选择服务提供者 IP地址与本机 IP地址相同的本地合设的服务提供者进程，通过本地网卡回环调用服务提供则。</li>
+<li>如果 VM内部没有，则发起远程调用。</li>
+</ol>
+<h1 id="4-路由规则"><a href="#4-路由规则" class="headerlink" title="4 路由规则"></a>4 路由规则</h1><h2 id="4-1-条件路由规则"><a href="#4-1-条件路由规则" class="headerlink" title="4.1 条件路由规则"></a>4.1 条件路由规则</h2><p>应用场景如下：</p>
+<ol>
+<li>通过 IP条件表达式进行黑白名单访问控制，例如 comsumerIP != 192.168.1.1</li>
+<li>流量引导，只暴露部分服务提供者，防止整个集群服务都被冲垮，导致其它服务也不可用，例如 providerIP = 192.168.3*</li>
+<li>读写分离：method=find<em>,list</em>,get<em>,query</em>=&gt;providerIP=192.168.1.*</li>
+<li>前后台分离：app=web<em>=&gt;providerIP=192.168.1.</em>,app=java<em>=&gt;providerIP=192.168.2.</em></li>
+<li>灰度升级，将 Web前台应用路由到新的服务版本上：app=web<em>=&gt;providerIP=192.168.1.</em></li>
+</ol>
+<h2 id="4-2-脚本路由规则"><a href="#4-2-脚本路由规则" class="headerlink" title="4.2 脚本路由规则"></a>4.2 脚本路由规则</h2><p>使用脚本来实现路由规则，在于动态编译，修改实时生效，常见的脚本语言有 JavaScript、Groovy、MVEL 等。</p>
+<h1 id="5-路由策略定制"><a href="#5-路由策略定制" class="headerlink" title="5 路由策略定制"></a>5 路由策略定制</h1><p>除了提供默认的路由策略之外，在架构上还需要支持业务扩展路由算法，实现业务自定义路由。  </p>
+<ol>
+<li>灰度升级，用户需要按照业务规则进行灰度路由：例如按照用户省份路由、按照请求来源中断类型（IOS、Android）、按照手机号段等；不同的用户按照规则路由到不同的集群环境中，例如没有同步升级的用户路由到升级前的环境，同步配套升级的消费者请求路由到灰度升级后的新版本中。</li>
+<li>服务故障、业务高峰期的导流：通过自定义路由，将异常的峰值流量导流到几台或者1 台服务器上，防止整个集群负载过重导致整个生产系统雪崩。</li>
+</ol>
+<p>路由扩展策略如下：  </p>
+<ol>
+<li>提供接口。</li>
+<li>提供配置 XML Schema定义。</li>
+<li>通过 Spring Bean 方式的服务发布、通过 JDK 的 SPI 方式扩展，即 META-INF/services。</li>
+</ol>
+<h1 id="6-配置化路由"><a href="#6-配置化路由" class="headerlink" title="6 配置化路由"></a>6 配置化路由</h1><ol>
+<li>本地配置：包括服务提供者和服务消费者、默认全局配置三种。</li>
+<li>统一注册管理：无论是服务提供者还是消费者，本地配置的路由策略统一注册到服务注册中心，进行集中化配置管理。</li>
+<li>动态下发：运维人员通过服务治理 Portal修改路由规则，更新后的路由规则被持久化到服务注册中心。</li>
+</ol>
+<p>路由配置优先级：客户端配置&gt;服务端配置&gt;全局配置。</p>
+<h1 id="7-最佳实践————多机房路由"><a href="#7-最佳实践————多机房路由" class="headerlink" title="7 最佳实践————多机房路由"></a>7 最佳实践————多机房路由</h1><p>为了能够相互发现对方的服务，不同机房会共用同一个服务注册中心集群（异地容灾机房除外）。假如机房1 发布了服务A，机房2 同样也发布了服务A，此时服务注册中心就会将2 个不同机房的服务A 地址信息推送给消费者，无论是机房1 还是机房2 的消费者，都将看到两个不同机房的服务。  </p>
+<p>如果仅仅依靠随机、轮询等负载均衡策略，消息将会被路由到两个机房，达不到不跨机房调用的目标。此时可以使用配置条件路由策略，通过网段条件匹配来实现地址过滤。<br>也可以使用虚拟分组策略，将整个集群系统的服务提供者（跨机房）逻辑分成若干个组，某个消费者只访问一个虚拟分组的服务提供者，防止跨组服务调用。</p>
+<h1 id="8-个人总结"><a href="#8-个人总结" class="headerlink" title="8 个人总结"></a>8 个人总结</h1><p>服务路由需要既具备丰富的路由策略，还要具备扩展能力，是非常重要的分布式下的基础功能。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    TheOhters
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://www.liwenguang.cn/2018/05/29/distributed_principle_prictice/6.html/" title="六、服务路由">http://www.liwenguang.cn/2018/05/29/distributed_principle_prictice/6.html/</a>
+  </li>
+  <li class="post-copyright-date">
+      <strong>发布时间：</strong>2018年5月29日 - 22时05分
+  </li>
+  <li class="post-copyright-date">
+      <strong>最后更新时间：</strong>2018年5月30日 - 23时05分
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/27/distributed_principle_prictice/5.html/" rel="next" title="五、协议栈">
+                <i class="fa fa-chevron-left"></i> 五、协议栈
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/30/distributed_principle_prictice/7.html/" rel="prev" title="七、集群容错">
+                七、集群容错 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.gif"
+                alt="TheOhters" />
+            
+              <p class="site-author-name" itemprop="name">TheOhters</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/LiWenGu/" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://liwengu.github.io/" title="原博客地址" target="_blank">原博客地址</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://blog.how2u.cn" title="视频大佬" target="_blank">视频大佬</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-透明化路由"><span class="nav-text">1 透明化路由</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-基于服务注册中心的订阅发布"><span class="nav-text">1.1 基于服务注册中心的订阅发布</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-消费者缓存服务提供者地址"><span class="nav-text">1.2 消费者缓存服务提供者地址</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-负载均衡"><span class="nav-text">2 负载均衡</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-随机"><span class="nav-text">2.1 随机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-轮询"><span class="nav-text">2.2 轮询</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-3-服务调用时延"><span class="nav-text">2.3 服务调用时延</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-4-一致性哈希"><span class="nav-text">2.4 一致性哈希</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-5-粘滞连接"><span class="nav-text">2.5 粘滞连接</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-本地路由优先策略"><span class="nav-text">3 本地路由优先策略</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-injvm-模式"><span class="nav-text">3.1 injvm 模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-innative-模式"><span class="nav-text">3.2 innative 模式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-路由规则"><span class="nav-text">4 路由规则</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-条件路由规则"><span class="nav-text">4.1 条件路由规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-脚本路由规则"><span class="nav-text">4.2 脚本路由规则</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-路由策略定制"><span class="nav-text">5 路由策略定制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-配置化路由"><span class="nav-text">6 配置化路由</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-最佳实践————多机房路由"><span class="nav-text">7 最佳实践————多机房路由</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-个人总结"><span class="nav-text">8 个人总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017/11/07 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">TheOhters</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">93.1k</span>
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://www-liwenguang-cn.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://www.liwenguang.cn/2018/05/29/distributed_principle_prictice/6.html/';
+          this.page.identifier = '2018/05/29/distributed_principle_prictice/6.html/';
+          this.page.title = '六、服务路由';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://www-liwenguang-cn.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="//unpkg.com/valine@1.1.8/dist/Valine.min.js"></script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
