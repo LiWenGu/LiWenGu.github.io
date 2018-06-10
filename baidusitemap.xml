@@ -4,17 +4,125 @@
 
     
   <url>
-    <loc>http://www.liwenguang.cn/2018/06/01/talker/schoolmate01.html/</loc>
-    <lastmod>2018-06-01T15:00:00.000Z</lastmod>
+    <loc>http://www.liwenguang.cn/2018/06/11/distributed_principle_prictice/15.html/</loc>
+    <lastmod>2018-06-10T17:30:00.000Z</lastmod>
     <data>
         <display>
-        <title>2018.06.09 同学聚会</title>
-        <pubTime>2018-06-01T15:00:00.000Z</pubTime>
+        <title>十四、流量控制</title>
+        <pubTime>2018-06-10T17:30:00.000Z</pubTime>
         
          
            
              
-              <breadCrumb title="闲聊" url="http://www.liwenguang.cn/categories/%E9%97%B2%E8%81%8A/"/>
+              <breadCrumb title="读书笔记" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+          
+             
+              <breadCrumb title="分布式服务框架原理与实践" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E8%B7%B5/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.liwenguang.cn/2018/06/07/distributed_principle_prictice/14.html/</loc>
+    <lastmod>2018-06-10T17:30:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>十四、流量控制</title>
+        <pubTime>2018-06-07T14:30:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="读书笔记" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+          
+             
+              <breadCrumb title="分布式服务框架原理与实践" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E8%B7%B5/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.liwenguang.cn/2018/06/06/distributed_principle_prictice/13.html/</loc>
+    <lastmod>2018-06-07T14:30:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>十三、服务多版本</title>
+        <pubTime>2018-06-06T13:24:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="读书笔记" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+          
+             
+              <breadCrumb title="分布式服务框架原理与实践" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E8%B7%B5/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.liwenguang.cn/2018/06/05/distributed_principle_prictice/12.html/</loc>
+    <lastmod>2018-06-06T13:24:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>十二、参数传递</title>
+        <pubTime>2018-06-05T14:28:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="读书笔记" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+          
+             
+              <breadCrumb title="分布式服务框架原理与实践" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E8%B7%B5/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.liwenguang.cn/2018/06/04/distributed_principle_prictice/11.html/</loc>
+    <lastmod>2018-06-05T14:22:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>十一、服务灰度发布</title>
+        <pubTime>2018-06-04T15:51:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="读书笔记" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+          
+             
+              <breadCrumb title="分布式服务框架原理与实践" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E8%B7%B5/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.liwenguang.cn/2018/06/03/distributed_principle_prictice/10.html/</loc>
+    <lastmod>2018-06-04T15:51:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>十、服务发布和引用</title>
+        <pubTime>2018-06-03T15:55:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="读书笔记" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+          
+             
+              <breadCrumb title="分布式服务框架原理与实践" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E8%B7%B5/"/>
           
         </display>
     </data>
@@ -23,7 +131,7 @@
     
   <url>
     <loc>http://www.liwenguang.cn/2018/05/31/distributed_principle_prictice/8.html/</loc>
-    <lastmod>2018-05-31T15:34:00.000Z</lastmod>
+    <lastmod>2018-06-02T04:10:00.000Z</lastmod>
     <data>
         <display>
         <title>八、服务调用</title>
@@ -36,6 +144,45 @@
           
              
               <breadCrumb title="分布式服务框架原理与实践" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E8%B7%B5/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.liwenguang.cn/2018/06/02/distributed_principle_prictice/9.html/</loc>
+    <lastmod>2018-06-02T04:10:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>九、服务注册中心</title>
+        <pubTime>2018-06-02T04:10:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="读书笔记" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+          
+             
+              <breadCrumb title="分布式服务框架原理与实践" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E6%A1%86%E6%9E%B6%E5%8E%9F%E7%90%86%E4%B8%8E%E5%AE%9E%E8%B7%B5/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.liwenguang.cn/2018/06/01/talker/schoolmate01.html/</loc>
+    <lastmod>2018-06-01T15:00:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>2018.06.09 同学聚会</title>
+        <pubTime>2018-06-01T15:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="闲聊" url="http://www.liwenguang.cn/categories/%E9%97%B2%E8%81%8A/"/>
           
         </display>
     </data>
@@ -187,11 +334,11 @@
 
     
   <url>
-    <loc>http://www.liwenguang.cn/2018/05/16/linux_cli_shell/1.html/</loc>
+    <loc>http://www.liwenguang.cn/2018/05/16/linux_cli_shell/2.html/</loc>
     <lastmod>2018-05-16T15:51:00.000Z</lastmod>
     <data>
         <display>
-        <title>一、bash shell 命令</title>
+        <title>二、shell 脚本</title>
         <pubTime>2018-05-16T15:51:00.000Z</pubTime>
         
          
@@ -208,11 +355,11 @@
 
     
   <url>
-    <loc>http://www.liwenguang.cn/2018/05/16/linux_cli_shell/2.html/</loc>
+    <loc>http://www.liwenguang.cn/2018/05/16/linux_cli_shell/1.html/</loc>
     <lastmod>2018-05-16T15:51:00.000Z</lastmod>
     <data>
         <display>
-        <title>二、shell 脚本</title>
+        <title>一、bash shell 命令</title>
         <pubTime>2018-05-16T15:51:00.000Z</pubTime>
         
          
@@ -250,6 +397,24 @@
 
     
   <url>
+    <loc>http://www.liwenguang.cn/2018/04/13/A2B_Java/3_ThreadLocal.html/</loc>
+    <lastmod>2018-04-13T11:00:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>ThreadLocal</title>
+        <pubTime>2018-04-13T10:00:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="Java 拾遗" url="http://www.liwenguang.cn/categories/Java-%E6%8B%BE%E9%81%97/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>http://www.liwenguang.cn/2018/04/13/A2B_Java/5_Spring_1.html/</loc>
     <lastmod>2018-04-13T11:00:00.000Z</lastmod>
     <data>
@@ -273,24 +438,6 @@
     <data>
         <display>
         <title>JVM_Memory</title>
-        <pubTime>2018-04-13T10:00:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="Java 拾遗" url="http://www.liwenguang.cn/categories/Java-%E6%8B%BE%E9%81%97/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.liwenguang.cn/2018/04/13/A2B_Java/3_ThreadLocal.html/</loc>
-    <lastmod>2018-04-13T11:00:00.000Z</lastmod>
-    <data>
-        <display>
-        <title>ThreadLocal</title>
         <pubTime>2018-04-13T10:00:00.000Z</pubTime>
         
          
@@ -532,12 +679,12 @@
 
     
   <url>
-    <loc>http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/</loc>
+    <loc>http://www.liwenguang.cn/2017/12/06/graphic2cryptography/12.html/</loc>
     <lastmod>2017-12-07T15:44:00.000Z</lastmod>
     <data>
         <display>
-        <title>十三、PGP——密码技术的完美组合</title>
-        <pubTime>2017-12-07T15:44:00.000Z</pubTime>
+        <title>十二、随机数——不可预测性的源泉</title>
+        <pubTime>2017-12-06T15:40:00.000Z</pubTime>
         
          
            
@@ -553,12 +700,12 @@
 
     
   <url>
-    <loc>http://www.liwenguang.cn/2017/12/06/graphic2cryptography/12.html/</loc>
+    <loc>http://www.liwenguang.cn/2017/12/07/graphic2cryptography/13.html/</loc>
     <lastmod>2017-12-07T15:44:00.000Z</lastmod>
     <data>
         <display>
-        <title>十二、随机数——不可预测性的源泉</title>
-        <pubTime>2017-12-06T15:40:00.000Z</pubTime>
+        <title>十三、PGP——密码技术的完美组合</title>
+        <pubTime>2017-12-07T15:44:00.000Z</pubTime>
         
          
            
@@ -860,11 +1007,32 @@
 
     
   <url>
-    <loc>http://www.liwenguang.cn/2017/11/07/concurrent-art/8.html/</loc>
+    <loc>http://www.liwenguang.cn/2017/11/07/concurrent-art/6.html/</loc>
     <lastmod>2017-11-07T12:07:00.000Z</lastmod>
     <data>
         <display>
-        <title>八、Java中的并发工具类</title>
+        <title>六、Java并发容器和框架</title>
+        <pubTime>2017-11-07T12:07:00.000Z</pubTime>
+        
+         
+           
+             
+              <breadCrumb title="读书笔记" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
+          
+             
+              <breadCrumb title="Java并发编程的艺术" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>http://www.liwenguang.cn/2017/11/07/concurrent-art/4.html/</loc>
+    <lastmod>2017-11-07T12:07:00.000Z</lastmod>
+    <data>
+        <display>
+        <title>四、Java并发编程基础</title>
         <pubTime>2017-11-07T12:07:00.000Z</pubTime>
         
          
@@ -902,32 +1070,11 @@
 
     
   <url>
-    <loc>http://www.liwenguang.cn/2017/11/07/concurrent-art/6.html/</loc>
+    <loc>http://www.liwenguang.cn/2017/11/07/concurrent-art/8.html/</loc>
     <lastmod>2017-11-07T12:07:00.000Z</lastmod>
     <data>
         <display>
-        <title>六、Java并发容器和框架</title>
-        <pubTime>2017-11-07T12:07:00.000Z</pubTime>
-        
-         
-           
-             
-              <breadCrumb title="读书笔记" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/"/>
-          
-             
-              <breadCrumb title="Java并发编程的艺术" url="http://www.liwenguang.cn/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>http://www.liwenguang.cn/2017/11/07/concurrent-art/4.html/</loc>
-    <lastmod>2017-11-07T12:07:00.000Z</lastmod>
-    <data>
-        <display>
-        <title>四、Java并发编程基础</title>
+        <title>八、Java中的并发工具类</title>
         <pubTime>2017-11-07T12:07:00.000Z</pubTime>
         
          

@@ -515,8 +515,8 @@
 </ol>
 <p>服务调用异常不包括业务层面的处理异常，例如数据库操作异常、用户记录不存在等异常。</p>
 <h1 id="2-容错策略"><a href="#2-容错策略" class="headerlink" title="2 容错策略"></a>2 容错策略</h1><p>服务不同，容错策略往往也不同，下面是集群容错和服务路由的关系：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/7_1.png" alt=""><br>消费者根据配置的路由策略选择某个目标地址之后，发起远程服务调用，发起远程服务调用，在此期间如果发生了远程服务调用异常，则需要服务框架进行集群容错，重新进行选路和调用。集群容错是系统自动执行的，上层用户并不需要关心底层的服务调用过程。</p>
-<h2 id="2-1-失败自动切换（Failover）"><a href="#2-1-失败自动切换（Failover）" class="headerlink" title="2.1 失败自动切换（Failover）"></a>2.1 失败自动切换（Failover）</h2><p>服务调用失败自动切换策略指的是当发生 RPC调用异常时，重新选路，查找下一个可用的服务提供者。<br>服务发布的时候，可以指定服务的集群容错策略。消费者可以覆盖服务提供者的通用配置，实现个性化的容错策略。  </p>
-<p>Failover 策略的设计思路如下：消费者路由操作完成之后，获得目标地址，调用通信框架的消息发送接口发送请求，监听服务端应答。如果返回的结果是 RPC调用异常（超时、流控、解码失败等系统异常），根据消费者集群容错的策略进行容错路由，如果是 Failover，则重新返回到路由 Handler 的入口，从路由节点继续执行。选录完成之后，对目标地址进行对比，防止重新路由到故障服务节点，过滤掉上次的故障服务提供者之后，调用通信框架的消息发送接口发送请求消息。  </p>
+<h2 id="2-1-失败自动切换（FailOver）"><a href="#2-1-失败自动切换（FailOver）" class="headerlink" title="2.1 失败自动切换（FailOver）"></a>2.1 失败自动切换（FailOver）</h2><p>服务调用失败自动切换策略指的是当发生 RPC调用异常时，重新选路，查找下一个可用的服务提供者。<br>服务发布的时候，可以指定服务的集群容错策略。消费者可以覆盖服务提供者的通用配置，实现个性化的容错策略。  </p>
+<p>FailOver 策略的设计思路如下：消费者路由操作完成之后，获得目标地址，调用通信框架的消息发送接口发送请求，监听服务端应答。如果返回的结果是 RPC调用异常（超时、流控、解码失败等系统异常），根据消费者集群容错的策略进行容错路由，如果是 FailOver，则重新返回到路由 Handler 的入口，从路由节点继续执行。选录完成之后，对目标地址进行对比，防止重新路由到故障服务节点，过滤掉上次的故障服务提供者之后，调用通信框架的消息发送接口发送请求消息。  </p>
 <ul>
 <li>读操作，因为通常它是幂等的。</li>
 <li>幂等性服务，保证调用1 次和 N 次效果相同。
@@ -691,7 +691,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">58</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -772,7 +772,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-集群容错场景"><span class="nav-text">1 集群容错场景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-通信链路故障"><span class="nav-text">1.1 通信链路故障</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-服务端超时"><span class="nav-text">1.2 服务端超时</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-服务端调用失败"><span class="nav-text">1.3 服务端调用失败</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-容错策略"><span class="nav-text">2 容错策略</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-失败自动切换（Failover）"><span class="nav-text">2.1 失败自动切换（Failover）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-失败通知（Failback）"><span class="nav-text">2.2 失败通知（Failback）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-失败缓存（Failcache）"><span class="nav-text">2.3 失败缓存（Failcache）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-快速失败（Failfast）"><span class="nav-text">2.4 快速失败（Failfast）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-容错策略扩展"><span class="nav-text">2.5 容错策略扩展</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-个人总结"><span class="nav-text">3 个人总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-集群容错场景"><span class="nav-text">1 集群容错场景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-通信链路故障"><span class="nav-text">1.1 通信链路故障</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-服务端超时"><span class="nav-text">1.2 服务端超时</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-服务端调用失败"><span class="nav-text">1.3 服务端调用失败</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-容错策略"><span class="nav-text">2 容错策略</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-失败自动切换（FailOver）"><span class="nav-text">2.1 失败自动切换（FailOver）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-失败通知（Failback）"><span class="nav-text">2.2 失败通知（Failback）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-失败缓存（Failcache）"><span class="nav-text">2.3 失败缓存（Failcache）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-快速失败（Failfast）"><span class="nav-text">2.4 快速失败（Failfast）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-容错策略扩展"><span class="nav-text">2.5 容错策略扩展</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-个人总结"><span class="nav-text">3 个人总结</span></a></li></ol></div>
             
 
           </div>
@@ -806,7 +806,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">93.1k</span>
+    <span title="Site words total count">106.1k</span>
   
 </div>
 

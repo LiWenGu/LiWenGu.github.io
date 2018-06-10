@@ -131,17 +131,23 @@
 
 
 
-<meta name="description" content="由于惯性思维，很多人会将传统 MVC架构/RPC架构的做法带入到分布式服务框架的架构设计中，其中有些思想存在误区，或者已经过时，它们会破坏分布式服务框架的架构品质。 1 几个误区1.1 NIO 就是异步服务2 服务调用方式3 最佳实践4 个人总结">
+<meta name="description" content="由于惯性思维，很多人会将传统 MVC架构/RPC架构的做法带入到分布式服务框架的架构设计中，其中有些思想存在误区，或者已经过时，它们会破坏分布式服务框架的架构品质。 1 几个误区1.1 NIO 就是异步服务NIO 只解决了通信层面的异步问题，跟服务调用的异步没有必然关系，也就是说，即便采用传统的 BIO 通信，依然可以实现异步服务调用，只不过通信效率和可靠性比较差。下面对异步服务调用和通信框架的关">
 <meta property="og:type" content="article">
 <meta property="og:title" content="八、服务调用">
 <meta property="og:url" content="http://www.liwenguang.cn/2018/05/31/distributed_principle_prictice/8.html/index.html">
 <meta property="og:site_name" content="Hello">
-<meta property="og:description" content="由于惯性思维，很多人会将传统 MVC架构/RPC架构的做法带入到分布式服务框架的架构设计中，其中有些思想存在误区，或者已经过时，它们会破坏分布式服务框架的架构品质。 1 几个误区1.1 NIO 就是异步服务2 服务调用方式3 最佳实践4 个人总结">
+<meta property="og:description" content="由于惯性思维，很多人会将传统 MVC架构/RPC架构的做法带入到分布式服务框架的架构设计中，其中有些思想存在误区，或者已经过时，它们会破坏分布式服务框架的架构品质。 1 几个误区1.1 NIO 就是异步服务NIO 只解决了通信层面的异步问题，跟服务调用的异步没有必然关系，也就是说，即便采用传统的 BIO 通信，依然可以实现异步服务调用，只不过通信效率和可靠性比较差。下面对异步服务调用和通信框架的关">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-31T15:34:00.000Z">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/8_1.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/8_2.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/8_3.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/8_4.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/8_5.png">
+<meta property="og:updated_time" content="2018-06-02T04:10:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="八、服务调用">
-<meta name="twitter:description" content="由于惯性思维，很多人会将传统 MVC架构/RPC架构的做法带入到分布式服务框架的架构设计中，其中有些思想存在误区，或者已经过时，它们会破坏分布式服务框架的架构品质。 1 几个误区1.1 NIO 就是异步服务2 服务调用方式3 最佳实践4 个人总结">
+<meta name="twitter:description" content="由于惯性思维，很多人会将传统 MVC架构/RPC架构的做法带入到分布式服务框架的架构设计中，其中有些思想存在误区，或者已经过时，它们会破坏分布式服务框架的架构品质。 1 几个误区1.1 NIO 就是异步服务NIO 只解决了通信层面的异步问题，跟服务调用的异步没有必然关系，也就是说，即便采用传统的 BIO 通信，依然可以实现异步服务调用，只不过通信效率和可靠性比较差。下面对异步服务调用和通信框架的关">
+<meta name="twitter:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/8_1.png">
 
 
 
@@ -448,7 +454,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  102
+                  1,551
                 </span>
               
 
@@ -464,7 +470,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  6
                 </span>
               
             </div>
@@ -486,7 +492,49 @@
 
       
         <p>由于惯性思维，很多人会将传统 MVC架构/RPC架构的做法带入到分布式服务框架的架构设计中，其中有些思想存在误区，或者已经过时，它们会破坏分布式服务框架的架构品质。</p>
-<h1 id="1-几个误区"><a href="#1-几个误区" class="headerlink" title="1 几个误区"></a>1 几个误区</h1><h2 id="1-1-NIO-就是异步服务"><a href="#1-1-NIO-就是异步服务" class="headerlink" title="1.1 NIO 就是异步服务"></a>1.1 NIO 就是异步服务</h2><h1 id="2-服务调用方式"><a href="#2-服务调用方式" class="headerlink" title="2 服务调用方式"></a>2 服务调用方式</h1><h1 id="3-最佳实践"><a href="#3-最佳实践" class="headerlink" title="3 最佳实践"></a>3 最佳实践</h1><h1 id="4-个人总结"><a href="#4-个人总结" class="headerlink" title="4 个人总结"></a>4 个人总结</h1>
+<h1 id="1-几个误区"><a href="#1-几个误区" class="headerlink" title="1 几个误区"></a>1 几个误区</h1><h2 id="1-1-NIO-就是异步服务"><a href="#1-1-NIO-就是异步服务" class="headerlink" title="1.1 NIO 就是异步服务"></a>1.1 NIO 就是异步服务</h2><p>NIO 只解决了通信层面的异步问题，跟服务调用的异步没有必然关系，也就是说，即便采用传统的 BIO 通信，依然可以实现异步服务调用，只不过通信效率和可靠性比较差。<br>下面对异步服务调用和通信框架的关系进行说明：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/8_1.png" alt=""><br>用户发起远程服务调用之后，经历层层业务逻辑处理、消息编码，最终序列化后的消息会被放入到通信框架的消息队列中。业务线程可以选择同步等待、也可以选择直接返回，通过消息队列的方式实现业务层和通信层的分离是比较成熟、典型的做法。<br>采用 NIO还是 BIO对上层的业务是不可见的，双方的汇聚点就是消息队列。业务线程将消息放入到发送队列中，可以选择主动等待或者立即返回，跟通信框架是否是 NIO 没有任何关系。</p>
+<h2 id="1-2-服务调用天生就是同步的"><a href="#1-2-服务调用天生就是同步的" class="headerlink" title="1.2 服务调用天生就是同步的"></a>1.2 服务调用天生就是同步的</h2><p>服务调用主要有两种模式：</p>
+<ol>
+<li>OneWay 模式：只有请求，没有应答，例如通知消息。</li>
+<li>请求-应答模式：一请求，一应答的模式，这种模式最常用。</li>
+</ol>
+<p>OneWay 模式的服务调用由于不需要返回应答，因此很容易被设计成异步的：消费者发起远程服务调用之后，立即返回，不需要同步阻塞等待应答。<br>对于请求-应答模式，可以利用 Future-Listener 机制来实现异步服务调用。从业务角度看，它的效果与同步等待等价，但是从技术角度来看，可以保证业务线程在不同步阻塞的情况下实现同步等待的效果，执行效率更高。</p>
+<h2 id="1-3-异步服务调用性能更高"><a href="#1-3-异步服务调用性能更高" class="headerlink" title="1.3 异步服务调用性能更高"></a>1.3 异步服务调用性能更高</h2><p>复杂的场景，异步服务调用会更高，越复杂的场景，异步服务调用优势越大。</p>
+<h1 id="2-服务调用方式"><a href="#2-服务调用方式" class="headerlink" title="2 服务调用方式"></a>2 服务调用方式</h1><h2 id="2-1-同步服务调用"><a href="#2-1-同步服务调用" class="headerlink" title="2.1 同步服务调用"></a>2.1 同步服务调用</h2><p>没什么可说的，只是需要注意设置用户线程等待超时时间。</p>
+<h2 id="2-2-异步服务调用"><a href="#2-2-异步服务调用" class="headerlink" title="2.2 异步服务调用"></a>2.2 异步服务调用</h2><p>基于 JDK的 Future机制，异步服务调用的工作原理如下：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/8_2.png" alt="">  </p>
+<ol>
+<li>消费者调用服务端发布的接口，接口调用由分布式服务框架包装成动态代理，发起远程服务调用。</li>
+<li>通信框架异步发送请求消息，如果没有发生 I/O异常，返回。</li>
+<li>请求消息发送成功后，I/O 线程构造 Future 对象，设置到 RPC上下文中。</li>
+<li>用户线程通过 RPC上下文获取 Future对象。</li>
+<li>构造 Listener 对象，将其添加到 Future中，用于服务端应答异步回调通知。</li>
+<li>用户线程返回，不阻塞等待应答，</li>
+<li>服务端返回应答消息，通信框架负责反序列化等。</li>
+<li>I/O 线程将应答设置到 Future 对象的操作结果中。</li>
+<li>Future 对象扫描注册的监听器列表，循环调用监听器的 operationComplete方法，将结果通知给监听器，监听器获取到结果，执行后续业务，异步调用结束。</li>
+</ol>
+<p>还有一种异步调用形式，就是不添加 Listener，用户连续发起 N次服务调用，然后依次从 RPC上下文中获取 Futrue对象，最终再主动 get结果，业务线程阻塞，相对比老的同步服务调用，它的阻塞时间更短，工作原理如下：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/8_3.png" alt="">  </p>
+<p>其串行到并行的优化原理如下图：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/8_4.png" alt=""><br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/8_5.png" alt="">  </p>
+<p>异步服务调用的代码示例如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">XxxService1.xxxMethod(Req); <span class="comment">// 立即返回 null</span></div><div class="line">Future f1 = RpcContext.getContext().getFuture();</div><div class="line">XxxService2.xxxMethod(Req);</div><div class="line">Future f2 = RpcContext.getContext().getFuture();</div><div class="line">Object xResult1 = f1.get(<span class="number">3000</span>);</div><div class="line">Object xResult2 = f2.get(<span class="number">3000</span>);</div></pre></td></tr></table></figure></p>
+<p>第二种基于 Future-Listener 的纯异步服务调用示例如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">XxxService1.xxxMethod(Req);</div><div class="line">Future f1 = RpcContext.getContext().getFuture();</div><div class="line">Listener l = <span class="keyword">new</span> Listener();</div><div class="line">f1.addListener(l);</div></pre></td></tr></table></figure></p>
+<h2 id="2-3-并行服务调用"><a href="#2-3-并行服务调用" class="headerlink" title="2.3 并行服务调用"></a>2.3 并行服务调用</h2><p>A服务-&gt;B服务-&gt;C服务-&gt;…<br>串行服务调用比较简单，但在一些业务场景中，需要采用并行服务调用来降低 E2E 的时延。</p>
+<ol>
+<li>多个服务之间逻辑不存在互相依赖关系，执行先后顺序没有严格的要求，逻辑上可以被并行执行。</li>
+<li>长流程业务，调用多个服务，对时延比较敏感，其中有部分服务逻辑上无上下文关联。
+目标主要有两个：</li>
+<li>降低业务 E2E 时延。</li>
+<li>提升整个系统的吞吐量。</li>
+</ol>
+<h2 id="2-4-泛化调用"><a href="#2-4-泛化调用" class="headerlink" title="2.4 泛化调用"></a>2.4 泛化调用</h2><p>主要用于客户端没有API 接口及数据模型的场景，使用 Map表示。</p>
+<h1 id="3-最佳实践"><a href="#3-最佳实践" class="headerlink" title="3 最佳实践"></a>3 最佳实践</h1><p>服务框架支持多种服务调用方式，在实现项目中中如何选择，建议从以下几个角度考虑：  </p>
+<ol>
+<li>降低业务 E2E时延：业务调用链是否太长、某些服务是否不太可靠，需要对服务调用流程进行梳理，看是否可以通过并行服务调用来提升调用效率，降低服务调用时延。</li>
+<li>可靠性角度：某些业务调用链上的关键服务不太可靠，一旦出故障会导致大量线程资源被挂住，可以考虑使用异步服务调用防止故障扩展。</li>
+<li>业务场景：对于测试，不想为每个测试用例都开发一个服务接口，能否做一个通用的测试框架，通过 Map等泛容器实现通用服务调用。</li>
+<li>传统的 RPC调用：服务调用比较简单，对时延要求不高的场景，可以考虑同步服务调用。</li>
+</ol>
+<h1 id="4-个人总结"><a href="#4-个人总结" class="headerlink" title="4 个人总结"></a>4 个人总结</h1><p>服务调用有多种形式，需要从业务和技术做出取舍。</p>
+
       
     </div>
     
@@ -512,7 +560,7 @@
       <strong>发布时间：</strong>2018年5月31日 - 23时05分
   </li>
   <li class="post-copyright-date">
-      <strong>最后更新时间：</strong>2018年5月31日 - 23时05分
+      <strong>最后更新时间：</strong>2018年6月2日 - 12时06分
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -637,7 +685,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">58</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -718,7 +766,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-几个误区"><span class="nav-text">1 几个误区</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-NIO-就是异步服务"><span class="nav-text">1.1 NIO 就是异步服务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-服务调用方式"><span class="nav-text">2 服务调用方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-最佳实践"><span class="nav-text">3 最佳实践</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-个人总结"><span class="nav-text">4 个人总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-几个误区"><span class="nav-text">1 几个误区</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-NIO-就是异步服务"><span class="nav-text">1.1 NIO 就是异步服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-服务调用天生就是同步的"><span class="nav-text">1.2 服务调用天生就是同步的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-异步服务调用性能更高"><span class="nav-text">1.3 异步服务调用性能更高</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-服务调用方式"><span class="nav-text">2 服务调用方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-同步服务调用"><span class="nav-text">2.1 同步服务调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-异步服务调用"><span class="nav-text">2.2 异步服务调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-并行服务调用"><span class="nav-text">2.3 并行服务调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-泛化调用"><span class="nav-text">2.4 泛化调用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-最佳实践"><span class="nav-text">3 最佳实践</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-个人总结"><span class="nav-text">4 个人总结</span></a></li></ol></div>
             
 
           </div>
@@ -752,7 +800,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">93.1k</span>
+    <span title="Site words total count">106.1k</span>
   
 </div>
 
