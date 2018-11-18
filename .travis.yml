@@ -1,8 +1,11 @@
 # 使用语言
 language: node_js
 
+sudo: false
+
 # node版本
-node_js: stable
+node_js:
+  - "6"
 
 # 设置只监听哪个分支
 branches:
