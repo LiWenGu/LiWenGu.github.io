@@ -17,9 +17,6 @@ cache:
 
 # tarvis生命周期执行顺序详见官网文档
 before_install:
-# 由于使用了yarn，所以需要下载，如不用yarn这两行可以删除
-  - curl -o- -L https://yarnpkg.com/install.sh | bash
-  - export PATH=$HOME/.yarn/bin:$PATH
   - npm install -g hexo-cli
 
 install:
@@ -29,7 +26,7 @@ install:
 script:
   - hexo clean
   - hexo generate
-  
+
 after_success:
   - cd ./public
   - git config --global user.name "liwenguang"
