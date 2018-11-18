@@ -14,20 +14,20 @@ cache:
     - node_modules
 # tarvis生命周期执行顺序详见官网文档
 before_install:
-- git config --global user.name "liwenguang"
-- git config --global user.email "liwenguang_dev@163.com"
 # 由于使用了yarn，所以需要下载，如不用yarn这两行可以删除
 - curl -o- -L https://yarnpkg.com/install.sh | bash
 - export PATH=$HOME/.yarn/bin:$PATH
 - npm install -g hexo-cli
 install:
 # 不用yarn的话这里改成 npm i 即可
-- yarn
+- yarn install --pure-lockfile
 script:
 - hexo clean
 - hexo generate
 after_success:
 - cd ./public
+- git config --global user.name "liwenguang"
+- git config --global user.email "liwenguang_dev@163.com"
 - git init
 - git add --all .
 - git commit -m "Travis CI Auto Builder"
