@@ -24,8 +24,10 @@ before_install:
 
 install:
 # 不用yarn的话这里改成 npm i 即可
-  #- yarn install --pure-lockfile
+  # - yarn install --pure-lockfile
   - npm install
+  # 安装 ribbon 模块
+  - git clone https://github.com/theme-next/theme-next-canvas-ribbon source/lib/canvas-ribbon
 script:
   - hexo clean
   - hexo generate
