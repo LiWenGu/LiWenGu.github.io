@@ -491,7 +491,7 @@ pangu: false
 # Disqus
 disqus:
   enable: true
-  shortname: www-liwenguang-cn.disqus.com
+  shortname: www-liwenguang-cn
   count: true
   lazyload: false
 
