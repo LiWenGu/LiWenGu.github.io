@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
-subtitle:
-description:
-keywords:
-author: John Doe
-language:
+title: Hello
+subtitle: 严律己，宽待人
+description: 最怕一生碌碌无为，还安慰自己平凡可贵
+keywords: Java
+author: Zed
+language: zh-CN
 timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: http://www.liwenguang.cn
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -27,6 +27,8 @@ category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
+ - "CNAME"
+ - "README.md"
 
 # Writing
 new_post_name: :title.md # File name of new posts
