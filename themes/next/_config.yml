@@ -970,7 +970,7 @@ vendors:
 
   # Internal version: 1.0.0
   # https://github.com/zproo/canvas-ribbon
-  canvas_ribbon:
+  canvas_ribbon: https://zproo.github.io/showcase/project/canvas-ribbon/canvas-ribbon.min.js
 
   # Internal version: 3.3.0
   # https://github.com/ethantw/Han
