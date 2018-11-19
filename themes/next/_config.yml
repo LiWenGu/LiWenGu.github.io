@@ -531,7 +531,7 @@ gitment:
   cleanly: false # Hide 'Powered by ...' on footer, and more
   language: zh-CN # Force language, or auto switch by theme
   github_user: LiWenGu # MUST HAVE, Your Github Username
-  github_repo: https://github.com/LiWenGu/liwengu.github.io # MUST HAVE, The name of the repo you use to store Gitment comments
+  github_repo: liwengu.github.io # MUST HAVE, The name of the repo you use to store Gitment comments
   client_id: dc2e4e5f20d27595c31a # MUST HAVE, Github client id for the Gitment
   client_secret: 5fec3118b77c6d5719e8d79fcd5ba84404013730 # EITHER this or proxy_gateway, Github access secret token for the Gitment
   proxy_gateway: # Address of api proxy, See: https://github.com/aimingoo/intersect
