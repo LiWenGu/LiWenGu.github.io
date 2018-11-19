@@ -13,10 +13,10 @@ branches:
     - source
 
 # 缓存，可以节省集成的时间，这里我用了yarn，如果不用可以删除
-#cache:
-#  yarn: true
-#  directories:
-#    - node_modules
+cache:
+  yarn: true
+  directories:
+    - node_modules
 
 # tarvis生命周期执行顺序详见官网文档
 before_install:
@@ -24,8 +24,8 @@ before_install:
 
 install:
 # 不用yarn的话这里改成 npm i 即可
-  # - yarn install --pure-lockfile
-  - npm install
+  - yarn install --pure-lockfile
+  #- npm install
 script:
   - hexo clean
   - hexo generate
