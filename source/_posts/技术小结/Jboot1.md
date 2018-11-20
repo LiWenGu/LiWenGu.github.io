@@ -14,7 +14,7 @@ Jboot的入门demo —— JbooFly。
 
 # 1 项目组成
 
-后端基础框架：Jboot1.2.7  
+后端基础框架：Jboot 1.2.7  
 前端基础框架：Fly Template 社区模版  
 界面渲染框架：JFinal Template Engine
 
@@ -24,7 +24,7 @@ Jboot的入门demo —— JbooFly。
 
 # 3 前端页面
 
-1. 社区首页：外层架子（_layout.html），分类导航（_navigation.html），置顶文章（_top_posts.html），内容列表（content()），右边四个小页面（_signin_panel/_recommend/_hot_posts/_links）
+ 1. 社区首页：外层架子（_layout.html），分类导航（_navigation.html），置顶文章（_top_posts.html），内容列表（content()），右边四个小页面（_signin_panel/_recommend/_hot_posts/_links）
 2. 个人页面：外层架子，左侧导航（_user_left_menu.html），我的主页（index.html），我的帖子（post.html/collection.html），基本设置（setting.html），我的消息（message.html），账号激活（activate.html）
 
 # 4 定时任务

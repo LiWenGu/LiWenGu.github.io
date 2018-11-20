@@ -102,7 +102,7 @@ ServletContext -> context-param -> listener -> filter -> servlet。
 1. 创建 ServletContext 上下文并将 `context-param` 属性写入此上下文。
 2. 执行 `ContextLoaderListener` 将 Spring 的上下文 `WebApplicationContext` 写入 ServletContext 用于 Servlet 容器共享，接着读取 context-param 节点（已经被加载了）的 `contextConfigLocation` 解析 xml 并创建 Spring 容器和初始化。
 3. 执行 `CharacterEncodingFilter` 过滤器设置相应设置，用于以后的每次请求。
-4. 执行 `DispatcherServlet` 用于 Servlet 的创建（根据 load-on-startup）。
+4. 执行 `DispatcherServlet`  用于 Servlet 的创建（根据 load-on-startup）。
 
 # 6. 参考
 

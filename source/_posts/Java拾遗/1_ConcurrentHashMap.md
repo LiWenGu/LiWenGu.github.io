@@ -224,7 +224,7 @@ final V putVal(K key, V value, boolean onlyIfAbsent) {
 2. size() 则是采用三次尝试无锁操作，如果 size 不一致才对每个 Segment 加锁获取 size
 
 在 jdk8 中：
-1. put 如果是新数据则使用 CAS 插入，如果是链表已有数据则使用 synchronized，如果一个 Node 链表超过 8 个就会变成红黑树，避免了 HashDos 攻击，最后统计 size
+1. put  如果是新数据则使用 CAS  插入，如果是链表已有数据则使用 synchronized，如果一个 Node 链表超过 8 个就会变成红黑树，避免了 HashDos 攻击，最后统计 size
 2. size() 直接获取 size
 
 参考：https://www.jianshu.com/p/e694f1e868ec
