@@ -41,9 +41,23 @@
                 {% endfor %}
                 {{ _p('counter.tag_cloud', visibleTags) }}
             </div>
-            <div class="tag-cloud-tags">
-              {{ tagcloud({min_font: 12, max_font: 30, amount: 300, color: true, start_color: '#ccc', end_color: '#111'}) }}
-            </div>
+            {### 修改：增加标签云 ###}
+            {% if site.tags.length > 1 %}
+              <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+              <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+              <div class="widget-wrap">
+                <div id="myCanvasContainer" class="widget tagcloud">
+                  <canvas width="500" height="500" id="resCanvas" style="width=100%">
+                    {{ list_tags() }}
+                  </canvas>
+                </div>
+              </div>
+            {% endif %}
+            {### 原代码
+              <div class="tag-cloud-tags">
+                {{ tagcloud({min_font: 12, max_font: 30, amount: 300, color: true, start_color: '#ccc', end_color: '#111'}) }}
+              </div>
+             ###}
           </div>
         {% elif page.type === 'categories' %}
           <div class="category-all-page">

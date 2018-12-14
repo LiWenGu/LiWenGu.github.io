@@ -2,7 +2,6 @@
 title: 关于
 date: 2017-11-21 01:46:00
 type: "about"
-comments: false
 ---
 
 2018-05~至今    上海万间信息 `Java 开发`  

@@ -2,10 +2,13 @@
 title: Jcmd 命令
 date: 2018-11-29 00:07:00
 updated: 2018-11-29 00:07:00
+tags:
+  - jvm
+  - jcmd
 comments: true
 categories: 
-- 转载
-- jvm
+  - 转载
+  - jvm
 permalink: reprint_jvm/jcmd.html  
 ---
 
