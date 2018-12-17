@@ -37,5 +37,8 @@ after_success:
   - git init
   - git add --all .
   - git commit -m "Travis CI Auto Builder"
-# 这里的 REPO_TOKEN 即之前在 travis 项目的环境变量里添加的
-  - git push --quiet --force https://${REPO_TOKEN}@github.com/LiWenGu/liwenguang.github.io master:master
+  # 这里的 REPO_TOKEN 即之前在 travis 项目的环境变量里添加的
+  # 推送 Github
+  - git push --quiet --force https://${GITHUB_REPO_TOKEN}@github.com/LiWenGu/liwenguang.github.io master:master
+  # 推送 Coding
+  - git push --quiet --force https://${CODING_REPO_TOKEN}@git.dev.tencent.com/liwenguang/blog.git master:master
