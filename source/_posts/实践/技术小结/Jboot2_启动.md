@@ -2,9 +2,12 @@
 title: Jboot_2
 date: 2018-01-10 12:00:00
 updated: 2018-01-12 18:37:00
-comments: true
+tags:
+  - jboot
 categories: 
-- 小结
+  - 小结
+  - jboot
+comments: true
 permalink: tech/Jboot_2.html    
 ---
 

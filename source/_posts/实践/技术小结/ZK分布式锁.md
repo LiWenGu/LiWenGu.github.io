@@ -2,9 +2,13 @@
 title: ZK分布式锁
 date: 2018-06-15 23:00:00
 updated: 2018-06-18 21:43:00
-comments: true
+tags:
+  - 中间件
+  - ZooKeeper
 categories: 
-- 小结
+  - 小结
+  - ZooKeeper
+comments: true
 permalink: tech/zk_distribute_lock.html    
 ---
 

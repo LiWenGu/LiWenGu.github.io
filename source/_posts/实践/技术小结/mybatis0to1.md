@@ -2,9 +2,12 @@
 title: 《MyBatis 从入门到精通》总结
 date: 2017-12-18 22:10:00
 updated: 2017-12-18 22:10:00
-comments: true
+tags:
+  - mybatis
 categories: 
-- 小结
+  - 小结
+  - mybatis
+comments: true
 permalink: tech/mybatis0to1.html 
 ---
 
