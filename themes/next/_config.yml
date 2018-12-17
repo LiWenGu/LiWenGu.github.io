@@ -194,8 +194,8 @@ links_icon: link
 links_title: Links
 links_layout: block
 #links_layout: inline
-#links:
-  #Title: http://example.com/
+links:
+  唐亚峰 | battcn: https://blog.battcn.com/
 
 # Sidebar Avatar
 avatar:
