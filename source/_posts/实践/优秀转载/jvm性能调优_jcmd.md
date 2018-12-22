@@ -6,11 +6,15 @@ tags:
   - jvm
   - jcmd
 categories: 
-  - 转载
-  - jvm
+  - 实践
+  - 优秀转载
 comments: true
 permalink: reprint_jvm/jcmd.html  
 ---
+
+![][0]
+
+<!--more-->
 
 **jcmd** 是 JDK1.7 之后出的命令行工具，如果你是 JDK1.7 之后的项目，建议你用 jcmd 替换掉 jps。  
 你可以使用它来查看堆信息：`jcmd pid GC.heap_dump`  
@@ -18,7 +22,7 @@ permalink: reprint_jvm/jcmd.html
 以及还有当前 VM 虚拟机的参数信息：`jcmd PID VM.flags`  
 具体更多命令：`jcmd help` `jcmd PID help`
 
-<!--more-->
+---
 
 # 1 概述
 在JDK1.7以后，新增了一个命令行工具 jcmd。他是一个多功能的工具，可以用它来导出堆、查看Java进程、导出线程信息、执行GC、还可以进行采样分析（jmc 工具的飞行记录器）。
@@ -295,3 +299,5 @@ C:\Users\jjs>jcmd 10576 VM.version
 Java HotSpot(TM) 64-Bit Server VM version 25.91-b15
 JDK 8.0_91
 ```
+
+[0]: https://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/background/2018-08-18%E4%B8%8A%E6%B5%B7%E5%A4%96%E6%BB%A9.jpg

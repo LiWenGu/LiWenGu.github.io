@@ -4,6 +4,8 @@ date: 2017-08-03 12:08:00
 updated: 2018-12-19 13:00:00
 tags:
   - web
+  - CDN
+  - DNS
 categories: 
   - 理论
   - 深入分析Java_Web技术
