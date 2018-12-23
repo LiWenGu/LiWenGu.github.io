@@ -245,6 +245,5 @@ JDK1.7 使用分段可重入锁，即锁的粒度变小了，相比原来直接�
 JDK1.8 使用 `CAS` + `Synchronized`，毕竟 `CAS` 这种无锁技术和优化过后的 `Synchronized` 效率还是高
 
 [0]: https://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/background/2014-04-27%E5%AD%A6%E6%A0%A1%E6%93%8D%E5%9C%BA%E5%80%92%E5%BD%B11.jpg
-[1]: https://upload-images.jianshu.io/upload_images/2184951-af57d9d50ae9f547.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/767/format/webp
-[2]: https://upload-images.jianshu.io/upload_images/2184951-d9933a0302f72d47.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/768/format/webp
-[00]: https://www.jianshu.com/p/e694f1e868ec
+[1]: https://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/%E8%BD%AC%E8%BD%BD/ConcurrentHashMap1.png
+[2]: https://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/%E8%BD%AC%E8%BD%BD/ConcurrentHashMap2.png

@@ -304,4 +304,3 @@ JDK 8.0_91
 参数用的最多还是 `jcmd -l`、`jcmd PID GC.heap_dump dump.hprof`、`jstat -gc PID 5000`
 
 [0]: https://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/background/2018-08-18%E4%B8%8A%E6%B5%B7%E5%A4%96%E6%BB%A9.jpg
-[00]: https://www.jianshu.com/p/388e35d8a09b
