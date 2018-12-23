@@ -25,8 +25,8 @@ permalink: reprint_jvm/jcmd.html
 ---
 
 # 1 概述
-在JDK1.7以后，新增了一个命令行工具 jcmd。他是一个多功能的工具，可以用它来导出堆、查看Java进程、导出线程信息、执行GC、还可以进行采样分析（jmc 工具的飞行记录器）。
 
+在JDK1.7以后，新增了一个命令行工具 jcmd。他是一个多功能的工具，可以用它来导出堆、查看Java进程、导出线程信息、执行GC、还可以进行采样分析（jmc 工具的飞行记录器）。
 
 # 2 命令格式
 ```
@@ -300,4 +300,11 @@ Java HotSpot(TM) 64-Bit Server VM version 25.91-b15
 JDK 8.0_91
 ```
 
+**上文转载自：[jijs | jvm 性能调优工具之 jcmd][00]**
+
+# 18 总结
+
+参数用的最多还是 `jcmd -l`、`jcmd PID GC.heap_dump dump.hprof`、`jstat -gc PID 5000`
+
 [0]: https://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/background/2018-08-18%E4%B8%8A%E6%B5%B7%E5%A4%96%E6%BB%A9.jpg
+[00]: https://www.jianshu.com/p/388e35d8a09b
