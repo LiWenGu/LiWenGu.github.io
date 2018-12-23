@@ -488,9 +488,10 @@ pangu: false
 # Copyright 2015-2018 GrowingIO, Inc. More info available at http://www.growingio.com
 #growingio_analytics: #your projectId
 
+# 修改：暂时用 valine
 # Disqus
 disqus:
-  enable: true
+  enable: false
   shortname: www-liwenguang-cn
   count: true
   lazyload: false
@@ -506,16 +507,16 @@ changyan:
 # You can get your appid and appkey from https://leancloud.cn
 # more info please open https://valine.js.org
 valine:
-  enable: false # When enable is set to be true, leancloud_visitors is recommended to be closed for the re-initialization problem within different leancloud adk version.
-  appid:  # your leancloud application appid
-  appkey:  # your leancloud application appkey
+  enable: true # When enable is set to be true, leancloud_visitors is recommended to be closed for the re-initialization problem within different leancloud adk version.
+  appid: tPNbcXbsHeBH6mDDuQiRNAIi-gzGzoHsz # your leancloud application appid
+  appkey: DuDTx0gUNp6hJiNaBNXPREQQ # your leancloud application appkey
   notify: false # mail notifier , https://github.com/xCss/Valine/wiki
   verify: false # Verification code
   placeholder: Just go go # comment box placeholder
   avatar: mm # gravatar style
   guest_info: nick,mail,link # custom comment header
   pageSize: 10 # pagination size
-  visitor: false # leancloud-counter-security is not supported for now. When visitor is set to be true, appid and appkey are recommended to be the same as leancloud_visitors' for counter compatibility. Article reading statistic https://valine.js.org/visitor.html
+  visitor: true # leancloud-counter-security is not supported for now. When visitor is set to be true, appid and appkey are recommended to be the same as leancloud_visitors' for counter compatibility. Article reading statistic https://valine.js.org/visitor.html
 
 # Support for LiveRe comments system.
 # You can get your uid from https://livere.com/insight/myCode (General web site)
@@ -653,11 +654,12 @@ leancloud_visitors:
 # Another tool to show number of visitors to each article.
 # visit https://console.firebase.google.com/u/0/ to get apiKey and projectId
 # visit https://firebase.google.com/docs/firestore/ to get more information about firestore
+# 修改存储文章
 firestore:
-  enable: false
+  enable: true
   collection: articles #required, a string collection name to access firestore database
-  apiKey: #required
-  projectId: #required
+  apiKey: AIzaSyCVkqzEnqL4-ArA42P-GpCQOtkQ4N78OxU #required
+  projectId: blog-9a4f7 #required
   bluebird: false #enable this if you want to include bluebird 3.5.1(core version) Promise polyfill
 
 # Show Views/Visitors of the website/page with busuanzi.
@@ -1011,7 +1013,7 @@ vendors:
 
   # valine comment
   # Example: https://cdn.jsdelivr.net/npm/valine@1.1.8/dist/Valine.min.js
-  valine:
+  valine: https://cdn.jsdelivr.net/npm/valine@1.3.4/dist/Valine.min.js
 
 # Assets
 css: css
