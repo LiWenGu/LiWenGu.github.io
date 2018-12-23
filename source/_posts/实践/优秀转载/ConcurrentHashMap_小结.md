@@ -12,13 +12,10 @@ comments: true
 permalink: reprint_jvm/concurrenthashmap.html  
 ---
 
-![][0]
+![][0]  
+在多线程环境下，使用 `HashMap` 进行 `put` 操作时由于有 `resize` 存在，因此会有死锁隐患，为了避免这种bug的隐患，强烈建议使用 `ConcurrentHashMap` 代替 `HashMap`，为了对更深入的了解，本文将对 `JDK1.7` 和 `JDK1.8` 的不同实现进行分析
 
 <!--more-->
-
-在多线程环境下，使用 `HashMap` 进行 `put` 操作时由于有 `resize` 存在，因此会有死锁隐患，为了避免这种bug的隐患，强烈建议使用 `ConcurrentHashMap` 代替 `HashMap`，为了对更深入的了解，本文将对 `JDK1.7` 和 `JDK1.8` 的不同实现进行分析  
-
----
 
 # 1 JDK1.7
 

@@ -12,17 +12,14 @@ comments: true
 permalink: reprint_jvm/jcmd.html  
 ---
 
-![][0]
-
-<!--more-->
-
+![][0]  
 **jcmd** 是 JDK1.7 之后出的命令行工具，如果你是 JDK1.7 之后的项目，建议你用 jcmd 替换掉 jps。  
 你可以使用它来查看堆信息：`jcmd pid GC.heap_dump`  
 也可以用来查看当前所有的 VM 虚拟机：`jcmd -l`  
 以及还有当前 VM 虚拟机的参数信息：`jcmd PID VM.flags`  
 具体更多命令：`jcmd help` `jcmd PID help`
 
----
+<!--more-->
 
 # 1 概述
 
