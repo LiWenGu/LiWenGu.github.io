@@ -506,8 +506,9 @@ changyan:
 # Valine.
 # You can get your appid and appkey from https://leancloud.cn
 # more info please open https://valine.js.org
+# 修改：评论系统
 valine:
-  enable: true # When enable is set to be true, leancloud_visitors is recommended to be closed for the re-initialization problem within different leancloud adk version.
+  enable: false # When enable is set to be true, leancloud_visitors is recommended to be closed for the re-initialization problem within different leancloud adk version.
   appid: tPNbcXbsHeBH6mDDuQiRNAIi-gzGzoHsz # your leancloud application appid
   appkey: DuDTx0gUNp6hJiNaBNXPREQQ # your leancloud application appkey
   notify: false # mail notifier , https://github.com/xCss/Valine/wiki
@@ -538,6 +539,17 @@ gitment:
   proxy_gateway: # Address of api proxy, See: https://github.com/aimingoo/intersect
   redirect_protocol: # Protocol of redirect_uri with force_redirect_protocol when mint enabled
 
+# Gitalk 
+# Demo: https://gitalk.github.io
+# Reference: https://asdfv1929.github.io/2018/01/20/gitalk/, https://liujunzhou.cn/2018/8/10/gitalk-error/#more
+gitalk:
+  enable: true
+  github_id: LiWenGu # Github repo owner
+  repo: liwengu.github.io # Repository name to store issues.
+  client_id: 9c95a1f557f59b539162 # Github Application Client ID
+  client_secret: 8c2aafea232c2f5de7d16e23667b703b2e0c4215 # Github Application Client Secret
+  admin_user: LiWenGu # GitHub repo owner and collaborators, only these guys can initialize github issues
+  distraction_free_mode: true # Facebook-like distraction free mode
 # Baidu Share
 # Available value:
 #    button | slide
