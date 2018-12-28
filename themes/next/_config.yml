@@ -348,7 +348,7 @@ post_copyright:
 # Dependencies: https://github.com/hexojs/hexo-deployer-git
 post_edit:
   enable: true
-  url: https://github.com/LiWenGu/liwengu.github.io/blob/source/source/_posts/ # Link for view source.
+  url: https://github.com/LiWenGu/liwengu.github.io/edit/source/source/ # Link for view source.
 # url: https://github.com/theme-next/theme-next.org/_posts/edit/master/ # Link for fork & edit.
 
 
