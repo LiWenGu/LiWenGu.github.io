@@ -668,7 +668,7 @@ leancloud_visitors:
 # visit https://firebase.google.com/docs/firestore/ to get more information about firestore
 # 修改存储文章
 firestore:
-  enable: true
+  enable: false
   collection: articles #required, a string collection name to access firestore database
   apiKey: AIzaSyCVkqzEnqL4-ArA42P-GpCQOtkQ4N78OxU #required
   projectId: blog-9a4f7 #required
