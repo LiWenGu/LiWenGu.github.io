@@ -12,6 +12,10 @@ comments: true
 permalink: tech/RocketMQ_jiexi.html    
 ---
 
+![][0]
+
+<!--more-->
+
 # 1 前置知识
 
 可能会有问题，如果描述不当请指出，因为自己对 Netty 源码没看多少
@@ -208,3 +212,5 @@ class Broker {
 4. 分布式事务的种类以及 RocketMQ 支持的分布式消息：https://www.infoq.cn/article/2018/08/rocketmq-4.3-release
 5. 滴滴出行基于RocketMQ构建企业级消息队列服务的实践：https://yq.aliyun.com/articles/664608
 6. 基于《RocketMQ技术内幕》源码注释：https://github.com/LiWenGu/awesome-rocketmq
+
+[0]: https://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/background/2019-04-25%E6%B2%A1%E5%BE%97%E9%80%89.png
