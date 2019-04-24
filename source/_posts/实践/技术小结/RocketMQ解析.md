@@ -25,6 +25,7 @@ Netty 使用 Reactor 线程模型，发挥 epoll 优点
 
 ## 1.2 DirectBuffer、MappedByteBuffer 为什么快？  
 
+不知道
 
 ## 1.3 RocketMQ 不使用 ZooKeeper 作为注册中心的原因，以及自制的 NameServer 优缺点？
 
