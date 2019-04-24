@@ -27,7 +27,7 @@ Netty 使用 Reactor 线程模型，发挥 epoll 优点
 
 ## 1.3 RocketMQ 不使用 ZooKeeper 作为注册中心的原因，以及自制的 NameServer 优缺点？
 
-ZooKeeper 作为支持顺序一致性的中间件，在某些情况下，它为了满足一致性，会丢失一定时间内的可用性，RocketMQ 需要注册中心只是为了发现组件地址，在某些情况下，RocketMQ 的注册中心可以出现数据不一致性，这也是 NameServer 的缺点，因为 NameServer 集群间互不通信，它们之间的注册信息可能会不一致，而且有新的服务器，NameServer 并不会立马通知到 Produer，而是由 Produer 定时去请求 NameServer 获取最新的 Broker/Consumer 信息，但是 NameServer 实现更加简单逻辑更少
+ZooKeeper 作为支持顺序一致性的中间件，在某些情况下，它为了满足一致性，会丢失一定时间内的可用性，RocketMQ 需要注册中心只是为了发现组件地址，在某些情况下，RocketMQ 的注册中心可以出现数据不一致性，这也是 NameServer 的缺点，因为 NameServer 集群间互不通信，它们之间的注册信息可能会不一致，而且有新的服务器加入时，NameServer 并不会立马通知到 Produer，而是由 Produer 定时去请求 NameServer 获取最新的 Broker/Consumer 信息，但是 NameServer 实现更加简单逻辑更少
 
 # 2 单机消息中心
 
