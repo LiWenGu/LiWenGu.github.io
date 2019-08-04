@@ -79,9 +79,15 @@ post/put/update/delete 等情况，这里有两个要注意，一是自己节点
  1. 数据库物理删除 
  2. 发布 ConfigDataChangeEvent 事件
  
- # 8. 配置的获取
+# 8. 配置的获取
  
 1. 直接获取本节点的 CacheItem 值，这个是 concurrenthashmap 类型，存储在内存中
+
+# 9. 配置的整体流程
+
+![][3]  
+https://github.com/LiWenGu/nacos.git  
+https://www.processon.com/view/link/5d441f3fe4b0bc1bbedcf559
 
 # 9. 代码地址
 
@@ -89,3 +95,4 @@ https://github.com/LiWenGu/nacos.git
 
 [1]: https://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/Nacos/536C41DF-52DF-4692-802E-AC3D537A434B.png
 [2]: https://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/Nacos/6015F579-FDC6-490D-9D0E-858D9BC2B827.png
+[3]: https://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/somephoto/Nacos%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86%E6%B5%81%E7%A8%8B.jpg
