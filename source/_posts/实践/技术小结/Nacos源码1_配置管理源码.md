@@ -57,7 +57,9 @@ password：空
 
 后台 console 的账号和密码根据配置文件可以查看：console/src/main/resources/META-INF/schema.sql，如果想修改，因为还有一个 Role 表，需要改动 role 和 user 表
 
-# 5. 配置的监听
+# 5. 配置接口
+
+## 5.1 配置的监听
 
 客户端监听注册中心的配置，其实本质是根据 groupKey（AppId+groupId+namespace）获取对应的 md5，即配置内容的 md5 进行对比是否有更新。默认等待 30s，即是否在 30s 内有改动。
 
@@ -66,7 +68,7 @@ password：空
 2. A->B，其实A的配置就是最新的，B的配置和A的配置一样，那么 A 请求阻塞 30s（默认Long-Pulling-Timeout配置），B的监听接口使用 Servlet 3.0 异步进行 10s 一次的循环，来根据 groupKey 拿配置的md5，进行对比是否改动，如果改动则返回，不改动理论上会等待30s。
 3. A->B，属于情况2的变种，就是，在情况2等待30s过程中，B2配置改变了，那么会根据事件分发以及 http 内部节点之间请求，B2会通知B，B最后来通知A，此时A会立刻返回
 
-# 6. 配置的修改
+## 5.2 配置的修改
 
 post/put/update/delete 等情况，这里有两个要注意，一是自己节点的内存更新，和其它节点的通知更新
 
@@ -74,22 +76,22 @@ post/put/update/delete 等情况，这里有两个要注意，一是自己节点
 2. 其它节点：得到http请求后，这个communication接口做了两件事，一是 dump：即根据是否是集群模式，如果是集群模式来将配置信息写入到硬盘（TODO：为什么硬盘？不写MYSQL吗？），二是 TaskMgr 0.1s 死轮询关键任务，这个关键任务就包括的事件改动的通知，这个任务内部做了 CacheItem 刷本节点的内存最新值，二是发布 LocalDataChangeEvent 事件给 LongPollingService 监听，其中 LongPollingService 内部会做 DataChangeTask 的任务来让响应 ClientLongPolling.sendResponse() 方法，从而让监听者即时返回  asyncContext.complete()  
 修改会有点绕，因为里面的发布订阅和定时任务太多了
  
- # 7. 配置的删除
+## 5.3 配置的删除
  
  1. 数据库物理删除 
  2. 发布 ConfigDataChangeEvent 事件
  
-# 8. 配置的获取
+## 5.4 配置的获取
  
 1. 直接获取本节点的 CacheItem 值，这个是 concurrenthashmap 类型，存储在内存中
 
-# 9. 配置的整体流程
+## 5.5 配置的整体流程
 
 ![][3]  
 https://github.com/LiWenGu/nacos.git  
 https://www.processon.com/view/link/5d441f3fe4b0bc1bbedcf559
 
-# 9. 代码地址
+# 6. 代码地址
 
 https://github.com/LiWenGu/nacos.git
 
