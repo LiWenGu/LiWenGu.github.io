@@ -17,7 +17,7 @@ permalink: tech/nacos1_service_instance_1.html
 1. 加入 VM option：`-Dnacos.standalone=true
 -Dnacos.functionMode=naming` 
 2. 启动 console 项目，查看 banner  
-![9a2c4dc62b9fc2e7e1acdbff1f77b2cd.png](evernotecid://7C43DEBC-F54E-48C8-9331-D22177889D6C/appyinxiangcom/11126461/ENResource/p158)
+![][1]
 
 # 1. service 与 instance 的逻辑关系
 
@@ -117,3 +117,5 @@ public void signalPublish(String key, Record value) throws Exception {
 instance 增加时，如果没有对应的 service，会默认创建该 service，如果已经有了 service ，会直接塞入到该 service 的 instanceList 中，具体细节在 ServiceManager 中进行操作。  
 接着判断增加的 instance 是否临时来使用不同的一致性协议，如果为临时实例，使用 distro 协议，如果非临时实例，使用 raft 协议。distro 协议大致为定时任务广播其它节点+保存内存，其中广播的接口为 /distro/dump。
 >distro 协议为自制协议，AP
+
+[1]: https://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/somephoto/Nacos1_naming_1.png
