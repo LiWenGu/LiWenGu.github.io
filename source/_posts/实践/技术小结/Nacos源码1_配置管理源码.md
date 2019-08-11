@@ -1,7 +1,7 @@
 ---
 title: Nacos源码1_配置管理源码
-date: 2019-08-10 18:50:10
-updated: 2018-06-18 18:50:10
+date: 2019-08-03 18:50:10
+updated: 2018-06-03 18:50:10
 tags:
   - 中间件
   - Nacos
@@ -16,7 +16,7 @@ permalink: tech/nacos1_config1.html
 
 1. fork 源地址：https://github.com/alibaba/nacos.git
 2. git clone 自己 fork 版本
-3. 现在基于 0.9.0 版本，nacos 项目基于标签做的版本发布，因此直接 git checkout 0.9.0 然后再基于此新建一个分支，用于源码的修改等
+3. 现在基于 1.1.3 版本，nacos 项目基于标签做的版本发布，因此直接 git checkout 1.1.3 然后再基于此新建一个分支，用于源码的修改等
 4. 在根目录下运行：mvn clean -Dmaven.test.skip=true，下载相关依赖包，检查环境
 5. 运行 console 项目主类，加上 VM options：-Dnacos.standalone=true  
 ![][1]
