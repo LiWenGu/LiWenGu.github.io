@@ -118,4 +118,8 @@ instance 增加时，如果没有对应的 service，会默认创建该 service�
 接着判断增加的 instance 是否临时来使用不同的一致性协议，如果为临时实例，使用 distro 协议，如果非临时实例，使用 raft 协议。distro 协议大致为定时任务广播其它节点+保存内存，其中广播的接口为 /distro/dump。
 >distro 协议为自制协议，AP
 
+# 4. 代码地址
+
+https://github.com/LiWenGu/nacos.git
+
 [1]: https://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/somephoto/Nacos1_naming_1.png
