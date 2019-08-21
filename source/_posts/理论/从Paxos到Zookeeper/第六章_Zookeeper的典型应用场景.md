@@ -3,8 +3,11 @@ title: 六、Zookeeper的典型应用场景
 date: 2017-08-30 00:08:00
 updated: 2017-09-05 23:09:00
 comments: true
+tags:
+  - zookeeper
+  - paxos
 categories: 
-- 读书笔记
+- 理论
 - 从Paxos到Zookeeper分布式一致性原理与实践
 permalink: paxos2zookeeper/6.html    
 ---

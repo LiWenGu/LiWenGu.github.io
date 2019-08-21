@@ -3,9 +3,11 @@ title: 十四、SSL/TLS-为了更安全的通信
 date: 2017-12-04 23:31:00
 updated: 2017-12-06 23:40:00
 comments: true
+tags:
+  - 密码学
 categories: 
-- 读书笔记
-- 图解密码技术
+  - 理论
+  - 图解密码技术
 permalink: graphic2cryptography/14.html    
 ---
 

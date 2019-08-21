@@ -6,8 +6,8 @@ tags:
   - 中间件
   - Nacos
 categories: 
-  - 小结
-  - Nacos
+  - 实践
+  - 技术小结
 comments: true
 permalink: tech/nacos1_config1.html    
 ---

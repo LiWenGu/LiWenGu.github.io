@@ -3,8 +3,11 @@ title: 电影《帕丁顿熊》有感
 date: 2017-12-13 00:33:00
 updated: 2017-12-13 00:33:00
 comments: true
+tags:
+  - 电影
 categories: 
-- 闲聊
+  - 实践
+  - 闲聊
 permalink: talker/paddington.html    
 ---
 

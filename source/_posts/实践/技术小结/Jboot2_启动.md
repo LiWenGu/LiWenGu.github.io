@@ -5,8 +5,8 @@ updated: 2018-01-12 18:37:00
 tags:
   - jboot
 categories: 
-  - 小结
-  - jboot
+  - 实践
+  - 技术小结
 comments: true
 permalink: tech/Jboot_2.html    
 ---

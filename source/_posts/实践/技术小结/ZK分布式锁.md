@@ -6,8 +6,8 @@ tags:
   - 中间件
   - ZooKeeper
 categories: 
-  - 小结
-  - ZooKeeper
+  - 实践
+  - 技术小结
 comments: true
 permalink: tech/zk_distribute_lock.html    
 ---

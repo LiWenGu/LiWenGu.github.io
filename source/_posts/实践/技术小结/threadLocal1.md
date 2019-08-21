@@ -5,8 +5,8 @@ updated: 2017-12-22 01:24:00
 tags:
   - threadlocal
 categories: 
-  - 小结
-  - threadlocal
+  - 实践
+  - 技术小结
 comments: true
 permalink: tech/threadlocal_1.html 
 ---

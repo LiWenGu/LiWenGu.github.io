@@ -3,9 +3,11 @@ title: 一、bash shell 命令
 date: 2018-05-16 23:51:00
 updated: 2018-05-16 23:51:00
 comments: true
+tags:
+  - shell
 categories: 
-- 读书笔记
-- Linux命令行与shell脚本编程大全
+  - 理论
+  - Linux命令行与shell脚本编程大全
 permalink: linux_cli_shell/1.html    
 ---
 

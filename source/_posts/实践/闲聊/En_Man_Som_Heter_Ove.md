@@ -3,8 +3,11 @@ title: 电影《一个叫欧维的男人决定去死》有感~
 date: 2017-11-23 23:11:00
 updated: 2017-11-23 23:11:00
 comments: true
+tags:
+  - 电影
 categories: 
-- 闲聊
+  - 实践
+  - 闲聊
 permalink: talker/2.html    
 ---
 

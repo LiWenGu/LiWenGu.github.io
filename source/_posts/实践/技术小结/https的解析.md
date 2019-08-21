@@ -6,8 +6,8 @@ tags:
   - https
   - 密码
 categories: 
-  - 小结
-  - https
+  - 实践
+  - 技术小结
 comments: true
 permalink: tech/https_tls.html    
 ---

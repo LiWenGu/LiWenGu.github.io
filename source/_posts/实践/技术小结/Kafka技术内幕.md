@@ -6,8 +6,8 @@ tags:
   - Kafka
   - 中间件
 categories: 
-  - 小结
-  - MQ
+  - 实践
+  - 技术小结
 comments: true
 permalink: tech/Kafka_jiexi.html    
 ---

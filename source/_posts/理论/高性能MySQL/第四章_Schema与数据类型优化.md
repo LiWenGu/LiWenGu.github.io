@@ -3,11 +3,11 @@ title: 四、Schema与数据类型优化
 date: 2017-12-25 12:31:00
 updated: 2017-12-28 00:28:00
 comments: true
-categories: 
-  - 读书笔记
-  - 高性能MySQL
 tags:
-  - MySQL
+  - mysql
+categories: 
+  - 理论
+  - 分布式服务框架原理与实践
 permalink: high_performance_MySQL/4.html    
 ---
 

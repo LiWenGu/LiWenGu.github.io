@@ -3,9 +3,11 @@ title: 三四、Java 性能调优工具箱|JIT编译器：概述
 date: 2017-01-10 12:00:00
 updated: 2017-01-12 18:37:00
 comments: true
+tags:
+  - java
 categories: 
-- 读书笔记
-- Java 性能权威指南
+  - 理论
+  - Java性能权威指南
 permalink: java_performance_the_definitive_guide/3_4.html    
 ---
 

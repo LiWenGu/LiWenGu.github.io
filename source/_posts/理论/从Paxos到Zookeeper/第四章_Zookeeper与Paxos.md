@@ -3,8 +3,11 @@ title: 四、Zookeeper与Paxos
 date: 2017-08-25 21:08:00
 updated: 2017-08-28 00:08:00
 comments: true
+tags:
+  - zookeeper
+  - paxos
 categories: 
-- 读书笔记
+- 理论
 - 从Paxos到Zookeeper分布式一致性原理与实践
 permalink: paxos2zookeeper/4.html    
 ---

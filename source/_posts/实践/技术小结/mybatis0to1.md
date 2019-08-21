@@ -5,8 +5,8 @@ updated: 2017-12-18 22:10:00
 tags:
   - mybatis
 categories: 
-  - 小结
-  - mybatis
+  - 实践
+  - 技术小结
 comments: true
 permalink: tech/mybatis0to1.html 
 ---

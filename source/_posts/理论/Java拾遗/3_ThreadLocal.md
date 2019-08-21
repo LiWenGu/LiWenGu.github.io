@@ -3,8 +3,11 @@ title: ThreadLocal
 date: 2018-04-13 18:00:00
 updated: 2018-04-13 19:00:00
 comments: true
+tags:
+  - java
 categories: 
-- Java 拾遗
+  - 理论
+  - Java拾遗
 permalink: A2B_Java/3_ThreadLocal.html    
 ---
 

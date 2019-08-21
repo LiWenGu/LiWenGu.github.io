@@ -3,9 +3,11 @@ title: 十三、PGP——密码技术的完美组合
 date: 2017-12-07 23:44:00
 updated: 2017-12-07 23:44:00
 comments: true
+tags:
+  - 密码学
 categories: 
-- 读书笔记
-- 图解密码技术
+  - 理论
+  - 图解密码技术
 permalink: graphic2cryptography/13.html    
 ---
 

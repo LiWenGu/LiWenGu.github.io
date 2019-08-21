@@ -5,7 +5,8 @@ updated: 2019-08-21 23:25:00
 tags:
   - 密码
 categories: 
-  - 小结
+  - 实践
+  - 技术小结
 comments: true
 permalink: tech/algo_go_1.html 
 ---

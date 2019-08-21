@@ -3,8 +3,12 @@ title: 去中心化
 date: 2017-12-05 01:06:00
 updated: 2017-12-05 01:06:00
 comments: true
+tags:
+  - 去中心化
+  - 区块链技术
 categories: 
-- 闲聊
+  - 实践
+  - 闲聊
 permalink: talker/decentralization_1.html    
 ---
 

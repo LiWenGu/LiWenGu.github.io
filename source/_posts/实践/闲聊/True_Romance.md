@@ -3,8 +3,11 @@ title: 电影《内在美》有感~
 date: 2017-11-15 11:50:00
 updated: 2017-11-15 11:50:00
 comments: true
+tags:
+  - 电影
 categories: 
-- 闲聊
+  - 实践
+  - 闲聊
 permalink: talker/1.html    
 ---
 
