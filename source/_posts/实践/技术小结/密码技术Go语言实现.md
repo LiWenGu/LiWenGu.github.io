@@ -11,6 +11,8 @@ comments: true
 permalink: tech/algo_go_1.html 
 ---
 
+[TOC]
+
 # 0. 基础
 
 加密三要素：
@@ -247,4 +249,397 @@ func TestAES(t *testing.T) {
 
 # 2. 非对称密码
 
+## 2.1 相关知识
+
+关键在于解决了秘钥的配送问题   
+核心在于 RSA 算法以及 X509标准、Pem 格式文件
+
+生成私钥：
+
+1. 使用 rsa 生成私钥
+2. 通过 x509 标准序列化为 ASN.1 的 DER 编码字符串
+3. 将私钥字符串设置到 pem 格式块中
+4. 通过 pem 将设置好的数据进行编码，写入文件中
+
+生成公钥：
+
+1. 从私钥对象取出公钥信息
+2. 通过 x509 标准将得到的 rsa 公钥序列化为字符串
+3. 将公钥字符串设置到 pem 格式块中
+4. 通过 pem 将设置好的数据进行编码，写入文件中
+
+## 2.2 工程实现
+
+算法核心类：
+```go
+package src
+
+import (
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
+	"os"
+)
+
+// 生成非对称秘钥对
+func RsaGenKey(bits int) {
+	// 1. 使用 rsa 的 GenerateKey 方法生成私钥
+	privateKey, err := rsa.GenerateKey(rand.Reader, bits)
+	if err != nil {
+		panic(err)
+	}
+	// 2. 通过 x509 标准将得到的 rsa 私钥序列化为 ASN.1 的 DER 编码字符串
+	privateStream := x509.MarshalPKCS1PrivateKey(privateKey)
+	// 3. 将私钥字符串设置到 pem 格式块中
+	block := pem.Block{
+		Type:    "RSA Private Key",
+		Headers: nil,
+		Bytes:   privateStream,
+	}
+	// 4. 通过 pem 将设置好的数据进行编码，写入文件
+	privateFile, err := os.Create("private.pem")
+	if err != nil {
+		panic(err)
+	}
+	err = pem.Encode(privateFile, &block)
+	if err != nil {
+		panic(err)
+	}
+	defer privateFile.Close()
+
+	// 1. 从得到的私钥对象中将公钥信息取出
+	pubKey := privateKey.PublicKey
+	// 2. 通过 x509 标准将得到的 rsa 公钥序列化为字符串
+	pubStream := x509.MarshalPKCS1PublicKey(&pubKey)
+	// 3. 将公钥字符串设置到 pem 格式块中
+	block = pem.Block{
+		Type:    "RSA Public key",
+		Headers: nil,
+		Bytes:   pubStream,
+	}
+	// 4. 通过 pem 将设置好的数据进行编码，写入文件
+	pubFile, err := os.Create("public.pem")
+	if err != nil {
+		panic(err)
+	}
+	err = pem.Encode(pubFile, &block)
+	if err != nil {
+		panic(err)
+	}
+	defer pubFile.Close()
+}
+
+// 公钥加密函数
+func RSAPublicEncrypto(src []byte, pathName string) []byte {
+	// 1. 得到公钥文件中的公钥
+	file, err := os.Open(pathName)
+	if err != nil {
+		panic(err)
+	}
+	info, err := file.Stat()
+	if err != nil {
+		panic(err)
+	}
+	recevBuf := make([]byte, info.Size())
+	file.Read(recevBuf)
+	// 2. 将得到的字符串解码
+	block, _ := pem.Decode(recevBuf)
+	// 3. 使用 xx509 将编码之后公钥解析出来
+	pubKey, err := x509.ParsePKCS1PublicKey(block.Bytes)
+	if err != nil {
+		panic(nil)
+	}
+	// 4. 使用公钥加密
+	msg, err := rsa.EncryptPKCS1v15(rand.Reader, pubKey, src)
+	if err != nil {
+		panic(err)
+	}
+	return msg
+}
+
+// 使用私钥解密
+func RSAPrivateDecrypt(src []byte, pathName string) []byte {
+	// 1. 打开私钥文件
+	file, err := os.Open(pathName)
+	if err != nil {
+		panic(err)
+	}
+	// 2. 读私钥文件内容
+	info, _ := file.Stat()
+	recevBuf := make([]byte, info.Size())
+	file.Read(recevBuf)
+	// 3. 将得到的字符串解码
+	block, _ := pem.Decode(recevBuf)
+	// 4. 通过 x509 还原私钥数据
+	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err != nil {
+		panic(err)
+	}
+	msg, err := rsa.DecryptPKCS1v15(rand.Reader, privateKey, src)
+	if err != nil {
+		panic(err)
+	}
+	return msg
+}
+```
+
+测试类：
+```go
+package src
+
+import (
+	"fmt"
+	"testing"
+)
+
+func TestRsaGenKey(t *testing.T) {
+	RsaGenKey(4096)
+
+	src := []byte("我是一个明文")
+	fmt.Println("加密前：" + string(src))
+	data := RSAPublicEncrypto(src, PublicKeyFile)
+	fmt.Println("加密后：" + string(data))
+	data = RSAPrivateDecrypt(data, PrivateKeyFile)
+	fmt.Println("解密后：" + string(data))
+}
+```
+
+# 3. 单向散列函数
+
+## 3.1 相关知识
+
+根据任意长度的消息计算出固定长度的散列值的一种数学函数  
+
+1. 能够快速计算出散列值  
+2. 消息不同散列值也不同
+3. 消息长度不影响散列值的长度
+
+常用的函数有：  
+1. MD4
+2. MD5
+3. SHA-1
+4. SHA-256
+5. SHA-512
+
+## 3.2 工程实现
+
+核心类
+```go
+package src
+
+import (
+	"crypto/md5"
+	"encoding/hex"
+)
+
+func GetMD5Str_1(src []byte) string {
+	res := md5.Sum(src)
+	myres := hex.EncodeToString(res[:])
+	return myres
+}
+
+func GetMD5Str_2(src []byte) string {
+	hash := md5.New()
+	// io.WriteString(hash, string(src))
+	hash.Write(src)
+	res := hash.Sum(nil)
+	// 散列值格式化
+	myres := hex.EncodeToString(res)
+	return myres
+}
+```
+
+测试类：
+```go
+package src
+
+import (
+	"fmt"
+	"testing"
+)
+
+func TestGetMD5Str_1(t *testing.T) {
+	str := GetMD5Str_1([]byte("我是一个明文"))
+	// e8e0915549a588dca746a1db55c75b35
+	fmt.Println(str)
+}
+
+func TestGetMD5Str_2(t *testing.T) {
+	str := GetMD5Str_2([]byte("我是一个明文"))
+	// e8e0915549a588dca746a1db55c75b35
+	fmt.Println(str)
+}
+```
+
+# 4. 消息认证码
+
+## 4.1 相关知识
+
+全称：message authentication code，简称 MAC  
+
+它主要是为了解决消息的完整性，即消息在过程中是否被篡改 
+算法过程：基于**秘钥**和**消息摘要（使用单向散列函数）**获得的一个值
+
+A 发送给 B 消息，B 解码之后发现是乱码，但是不确定是不是 B 发错了还是说 B 本来发的就是乱码，即消息接收的是否是完整的，即消息没有被篡改，消息被改变，但是依然可以解出数据，但是不知道数据是否可靠
+
+为什么出现消息认证码：  
+1. 验证数据是否被篡改
+2. 验证数据是否完整
+
+使用场景：
+IPSec：IP 协议的增强版
+
+类型：
+HMAC：使用 hash 算法实现的消息认证码
+
+消息认证码存在的问题：  
+1. 对第三方证明：A 向 B 发送消息，B 想要向 C 证明这条消息的确是 A 发送的，但是消息认证码无法证明：因为有可能这条消息是 B 自己发的，诬陷 A（这是由于秘钥的对称，A 和 B 都有相同的秘钥，导致的）
+2. 防止否认：A 就算向 B 发送了消息，但只有 B 知道，B 无法跟别人证明这真是 A 发送的而不是 B 自己捏造的，因为 A 可以不承认，并且说：这是 B 发的，跟我无关。即无法防止发送方否认
+3. 无法有效的配送秘钥：因为要保证 A B 都是相同的秘钥
+
+## 4.2 工程实现
+
+核心类：
+```go
+package src
+
+import (
+	"crypto/hmac"
+	"crypto/sha256"
+)
+
+func GenerateHMAC(src, key []byte) []byte {
+	hasher := hmac.New(sha256.New, key)
+
+	mac := hasher.Sum(nil)
+	return mac
+}
+
+func VerifyHMAC(src, key, mac1 []byte) bool {
+	mac2 := GenerateHMAC(src, key)
+	return hmac.Equal(mac1, mac2)
+}
+```
+
+测试类：
+```go
+package src
+
+import (
+	"fmt"
+	"testing"
+)
+
+func TestGenerateHMAC(t *testing.T) {
+	src := []byte("我是一个明文的hash值")
+	key := []byte("12345678")
+	mac1 := GenerateHMAC(src, key)
+	fmt.Printf("mac1: %x\n", mac1)
+	isEqual := VerifyHMAC(src, key, mac1)
+	fmt.Println(isEqual)
+}
+```
+
+# 5. 数字签名
+
+## 5.1 相关知识
+
+![][2]
+
+解决消息认证码的问题：
+1. 无法有效的配送密码->不需要配送（使用非对称加密）
+2. 无法进行第三方证明->只要持有公钥，就可以帮助认证
+3. 无法防止发送方否认->私钥只有发送方持有
+
+算法过程，为了方便理解，这里将 A 直接指为明文，实际中 A 应该为加密后的密文：
+1. 发送方：根据原文 A 使用摘要算法得到 H1，对 H1 使用私钥进行签名（可以理解为加密）H1 + privateKey = S，将 S 和 A 发送
+2. 接收方：接收到 A 后，使用相同的摘要算法得到 H2。接收到 S 后，使用公钥验签（可以理解为解密）S + privateKey = H1。最后对比 H1 和接收到 H2，是否一致，来完成验签
+
+## 5.2 工程实现
+
+核心类：
+```go
+package src
+
+import (
+	"crypto"
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/sha256"
+	"crypto/x509"
+	"encoding/pem"
+	"io/ioutil"
+)
+
+// 私钥签名
+func RsaSignData(filename string, src []byte) []byte {
+	info, err := ioutil.ReadFile(filename)
+	if err != nil {
+		panic(err)
+	}
+
+	block, _ := pem.Decode(info)
+	derText := block.Bytes
+	privateKey, err := x509.ParsePKCS1PrivateKey(derText)
+	if err != nil {
+		panic(nil)
+	}
+	// 1. 获取原文的 hash 值
+	hash := sha256.Sum256(src)
+	// 2. 对原文 hash 值使用私钥进行签名
+	signature, err := rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA256, hash[:])
+	if err != nil {
+		panic(err)
+	}
+	return signature
+}
+
+// 公钥认证
+func RsaVerifySignature(sign []byte, src []byte, filename string) bool {
+	info, err := ioutil.ReadFile(filename)
+	if err != nil {
+		panic(err)
+	}
+	block, _ := pem.Decode(info)
+	derText := block.Bytes
+	publicKey, err := x509.ParsePKCS1PublicKey(derText)
+	if err != nil {
+		panic(nil)
+	}
+	// 1. 获取原文的 hash 值
+	hash := sha256.Sum256(src)
+	// 2. 公钥解密签名
+	err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, hash[:], sign)
+	if err != nil {
+		return false
+	}
+	return true
+}
+```
+
+测试类：
+```go
+package src
+
+import (
+	"fmt"
+	"testing"
+)
+
+// 私钥签名
+func TestRsaSign(t *testing.T) {
+	src := []byte("我是一个明文哦")
+	signature := RsaSignData(PrivateKeyFile, src)
+	fmt.Println("密文：" + string(signature))
+	isVerify := RsaVerifySignature(signature, src, PublicKeyFile)
+	if isVerify {
+		fmt.Println("验证成功")
+	} else {
+		fmt.Println("验证失败")
+	}
+}
+```
+
 [1]: https://community.cisco.com/legacyfs/online/legacy/9/6/8/112869-des3p1.gif
+[2]: https://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/somephoto/2019-08-27%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D.jpg
