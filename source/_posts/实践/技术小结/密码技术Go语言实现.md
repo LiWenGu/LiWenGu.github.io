@@ -11,8 +11,6 @@ comments: true
 permalink: tech/algo_go_1.html 
 ---
 
-[TOC]
-
 # 0. 基础
 
 加密三要素：

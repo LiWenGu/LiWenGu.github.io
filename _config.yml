@@ -3,9 +3,10 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hello
+# 改动
+title: 不坠青云志
 subtitle: 严律己，宽待人
-description: There is no shortcuts to success.
+description: Not you, who?
 keywords: Java
 author: 李文文 | zed
 language: zh-CN
@@ -13,12 +14,13 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://blog.liwenguang.com
+url: https://blog.liwenguang.com
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 
 # Directory
+# 改动
 source_dir: source
 public_dir: public
 tag_dir: tags
@@ -83,8 +85,23 @@ theme: next
 deploy:
   type:
 
+# 改动
 search:
   path: search.xml
   field: post
   format: html
   limit: 10000
+
+# 改动
+# Security
+encrypt: # hexo-blog-encrypt
+  enable: true
+
+# 改动 增加字数统计
+symbols_count_time:
+  symbols: true 
+  time: true 
+  total_symbols: true 
+  total_time: true 
+  exclude_codeblock: false
+
