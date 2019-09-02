@@ -20,6 +20,8 @@ branches:
 
 # tarvis生命周期执行顺序详见官网文档
 before_install:
+  - git submodule init
+  - git submodule update
   - npm install -g hexo-cli
 
 install:
