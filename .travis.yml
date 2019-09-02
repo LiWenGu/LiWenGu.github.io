@@ -5,7 +5,7 @@ sudo: false
 
 # node版本
 node_js:
-  - "7"
+  - "10.16.3"
 
 # 设置只监听哪个分支
 branches:
