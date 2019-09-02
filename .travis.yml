@@ -19,9 +19,11 @@ branches:
 #     - node_modules
 
 # tarvis生命周期执行顺序详见官网文档
+git:
+  submodules: false
 before_install:
-  - git submodule init
-  - git submodule update
+  - echo -e "machine github.com\n  login 1254755805@qq.com\n  password ${CI_USER_PASSWORD}" >~/.netrc
+  - git submodule update --init --recursive
   - npm install -g hexo-cli
 
 install:
