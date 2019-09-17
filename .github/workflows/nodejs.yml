@@ -19,6 +19,7 @@ jobs:
     - name: prepared
       run: |
         git submodule update --remote
+        npm install -g hexo-cli
         npm install
         hexo clean
         hexo generate
