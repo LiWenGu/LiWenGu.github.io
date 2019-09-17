@@ -16,7 +16,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: prepared
+    - name: done
       run: |
         git submodule update --remote
         npm install -g hexo-cli
@@ -29,9 +29,5 @@ jobs:
         git init
         git add --all .
         git commit -m "CI Auto Builder"
-    - name: deploy to github
-      run: |
         git push --quiet --force https://${GITHUB_REPO_TOKEN}@github.com/LiWenGu/liwengu.github.io master:master
-    - name: deploy to coding
-      run: |
         git push --quiet --force https://liwenguang:${CODING_REPO_TOKEN}@git.dev.tencent.com/liwenguang/liwenguang.coding.me.git master:master
