@@ -1,0 +1,36 @@
+name: MyBlog CI
+on:
+  push:
+    branches:
+      - source
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: prepared
+      run: |
+        git submodule update --remote
+        npm install
+        hexo clean
+        hexo generate
+        cd ./public
+        git config --global user.name "liwenguang"
+        git config --global user.email "liwenguang_dev@163.com"
+        git init
+        git add --all .
+        git commit -m "CI Auto Builder"
+    - name: deploy to github
+      run: |
+        git push --quiet --force https://${GITHUB_REPO_TOKEN}@github.com/LiWenGu/liwengu.github.io master:master
+    - name: deploy to coding
+      run: |
+        git push --quiet --force https://liwenguang:${CODING_REPO_TOKEN}@git.dev.tencent.com/liwenguang/liwenguang.coding.me.git master:master
