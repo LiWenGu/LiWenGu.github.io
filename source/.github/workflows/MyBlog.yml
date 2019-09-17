@@ -1,0 +1,33 @@
+name: MyBlog
+on:
+  push:
+    branches:
+      - source
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: done
+      run: |
+        git submodule update --init --recursive
+        npm install -g hexo-cli
+        npm install
+        hexo clean
+        hexo generate
+        cd ./public
+        git config --global user.name "liwenguang"
+        git config --global user.email "liwenguang_dev@163.com"
+        git init
+        git add --all .
+        git commit -m "GITHUB ACTIONS CI Auto Builder"
+        git push --quiet --force https://${{ secrets.GITHUB_REPO_TOKEN }}@github.com/LiWenGu/liwengu.github.io master:master
+        git push --quiet --force https://liwenguang:${{ secrets.CODING_REPO_TOKEN }}@git.dev.tencent.com/liwenguang/liwenguang.coding.me.git master:master
