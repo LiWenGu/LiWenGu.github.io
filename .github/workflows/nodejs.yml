@@ -1,4 +1,4 @@
-name: MyBlog CI
+name: MyBlog
 on:
   push:
     branches:
