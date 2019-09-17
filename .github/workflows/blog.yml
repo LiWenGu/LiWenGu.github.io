@@ -1,24 +1,24 @@
-name: MyBlog
+name: blog
 on:
   push:
     branches:
       - source
 jobs:
   build:
+    name: blog build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
 
     steps:
-    - uses: actions/checkout@v1
+    - name: Git command
+      uses: srt32/git-actions@v0.0.3
+      with:
+        args: git submodule update --init --recursive
     - name: Use Node.js ${{matrix.node-version}}
       uses: actions/setup-node@v1
       with:
         node-version: ${{matrix.node-version}}
     - name: done
       run: |
-        git submodule update --init --recursive
         npm install -g hexo-cli
         npm install
         hexo clean
