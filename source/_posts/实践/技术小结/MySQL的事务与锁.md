@@ -174,5 +174,6 @@ INSERT INTO child (id) VALUES (101);
 # 3. 死锁日志分析
 
 强推大佬的：https://github.com/aneasystone/mysql-deadlocks.git 收集了基本上所有的死锁案例并复现了基本所有案例。线上排查死锁必备。  
-为什么写这篇博文，也是因为该项目如果没有一定的事务和锁基础  
-我是先看了 《MySQL 技术内幕》 一书然后再看该项目作者的死锁博文系列：https://www.aneasystone.com/archives/2018/04/solving-dead-locks-four.html，最后给自己总结的该博文，可能会有误导，因为自己知识有限。
+为什么写这篇博文，也是因为该项目如果没有一定的事务和锁基础很难看懂  
+我是先看了 《MySQL 技术内幕》 一书然后再看该项目作者关于死锁博文系列：https://www.aneasystone.com/archives/2018/04/solving-dead-locks-four.html  
+最后给自己总结的该博文，可能会有误导，因为自己知识有限。
