@@ -29,15 +29,31 @@ reference:
 3. http://dubbo.apache.org/zh-cn/blog/introduction-to-dubbo-spi-2.html
 4. https://github.com/LiWenGu/iris-java.git（轻量级微内核插件机制的 Java RPC 框架）
 
-<!--more-->
-
 ---
 
 如果让你实现类似 SPI 功能，你会如何实现？
 
 # 1. 加载文件反射动态的获得所有扩展相关类
 
-1. 读取名称为接口全路径的文件，文件内容为具体实现类的全路径，将内容全部保存为 Map
+1. 读取名称为接口全路径的文件，文件内容为具体实现类的全路径，将内容全部保存为 Map  
+  
+例如文件名为：  
+com.liwenguang.PayService  
+文件内容为：
+```properties
+impl1=com.liwenguang.impl.PayServiceImpl1
+impl2=com.liwenguang.impl.PayServiceImpl2
+```
+
+最后映射的 Map 为
+```json
+{
+    impl1: Class.for("com.liwenguang.impl.PayServiceImpl1")
+    impl2: Class.for("com.liwenguang.impl.PayServiceImpl2")
+}
+```
+
+扩展类和包装类类似，如下源码：  
 
 ```java
 /**
@@ -177,6 +193,9 @@ reference:
 
 # 2. wrapper 包装的 IOC 实现
 
+IOC 的支持：在扩展类初始化时，将其依赖的扩展类动态的使用构造方法/set方法，塞入。最常用的是生成动态类，在执行方法时，根据参数来决定执行哪个实现类的方法  
+源码如下：  
+
 ```java
 
 public T getExtension(String name, List<String> wrappers) {
@@ -231,7 +250,7 @@ private T injectExtension(T instance) {
     }
 ```
 
-在例子中即可以使用构造方法进行的注入，也支持 set 方法进行注入。但是不支持循环依赖。
+在例子中即可以使用构造方法进行的注入，也支持 set 方法进行注入。但是构造方法由于比较特殊，在 Dubbo 中去除掉了，个人猜测是因为构造方法的循环依赖的问题太难解决了。
 
 # 3. 根据参数在运行时动态切换实现类
 
@@ -335,7 +354,7 @@ private static String getFromMap(Object obj, String[] keys) {
 }
 ```
 
-具体为，当参数为 Map 时，并且请求执行的方法带有 @Adaptive 时，会根据 Map 参数里面的某个 key 的 value，来决定使用
+具体例子为：当参数为 Map 时，并且被请求执行的方法带有 @Adaptive 注解时，会根据 Map 参数里面的某个 key 的 value，来决定使用哪个实现类的方法，例如 Map 中键值对为 key:impl1 那么执行的就是 impl1 方法。
 
 # 4. 完整线路
 
