@@ -2,9 +2,9 @@
 title: 关于
 date: 2017-11-21 01:46:00
 type: "about"
-password: Y
+password: me
 abstract: 足迹
-message: 除非你知道 Y 代表什么，不然请不要输入 Y
+message: Why??!!!!!
 ---
    
 2019-07~至今 杭州装点文化 `Java基础组开发` 
