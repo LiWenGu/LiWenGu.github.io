@@ -35,4 +35,4 @@ jobs:
         git add --all .
         git commit -m "GITHUB ACTIONS CI Auto Builder"
         git push --quiet --force https://${{secrets.GITHUB_REPO_TOKEN}}@github.com/LiWenGu/liwengu.github.io master:master
-        git push --quiet --force https://liwenguang:${{secrets.CODING_REPO_TOKEN}}@git.dev.tencent.com/liwenguang/liwenguang.coding.me.git master:master
+        git push --quiet --force https://liwenguang:${{secrets.CODING_REPO_TOKEN}}@liwenguang.coding.net/liwenguang/liwenguang.coding.me.git master:master
