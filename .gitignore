@@ -7,3 +7,5 @@ public/
 .deploy*/
 target
 .idea/
+*.sy.md
+db.json
