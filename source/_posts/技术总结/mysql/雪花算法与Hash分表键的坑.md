@@ -11,6 +11,10 @@ comments: true
 permalink: tech/mysql/snowflake&hash.html 
 ---
 
+![][0]
+
+<!-- more -->
+
 # 1 雪花算法的位数原理
 
 
@@ -141,6 +145,6 @@ public static long hashC (long snowflakeId) {
 
 这是我在分库分表时，踩下的坑，当时某个业务有个列是雪花算法生成的，因为业务都是它来查值，因此我在分表的时候把它设为分表键，前期数据量比较少，没关注，后面量在 900G 的时候，发现 0000 表占了 500G。然后就开始重新建表，重新分库，开始数据平滑迁移到新表。
 
-
+[0]: https://markdownnoteimages.oss-cn-hangzhou.aliyuncs.com/share.jpg
 
 
