@@ -7,13 +7,14 @@ tags:
 categories: 
   - [技术总结, dubbo]
 comments: true
-permalink: tech/dubbo_spi.html    
+permalink: tech/dubbo/dubbo_spi.html    
 ---
 
 # 0. 背景
 
 最近因为项目需要，需要基于 Dubbo 增加一个 filter，拦截所有的 RPC 请求，打印出请求的相关信息。  
 我自定义的 Filter 作为提供者拦截器一共有三步：
+
 1. 写一个自定义类，实现自 Filter 接口
 2. 在 META-INF/dubbo 下增加一个 org.apache.dubbo.rpc.Filter 的文件名，内容为自定义 Filter 的全路径
 3. 自定义 Filter 类上增加一个 @Activate(group = Constants.PROVIDER, order = -999) 注解  
@@ -21,10 +22,11 @@ permalink: tech/dubbo_spi.html
 因此有个疑问，它是如何生效的呢？我在哪个地方让它生效的呢？因此在参考了一些博客和项目后，有了我这篇总结，分析了 Dubbo SPI 的原理以及我还未使用到的 AOP、IOC 特性是如何实现的。  
   
 reference:  
-1. http://dubbo.apache.org/zh-cn/docs/source_code_guide/dubbo-spi.html
-2. http://dubbo.apache.org/zh-cn/blog/introduction-to-dubbo-spi.html
-3. http://dubbo.apache.org/zh-cn/blog/introduction-to-dubbo-spi-2.html
-4. https://github.com/LiWenGu/iris-java.git（轻量级微内核插件机制的 Java RPC 框架）
+
+1. [http://dubbo.apache.org/zh-cn/docs/source_code_guide/dubbo-spi.html]
+2. [http://dubbo.apache.org/zh-cn/blog/introduction-to-dubbo-spi.html]
+3. [http://dubbo.apache.org/zh-cn/blog/introduction-to-dubbo-spi-2.html]
+4. [https://github.com/LiWenGu/iris-java.git]（轻量级微内核插件机制的 Java RPC 框架）
 
 ---
 
@@ -37,12 +39,14 @@ reference:
 例如文件名为：  
 com.liwenguang.PayService  
 文件内容为：
+
 ```properties
 impl1=com.liwenguang.impl.PayServiceImpl1
 impl2=com.liwenguang.impl.PayServiceImpl2
 ```
 
 最后映射的 Map 为
+
 ```json
 {
     impl1: Class.for("com.liwenguang.impl.PayServiceImpl1")
@@ -355,6 +359,6 @@ private static String getFromMap(Object obj, String[] keys) {
 
 # 4. 完整线路
 
-![][0]
+![完整线路][0]
 
 [0]: https://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/somephoto/2019-10-17_DUBBO_SPI%E5%8E%9F%E7%90%86.jpg
