@@ -28,7 +28,7 @@ reference:
 3. [http://dubbo.apache.org/zh-cn/blog/introduction-to-dubbo-spi-2.html]
 4. [https://github.com/LiWenGu/iris-java.git]（轻量级微内核插件机制的 Java RPC 框架）
 
----
+<!--more-->
 
 如果让你实现类似 SPI 功能，你会如何实现？
 

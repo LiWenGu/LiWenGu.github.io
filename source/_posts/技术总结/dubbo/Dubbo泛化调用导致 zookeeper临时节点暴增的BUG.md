@@ -15,6 +15,8 @@ permalink: tech/dubbo/$invoke_zknode_problem.html
 dubbo 2.7.5，最近发现 zk 的 node 越来越多，监控报警半夜给我打电话。后来排查发现是业务方使用泛化调用不规范！
 但是排查过程学习到了很多。
 
+<!--more-->
+
 # 1. 监控
 
 线上 zk 监控主要是监控 zk 的 node 数量，以及机器 cpu memory，报警主要是 zk 的 node 数量报警，到了阈值。
