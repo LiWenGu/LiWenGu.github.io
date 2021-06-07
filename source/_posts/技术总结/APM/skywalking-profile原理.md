@@ -508,7 +508,7 @@ TracingContext(String firstOPName) {
     this.correlationContext = new CorrelationContext();
     this.extensionContext = new ExtensionContext();
 }
-``
+```
 
 addProfiling 方法最终会走到 ProfileTaskExecutionContext.attemptProfiling 方法，该方法会将当前线程堆栈信息存储 volatile 变量：profilingSegmentSlots 中，该变量会在 ProfileThread.profiling 方法中通过 executionContext.threadProfilerSlots(); 方式死循环取出来。
 
