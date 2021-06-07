@@ -10,7 +10,7 @@ comments: true
 permalink: tech/mq_use.html    
 ---
 
-![][0]
+MQ使用的总结心得，主要是阿里云的开源版 RocketMQ：ONS。
 
 <!--more-->
 
