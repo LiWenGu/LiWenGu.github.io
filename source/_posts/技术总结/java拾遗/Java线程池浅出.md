@@ -5,7 +5,7 @@ updated: 2020-01-02 18:32:00
 tags:
   - java
 categories: 
-  - [实践, java拾遗]
+  - [技术总结, java拾遗]
 comments: true
 permalink: tech/java_threadpool_learing.html    
 ---

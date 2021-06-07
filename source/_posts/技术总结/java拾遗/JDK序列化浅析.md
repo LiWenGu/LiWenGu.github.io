@@ -5,7 +5,7 @@ updated: 2020-01-08 00:10:00
 tags:
   - java
 categories: 
-  - [实践, java拾遗]
+  - [技术总结, java拾遗]
 comments: true
 permalink: tech/jdk_seriazable.html    
 ---

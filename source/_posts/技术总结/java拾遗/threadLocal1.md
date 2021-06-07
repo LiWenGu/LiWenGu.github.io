@@ -5,7 +5,7 @@ updated: 2017-12-22 01:24:00
 tags:
   - java
 categories: 
-  - [实践, java拾遗]
+  - [技术总结, java拾遗]
 comments: true
 permalink: tech/threadlocal_1.html 
 ---
