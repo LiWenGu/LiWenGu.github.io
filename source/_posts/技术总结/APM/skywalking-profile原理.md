@@ -3,7 +3,7 @@ title: skywalking-profile原理
 date: 2021-05-29 15:52:00
 updated: 2021-05-29 15:52:00
 tags:
-  - dubbo
+  - skywalking
 categories: 
   - [技术总结, apm]
 comments: true
