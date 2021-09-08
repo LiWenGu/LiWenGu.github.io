@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Menlo:300,300italic,400,400italic,700,700italic|Monda:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.liwenguang.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Not you, who?">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="website">
+<meta property="og:title" content="不坠青云志">
+<meta property="og:url" content="https://blog.liwenguang.com/page/5/index.html">
+<meta property="og:site_name" content="不坠青云志">
+<meta property="og:description" content="Not you, who?">
+<meta property="og:locale" content="zh-CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="不坠青云志">
+<meta name="twitter:description" content="Not you, who?">
+
+<link rel="canonical" href="https://blog.liwenguang.com/page/5/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>不坠青云志</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146913835-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-146913835-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cfa1bf8fa457ee5150093dc7c8761541";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">不坠青云志</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">严律己，宽待人</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">44</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">31</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">186</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+  <a href="https://github.com/LiWenGu/liwengu.github.io" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2020/05/17/2020/20.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/17/2020/20.html/" class="post-title-link" itemprop="url">2020/20周总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-17 23:12:00" itemprop="dateCreated datePublished" datetime="2020-05-17T23:12:00+00:00">2020-05-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/" itemprop="url" rel="index"><span itemprop="name">行为总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/周总结/" itemprop="url" rel="index"><span itemprop="name">周总结</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/05/17/2020/20.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/17/2020/20.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          除非你觉得你的时间不是很宝贵，否则不要看这篇流水账式的博文，这只是篇个人的工作的学习一个总结而已，没有包含任何的技术细节
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/05/17/2020/20.html/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2020/05/13/2020/19.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/13/2020/19.html/" class="post-title-link" itemprop="url">2020/19周总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-13 00:36:00" itemprop="dateCreated datePublished" datetime="2020-05-13T00:36:00+00:00">2020-05-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/" itemprop="url" rel="index"><span itemprop="name">行为总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/周总结/" itemprop="url" rel="index"><span itemprop="name">周总结</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/05/13/2020/19.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/13/2020/19.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          除非你觉得你的时间不是很宝贵，否则不要看这篇流水账式的博文，这只是篇个人的工作的学习一个总结而已，没有包含任何的技术细节
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/05/13/2020/19.html/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2020/05/04/2020/18.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/05/04/2020/18.html/" class="post-title-link" itemprop="url">2020/18周总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-05-04 23:40:10" itemprop="dateCreated datePublished" datetime="2020-05-04T23:40:10+00:00">2020-05-04</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/" itemprop="url" rel="index"><span itemprop="name">行为总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/周总结/" itemprop="url" rel="index"><span itemprop="name">周总结</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/05/04/2020/18.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/05/04/2020/18.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          除非你觉得你的时间不是很宝贵，否则不要看这篇流水账式的博文，这只是篇个人的工作的学习一个总结而已，没有包含任何的技术细节
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/05/04/2020/18.html/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2020/04/27/2020/17.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/27/2020/17.html/" class="post-title-link" itemprop="url">2020/17周总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-04-27 23:30:10 / 修改时间：23:30:00" itemprop="dateCreated datePublished" datetime="2020-04-27T23:30:10+00:00">2020-04-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/" itemprop="url" rel="index"><span itemprop="name">行为总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/周总结/" itemprop="url" rel="index"><span itemprop="name">周总结</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/04/27/2020/17.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/04/27/2020/17.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          除非你觉得你的时间不是很宝贵，否则不要看这篇流水账式的博文，这只是篇个人的工作的学习一个总结而已，没有包含任何的技术细节
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/27/2020/17.html/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2020/04/13/2020/15.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/04/13/2020/15.html/" class="post-title-link" itemprop="url">2020/15周总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-04-13 22:00:00" itemprop="dateCreated datePublished" datetime="2020-04-13T22:00:00+00:00">2020-04-13</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/" itemprop="url" rel="index"><span itemprop="name">行为总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/周总结/" itemprop="url" rel="index"><span itemprop="name">周总结</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/04/13/2020/15.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/04/13/2020/15.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          除非你觉得你的时间不是很宝贵，否则不要看这篇流水账式的博文，这只是篇个人的工作的学习一个总结而已，没有包含任何的技术细节
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/13/2020/15.html/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2020/03/31/tech/mq_use.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/31/tech/mq_use.html/" class="post-title-link" itemprop="url">MQ使用心得</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-31 22:25:00" itemprop="dateCreated datePublished" datetime="2020-03-31T22:25:00+00:00">2020-03-31</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/工作思考/" itemprop="url" rel="index"><span itemprop="name">工作思考</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/03/31/tech/mq_use.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/03/31/tech/mq_use.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>MQ使用的总结心得，主要是阿里云的开源版 RocketMQ：ONS。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/31/tech/mq_use.html/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2020/03/31/2020/13.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/31/2020/13.html/" class="post-title-link" itemprop="url">2020/13周总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-31 22:04:00" itemprop="dateCreated datePublished" datetime="2020-03-31T22:04:00+00:00">2020-03-31</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/" itemprop="url" rel="index"><span itemprop="name">行为总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/周总结/" itemprop="url" rel="index"><span itemprop="name">周总结</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/03/31/2020/13.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/03/31/2020/13.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          除非你觉得你的时间不是很宝贵，否则不要看这篇流水账式的博文，这只是篇个人的工作的学习一个总结而已，没有包含任何的技术细节
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/31/2020/13.html/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2020/01/23/zookeeper_distributed_process_coordination/1.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/23/zookeeper_distributed_process_coordination/1.html/" class="post-title-link" itemprop="url">《Zookeeper:分布式过程协同技术详解》阅读总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-23 17:21:00" itemprop="dateCreated datePublished" datetime="2020-01-23T17:21:00+00:00">2020-01-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书总结/" itemprop="url" rel="index"><span itemprop="name">读书总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书总结/Zookeeper-分布式过程协同技术详解/" itemprop="url" rel="index"><span itemprop="name">Zookeeper:分布式过程协同技术详解</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/01/23/zookeeper_distributed_process_coordination/1.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/01/23/zookeeper_distributed_process_coordination/1.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="0-背景"><a href="#0-背景" class="headerlink" title="0. 背景"></a>0. 背景</h1><p>公司从 naocs 的注册中心到 zookeeper 注册中心转变，自己也好久没看过 zookeeper 相关了，上次应该看的是《从Paxos到Zookeeper》一书，这次正好趁年假把另一本经典的书《Zookeeper:分布式过程协同技术详解》看下。</p>
+<h1 id="1-总览"><a href="#1-总览" class="headerlink" title="1. 总览"></a>1. 总览</h1><p>一共十章，八章偏入门实战，敲代码和实战理论为主，在 github 上也有相应的源码。第九章是原理讲解，最后一章是配置详解。<br>前八章应该属于入门实战，通过介绍四大节点类型和监听，来实现一个简单的分布式任务协调中心。<br>第九章通过对源码讲解，对关键的“顺序一致性”、“事务”做代码上的了解。<br>最后一章应该属于参数调优，适合运维和部署者，属于优化点。</p>
+<h1 id="2-入门实战"><a href="#2-入门实战" class="headerlink" title="2. 入门实战"></a>2. 入门实战</h1><p>入门实战分布式任务调度中心书中源码地址：<a href="https://github.com/fpj/zookeeper-book-example" target="_blank" rel="noopener">https://github.com/fpj/zookeeper-book-example</a>  </p>
+<p>关键点：  </p>
+<ol>
+<li>临时节点</li>
+<li>临时有序节点</li>
+<li>永久节点</li>
+<li>永久临时节点</li>
+<li>watch 监听</li>
+<li>异步调用</li>
+<li>ACL 权限控制</li>
+<li>watch 羊群效应的避免</li>
+<li>watch 事件类型业务处理</li>
+<li>curator 开源客户端的使用</li>
+</ol>
+<blockquote>
+<p>观察者的横向扩展用于读性能提高。而在选举时的跟随者以及领导者时的 zxid 的 zab 广播协议过程是通过延长领导者选举时间、超过半数来避免脑裂的产生。</p>
+</blockquote>
+<h1 id="3-源码分析"><a href="#3-源码分析" class="headerlink" title="3. 源码分析"></a>3. 源码分析</h1><p>关键步骤：</p>
+<ol>
+<li>git clone <a href="https://github.com/apache/zookeeper.git" target="_blank" rel="noopener">https://github.com/apache/zookeeper.git</a></li>
+<li>ant eclipse 编译</li>
+<li>idea 导入: file - new - Project From Existing Sources</li>
+<li>zookeeper-jute 项目需要编译得到生成之后的代码: maven clean install</li>
+<li>复制 zookeeper-jute 项目的 target/classed/org 到 zookeeper-server 下</li>
+<li><p>在 zookeeper-server 项目的 org.apache.zookeeper.version 包新建 Info 类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Info</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> MAJOR=<span class="number">3</span>;</span><br><span class="line">    <span class="keyword">int</span> MINOR=<span class="number">5</span>;</span><br><span class="line">    <span class="keyword">int</span> MICRO=<span class="number">6</span>;</span><br><span class="line">    String QUALIFIER=<span class="keyword">null</span>;</span><br><span class="line">    String REVISION_HASH=<span class="string">"c11b7e26bc554b8523dc929761dd28808913f091"</span>;</span><br><span class="line">    String BUILD_DATE=<span class="string">"01/19/2020 10:13 GMT"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动 server：执行 org.apache.zookeeper.server.quorum.QuorumPeerMain 类并带 JVM 参数：-Dlog4j.configuration=file:/Users/liwenguang/SourceCode/middle/zookeeper/conf/log4j.properties 以及启动参数：conf/zoo_sample.cfg</p>
+</li>
+</ol>
+<blockquote>
+<p>-Dzookeeper.4lw.commands.whitelist=* 用于 telnet 命令查询。</p>
+</blockquote>
+<ol start="8">
+<li>至此，server 启动完毕</li>
+<li>启动 client：执行 org.apache.zookeeper.ZooKeeperMain，启动参数：-server 127.0.0.1:2181 ls /zookeeper</li>
+</ol>
+<blockquote>
+<ul>
+<li>ls /zookeeper 为命令</li>
+</ul>
+</blockquote>
+<ol start="10">
+<li>至此 client 启动测试完毕</li>
+</ol>
+<h1 id="4-最后"><a href="#4-最后" class="headerlink" title="4. 最后"></a>4. 最后</h1><p>翻译的好烂！错别字不说，句子翻译的都不通畅！但是真适合入门（第九章除外），第九章适合看了《从Paxos到Zookeeper》之后再看。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2020/01/20/2020/01.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/20/2020/01.html/" class="post-title-link" itemprop="url">2020/03周总结</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-20 00:22:00" itemprop="dateCreated datePublished" datetime="2020-01-20T00:22:00+00:00">2020-01-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/" itemprop="url" rel="index"><span itemprop="name">行为总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/周总结/" itemprop="url" rel="index"><span itemprop="name">周总结</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/01/20/2020/01.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/01/20/2020/01.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          除非你觉得你的时间不是很宝贵，否则不要看这篇流水账式的博文，这只是篇个人的工作的学习一个总结而已，没有包含任何的技术细节
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/20/2020/01.html/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2020/01/08/tech/jdk_seriazable.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/08/tech/jdk_seriazable.html/" class="post-title-link" itemprop="url">JDK序列化浅析</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-08 00:10:00" itemprop="dateCreated datePublished" datetime="2020-01-08T00:10:00+00:00">2020-01-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术总结/" itemprop="url" rel="index"><span itemprop="name">技术总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术总结/java拾遗/" itemprop="url" rel="index"><span itemprop="name">java拾遗</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/01/08/tech/jdk_seriazable.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/01/08/tech/jdk_seriazable.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>11k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>10 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="0-背景"><a href="#0-背景" class="headerlink" title="0. 背景"></a>0. 背景</h1><p>一直在用 RPC，但是对非常重要的序列化原理一直模糊不懂，尤其是其中的 serialVersionUID 也模糊不清，虽然 Dubbo 已经帮我们使用了经过优化过的 hession2，但是还是想一探究竟，为什么原生的 JDK 序列化就不行呢？原生 JDK 序列化到底是怎么样的。</p>
+<p>主要参考《分布式Java应用》的<strong>4.3序列化/反序列化</strong>章节</p>
+<h1 id="1-序列化之-writeObject"><a href="#1-序列化之-writeObject" class="headerlink" title="1. 序列化之 writeObject"></a>1. 序列化之 writeObject</h1><h2 id="1-1-获取类信息"><a href="#1-1-获取类信息" class="headerlink" title="1.1 获取类信息"></a>1.1 获取类信息</h2><p>序列化时，需要获取到当前序列化对象的类信息，获取类信息主要是调用的 <code>ObjectStreamClass.lookup(cl, true)</code>，ObjectStreamClass 会通过 ConcurrentMap 缓存类信息优化序列化速度：<code>static final ConcurrentMap&lt;WeakClassKey,Reference&lt;?&gt;&gt; localDescs</code>，其中 key 使用了弱引用（在 ThreadLocal 也有使用弱引用）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">writeObject0</span><span class="params">(Object obj, <span class="keyword">boolean</span> unshared)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> IOException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">        <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">            <span class="comment">// REMIND: skip this check for strings/arrays?</span></span><br><span class="line">            Class&lt;?&gt; repCl;</span><br><span class="line">            <span class="comment">// 获取类信息</span></span><br><span class="line">            desc = ObjectStreamClass.lookup(cl, <span class="keyword">true</span>);</span><br><span class="line">            <span class="keyword">if</span> (!desc.hasWriteReplaceMethod() ||</span><br><span class="line">                    (obj = desc.invokeWriteReplace(obj)) == <span class="keyword">null</span> ||</span><br><span class="line">                    (repCl = obj.getClass()) == cl)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            cl = repCl;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (enableReplace) &#123;</span><br><span class="line">            Object rep = replaceObject(obj);</span><br><span class="line">            <span class="keyword">if</span> (rep != obj &amp;&amp; rep != <span class="keyword">null</span>) &#123;</span><br><span class="line">                cl = rep.getClass();</span><br><span class="line">                desc = ObjectStreamClass.lookup(cl, <span class="keyword">true</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            obj = rep;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// if object replaced, run through original checks a second time</span></span><br><span class="line">        <span class="keyword">if</span> (obj != orig) &#123;</span><br><span class="line">            subs.assign(orig, obj);</span><br><span class="line">            <span class="keyword">if</span> (obj == <span class="keyword">null</span>) &#123;</span><br><span class="line">                writeNull();</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (!unshared &amp;&amp; (h = handles.lookup(obj)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                writeHandle(h);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> Class) &#123;</span><br><span class="line">                writeClass((Class) obj, unshared);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> ObjectStreamClass) &#123;</span><br><span class="line">                writeClassDesc((ObjectStreamClass) obj, unshared);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// remaining cases</span></span><br><span class="line">        <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">            writeString((String) obj, unshared);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (cl.isArray()) &#123;</span><br><span class="line">            writeArray(obj, desc, unshared);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> Enum) &#123;</span><br><span class="line">            writeEnum((Enum&lt;?&gt;) obj, desc, unshared);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> Serializable) &#123;</span><br><span class="line">            writeOrdinaryObject(obj, desc, unshared);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (extendedDebugInfo) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> NotSerializableException(</span><br><span class="line">                        cl.getName() + <span class="string">"\n"</span> + debugInfoStack.toString());</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> NotSerializableException(cl.getName());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        depth--;</span><br><span class="line">        bout.setBlockDataMode(oldMode);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Caches</span> </span>&#123;</span><br><span class="line">    <span class="comment">/** cache mapping local classes -&gt; descriptors */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> ConcurrentMap&lt;ObjectStreamClass.WeakClassKey,Reference&lt;?&gt;&gt; localDescs =</span><br><span class="line">            <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** cache mapping field group/local desc pairs -&gt; field reflectors */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">final</span> ConcurrentMap&lt;ObjectStreamClass.FieldReflectorKey,Reference&lt;?&gt;&gt; reflectors =</span><br><span class="line">            <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** queue for WeakReferences to local classes */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ReferenceQueue&lt;Class&lt;?&gt;&gt; localDescsQueue =</span><br><span class="line">            <span class="keyword">new</span> ReferenceQueue&lt;&gt;();</span><br><span class="line">    <span class="comment">/** queue for WeakReferences to field reflectors keys */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ReferenceQueue&lt;Class&lt;?&gt;&gt; reflectorsQueue =</span><br><span class="line">            <span class="keyword">new</span> ReferenceQueue&lt;&gt;();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> ObjectStreamClass <span class="title">lookup</span><span class="params">(Class&lt;?&gt; cl, <span class="keyword">boolean</span> all)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!(all || Serializable.class.isAssignableFrom(cl))) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    processQueue(ObjectStreamClass.Caches.localDescsQueue, ObjectStreamClass.Caches.localDescs);</span><br><span class="line">    ObjectStreamClass.WeakClassKey key = <span class="keyword">new</span> ObjectStreamClass.WeakClassKey(cl, ObjectStreamClass.Caches.localDescsQueue);</span><br><span class="line">    Reference&lt;?&gt; ref = ObjectStreamClass.Caches.localDescs.get(key);</span><br><span class="line">    Object entry = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (ref != <span class="keyword">null</span>) &#123;</span><br><span class="line">        entry = ref.get();</span><br><span class="line">    &#125;</span><br><span class="line">    ObjectStreamClass.EntryFuture future = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (entry == <span class="keyword">null</span>) &#123;</span><br><span class="line">        ObjectStreamClass.EntryFuture newEntry = <span class="keyword">new</span> ObjectStreamClass.EntryFuture();</span><br><span class="line">        Reference&lt;?&gt; newRef = <span class="keyword">new</span> SoftReference&lt;&gt;(newEntry);</span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (ref != <span class="keyword">null</span>) &#123;</span><br><span class="line">                ObjectStreamClass.Caches.localDescs.remove(key, ref);</span><br><span class="line">            &#125;</span><br><span class="line">            ref = ObjectStreamClass.Caches.localDescs.putIfAbsent(key, newRef);</span><br><span class="line">            <span class="keyword">if</span> (ref != <span class="keyword">null</span>) &#123;</span><br><span class="line">                entry = ref.get();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">while</span> (ref != <span class="keyword">null</span> &amp;&amp; entry == <span class="keyword">null</span>);</span><br><span class="line">        <span class="keyword">if</span> (entry == <span class="keyword">null</span>) &#123;</span><br><span class="line">            future = newEntry;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (entry <span class="keyword">instanceof</span> ObjectStreamClass) &#123;  <span class="comment">// check common case first</span></span><br><span class="line">        <span class="keyword">return</span> (ObjectStreamClass) entry;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (entry <span class="keyword">instanceof</span> ObjectStreamClass.EntryFuture) &#123;</span><br><span class="line">        future = (ObjectStreamClass.EntryFuture) entry;</span><br><span class="line">        <span class="keyword">if</span> (future.getOwner() == Thread.currentThread()) &#123;</span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">             * Handle nested call situation described by 4803747: waiting</span></span><br><span class="line"><span class="comment">             * for future value to be set by a lookup() call further up the</span></span><br><span class="line"><span class="comment">             * stack will result in deadlock, so calculate and set the</span></span><br><span class="line"><span class="comment">             * future value here instead.</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            entry = <span class="keyword">null</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            entry = future.get();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (entry == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            entry = <span class="keyword">new</span> ObjectStreamClass(cl);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable th) &#123;</span><br><span class="line">            entry = th;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (future.set(entry)) &#123;</span><br><span class="line">            ObjectStreamClass.Caches.localDescs.put(key, <span class="keyword">new</span> SoftReference&lt;Object&gt;(entry));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// nested lookup call already set future</span></span><br><span class="line">            entry = future.get();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (entry <span class="keyword">instanceof</span> ObjectStreamClass) &#123;</span><br><span class="line">        <span class="keyword">return</span> (ObjectStreamClass) entry;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (entry <span class="keyword">instanceof</span> RuntimeException) &#123;</span><br><span class="line">        <span class="keyword">throw</span> (RuntimeException) entry;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (entry <span class="keyword">instanceof</span> Error) &#123;</span><br><span class="line">        <span class="keyword">throw</span> (Error) entry;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> InternalError(<span class="string">"unexpected entry: "</span> + entry);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="1-2-初始化-ObjectStreamClass"><a href="#1-2-初始化-ObjectStreamClass" class="headerlink" title="1.2 初始化 ObjectStreamClass"></a>1.2 初始化 ObjectStreamClass</h2><p>此时从缓存获取的为 null，因此需要初始化：<code>new ObjectStreamClass(cl);</code>，该初始化方法会有一系列的判断：</p>
+<ol>
+<li>是否是代理类（JDK动态代理都会继承 Proxy）</li>
+<li>是否为 Enum</li>
+<li>是否为 serializable（通过 native）</li>
+<li>是否为 externalizable</li>
+<li>获取父类信息（父类如果没有实现 Serializable 则必须有空构造方法）</li>
+</ol>
+<p>当为 serializable 类型，继续如下步骤：</p>
+<ol>
+<li>如果为 enum 则生成一个值为 0 的 suid，并将 fields 设置为空的 ObjectStreamFiled 数组。</li>
+<li>如果为 Array 类型，将 fields 设置为空的 ObjectStreamField 数组。</li>
+<li>如果非以上两种类型则获取定义的 serialVersionUID 的值</li>
+<li>最后写入类信息若发现没有 suid，则根据类签名信息（<code>computeDefaultSUID</code>）来生成</li>
+<li>如果类实现了 Externalizable 接口则调用 <code>writeExternal</code>。</li>
+<li>写入流时，直接采用全类名写入。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">ObjectStreamClass</span><span class="params">(<span class="keyword">final</span> Class&lt;?&gt; cl)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.cl = cl;</span><br><span class="line">    name = cl.getName();</span><br><span class="line">    isProxy = Proxy.isProxyClass(cl);</span><br><span class="line">    isEnum = Enum.class.isAssignableFrom(cl);</span><br><span class="line">    serializable = Serializable.class.isAssignableFrom(cl);</span><br><span class="line">    externalizable = Externalizable.class.isAssignableFrom(cl);</span><br><span class="line">    <span class="comment">// 获取父类信息</span></span><br><span class="line">    Class&lt;?&gt; superCl = cl.getSuperclass();</span><br><span class="line">    superDesc = (superCl != <span class="keyword">null</span>) ? lookup(superCl, <span class="keyword">false</span>) : <span class="keyword">null</span>;</span><br><span class="line">    localDesc = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (serializable) &#123;</span><br><span class="line">        AccessController.doPrivileged(<span class="keyword">new</span> PrivilegedAction&lt;Void&gt;() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> Void <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                <span class="keyword">if</span> (isEnum) &#123;</span><br><span class="line">                    suid = Long.valueOf(<span class="number">0</span>);</span><br><span class="line">                    fields = NO_FIELDS;</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span> (cl.isArray()) &#123;</span><br><span class="line">                    fields = NO_FIELDS;</span><br><span class="line">                    <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 生成 suid</span></span><br><span class="line">                suid = getDeclaredSUID(cl);</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    fields = getSerialFields(cl);</span><br><span class="line">                    <span class="comment">// 计算Filed空间，引用属性（非基本类型）个数</span></span><br><span class="line">                    computeFieldOffsets();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InvalidClassException e) &#123;</span><br><span class="line">                    serializeEx = deserializeEx =</span><br><span class="line">                            <span class="keyword">new</span> ObjectStreamClass.ExceptionInfo(e.classname, e.getMessage());</span><br><span class="line">                    fields = NO_FIELDS;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (externalizable) &#123;</span><br><span class="line">                    cons = getExternalizableConstructor(cl);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    cons = getSerializableConstructor(cl);</span><br><span class="line">                    writeObjectMethod = getPrivateMethod(cl, <span class="string">"writeObject"</span>,</span><br><span class="line">                            <span class="keyword">new</span> Class&lt;?&gt;[] &#123; ObjectOutputStream.class &#125;,</span><br><span class="line">                            Void.TYPE);</span><br><span class="line">                    readObjectMethod = getPrivateMethod(cl, <span class="string">"readObject"</span>,</span><br><span class="line">                            <span class="keyword">new</span> Class&lt;?&gt;[] &#123; ObjectInputStream.class &#125;,</span><br><span class="line">                            Void.TYPE);</span><br><span class="line">                    readObjectNoDataMethod = getPrivateMethod(</span><br><span class="line">                            cl, <span class="string">"readObjectNoData"</span>, <span class="keyword">null</span>, Void.TYPE);</span><br><span class="line">                    hasWriteObjectData = (writeObjectMethod != <span class="keyword">null</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                domains = getProtectionDomains(cons, cl);</span><br><span class="line">                writeReplaceMethod = getInheritableMethod(</span><br><span class="line">                        cl, <span class="string">"writeReplace"</span>, <span class="keyword">null</span>, Object.class);</span><br><span class="line">                readResolveMethod = getInheritableMethod(</span><br><span class="line">                        cl, <span class="string">"readResolve"</span>, <span class="keyword">null</span>, Object.class);</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        suid = Long.valueOf(<span class="number">0</span>);</span><br><span class="line">        fields = NO_FIELDS;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        fieldRefl = getReflector(fields, <span class="keyword">this</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InvalidClassException ex) &#123;</span><br><span class="line">        <span class="comment">// field mismatches impossible when matching local fields vs. self</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> InternalError(ex);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (deserializeEx == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (isEnum) &#123;</span><br><span class="line">            deserializeEx = <span class="keyword">new</span> ObjectStreamClass.ExceptionInfo(name, <span class="string">"enum type"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (cons == <span class="keyword">null</span>) &#123;</span><br><span class="line">            deserializeEx = <span class="keyword">new</span> ObjectStreamClass.ExceptionInfo(name, <span class="string">"no valid constructor"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; fields.length; i++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (fields[i].getField() == <span class="keyword">null</span>) &#123;</span><br><span class="line">            defaultSerializeEx = <span class="keyword">new</span> ObjectStreamClass.ExceptionInfo(</span><br><span class="line">                    name, <span class="string">"unmatched serializable field(s) declared"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    initialized = <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="2-反序列化之-readObject"><a href="#2-反序列化之-readObject" class="headerlink" title="2. 反序列化之 readObject"></a>2. 反序列化之 readObject</h1><p>在最开始校验：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">short</span> STREAM_MAGIC = (<span class="keyword">short</span>)<span class="number">0xaced</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Version number that is written to the stream header.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">short</span> STREAM_VERSION = <span class="number">5</span>;</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/somephoto/2020-01-08%E5%BA%8F%E5%88%97%E5%8C%96%E5%A4%B4.png" alt></p>
+<ol>
+<li>读取流中类名、suid，是否有 writeObject、是否是 enum 类型，Filed 个数属性等。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李文文 | zed"
+      src="/images/avatar2.jpg">
+  <p class="site-author-name" itemprop="name">李文文 | zed</p>
+  <div class="site-description" itemprop="description">Not you, who?</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">186</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LiWenGu" title="GitHub → https://github.com/LiWenGu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liwenguang_dev@163.com" title="E-Mail → mailto:liwenguang_dev@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="rss → /atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.battcn.com/" title="https://blog.battcn.com/" rel="noopener" target="_blank">唐亚峰 | battcn</a>
+        </li>
+    </ul>
+  </div>
+<!-- CloudCalendar -->
+<div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
+	<div class="widget" id="CloudCalendar"></div>
+</div>
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李文文 | zed</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">1m</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">15:28</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+<!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script>
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
+
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'tPNbcXbsHeBH6mDDuQiRNAIi-gzGzoHsz',
+      appKey     : 'DuDTx0gUNp6hJiNaBNXPREQQ',
+      placeholder: "欢迎评论",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

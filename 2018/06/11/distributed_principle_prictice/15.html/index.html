@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Menlo:300,300italic,400,400italic,700,700italic|Monda:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.liwenguang.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="业务高峰期，为了保证核心服务的 SLA，往往需要停掉一些不太重要的业务，例如商品评论、论坛或者粉丝积分等。   某些服务因为某种原因不可用，但是流程不能直接失败，需要本地 Mock 服务端实现，做流程放通。例如图书阅读，如果用户登录余额鉴权服务不能正常工作，需要做业务放通，记录消费话单，允许用户继续阅读，而不是返回失败。    这就是服务降级，分为容错降级和屏蔽降级两种模式。 1 屏蔽降级在一个">
+<meta name="keywords" content="分布式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="十五、服务降级">
+<meta property="og:url" content="https://blog.liwenguang.com/2018/06/11/distributed_principle_prictice/15.html/index.html">
+<meta property="og:site_name" content="不坠青云志">
+<meta property="og:description" content="业务高峰期，为了保证核心服务的 SLA，往往需要停掉一些不太重要的业务，例如商品评论、论坛或者粉丝积分等。   某些服务因为某种原因不可用，但是流程不能直接失败，需要本地 Mock 服务端实现，做流程放通。例如图书阅读，如果用户登录余额鉴权服务不能正常工作，需要做业务放通，记录消费话单，允许用户继续阅读，而不是返回失败。    这就是服务降级，分为容错降级和屏蔽降级两种模式。 1 屏蔽降级在一个">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/15_1.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/15_2.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/15_3.png">
+<meta property="og:updated_time" content="2018-06-11T22:56:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="十五、服务降级">
+<meta name="twitter:description" content="业务高峰期，为了保证核心服务的 SLA，往往需要停掉一些不太重要的业务，例如商品评论、论坛或者粉丝积分等。   某些服务因为某种原因不可用，但是流程不能直接失败，需要本地 Mock 服务端实现，做流程放通。例如图书阅读，如果用户登录余额鉴权服务不能正常工作，需要做业务放通，记录消费话单，允许用户继续阅读，而不是返回失败。    这就是服务降级，分为容错降级和屏蔽降级两种模式。 1 屏蔽降级在一个">
+<meta name="twitter:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/15_1.png">
+
+<link rel="canonical" href="https://blog.liwenguang.com/2018/06/11/distributed_principle_prictice/15.html/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>十五、服务降级 | 不坠青云志</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146913835-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-146913835-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cfa1bf8fa457ee5150093dc7c8761541";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">不坠青云志</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">严律己，宽待人</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">44</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">31</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">186</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+  <a href="https://github.com/LiWenGu/liwengu.github.io" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2018/06/11/distributed_principle_prictice/15.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          十五、服务降级
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2018-06-11 01:30:00 / 修改时间：22:56:00" itemprop="dateCreated datePublished" datetime="2018-06-11T01:30:00+00:00">2018-06-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书总结/" itemprop="url" rel="index"><span itemprop="name">读书总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书总结/分布式服务框架原理与实践/" itemprop="url" rel="index"><span itemprop="name">分布式服务框架原理与实践</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2018/06/11/distributed_principle_prictice/15.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2018/06/11/distributed_principle_prictice/15.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <ol>
+<li>业务高峰期，为了保证核心服务的 SLA，往往需要停掉一些不太重要的业务，例如商品评论、论坛或者粉丝积分等。  </li>
+<li>某些服务因为某种原因不可用，但是流程不能直接失败，需要本地 Mock 服务端实现，做流程放通。例如图书阅读，如果用户登录余额鉴权服务不能正常工作，需要做业务放通，记录消费话单，允许用户继续阅读，而不是返回失败。  </li>
+</ol>
+<p>这就是服务降级，分为容错降级和屏蔽降级两种模式。</p>
+<h1 id="1-屏蔽降级"><a href="#1-屏蔽降级" class="headerlink" title="1 屏蔽降级"></a>1 屏蔽降级</h1><p>在一个应用中，服务往往是合设的，尽管可以通过线程池隔离等方式保证服务之间的资源隔离，但是 100%的隔离是不现实的。特别是对缓存、网络 I/O、磁盘 I/O、数据库连接资源等公共依赖无法隔离，在业务高峰期时，服务往往存在激烈的竞争，导致订购等核心服务运行质量下降，影响系统的稳定运行和客户体验。  </p>
+<p>此时需要对非核心服务做强制降级，不发起远程服务调用，直接返回空、异常或者执行特定的本地逻辑，减少自身对公共资源的消费，把资源释放出来供核心服务使用。  </p>
+<h2 id="1-1-屏蔽降级的流程"><a href="#1-1-屏蔽降级的流程" class="headerlink" title="1.1 屏蔽降级的流程"></a>1.1 屏蔽降级的流程</h2><p><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/15_1.png" alt></p>
+<h2 id="1-2-屏蔽降级的设计实现"><a href="#1-2-屏蔽降级的设计实现" class="headerlink" title="1.2 屏蔽降级的设计实现"></a>1.2 屏蔽降级的设计实现</h2><p>屏蔽降级通常用于服务运行态治理，开发时不会配置，当外界的触发条件达到某个临界值时，由运维人员/开发人员决策，通过服务治理控制台，进行人工降级操作，它的取值有如下三种：  </p>
+<ol>
+<li>mock = force: return null。不发起远程服务调用，直接返回空对象。</li>
+<li>mock = force: throw Exception。不发起远程服务调用，直接抛出指定异常。</li>
+<li>mock = force: execute Bean。不发起远程服务调用，直接执行本地模拟接口实现类。  </li>
+</ol>
+<p>屏蔽降级操作是可逆的，当系统压力恢复正常水平或者不再需要屏蔽降级时，可以对已经屏蔽降级的服务恢复正常。恢复之后，消费者重新调用远程的服务提供者，同时服务状态被修改为正常状态。</p>
+<h1 id="2-容错降级"><a href="#2-容错降级" class="headerlink" title="2 容错降级"></a>2 容错降级</h1><p>当非核心服务不可用时，可以对故障服务做业务逻辑放通，分布式服务框架的业务放通实际属于容错降级的一种。<br>容错降级不仅仅只用于业务放通，它也常用于服务提供方在客户端执行容错逻辑，容错逻辑主要包括两种：  </p>
+<ol>
+<li>RPC异常：通常指超时异常、消息解码异常、流控异常、系统拥塞保护异常等。</li>
+<li>Service异常：例如登录校验失败异常、数据库操作失败异常等。</li>
+</ol>
+<h2 id="2-1-容错降级的工作原理"><a href="#2-1-容错降级的工作原理" class="headerlink" title="2.1 容错降级的工作原理"></a>2.1 容错降级的工作原理</h2><p><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/15_2.png" alt><br>容错降级与屏蔽降级的主要差异：  </p>
+<ol>
+<li>触发条件不同：容错降级时根据服务调用结果，自动匹配触发的；而屏蔽降级往往是通过人工根据系统运行情况手工操作触发的。</li>
+<li>作用不同：容错降级时当服务提供者不可用时，让消费者执行业务放通：屏蔽降级的主要目的是将原属于降级业务的资源调配出来供核心业务使用。</li>
+<li>调用机制不同：一个发起远程服务调用，一个只做本地调用。  </li>
+</ol>
+<p>业务放通的 Mock接口实现往往放在消费者端，主要在于提供端可能为多个消费者服务，为了解耦，单独的消费者自己进行放通。</p>
+<ol>
+<li>mock = fail: throw Exception。将异常转义。</li>
+<li>mock = fail: execute Bean。将异常屏蔽掉，直接执行本地模拟解耦实现类，返回 Mock接口的执行结果。  </li>
+</ol>
+<p>与屏蔽降级不同的是，通常在开发态，就需要指定容错降级的策略。  </p>
+<p>无论是屏蔽降级还是容错降级，都支持从消费者或者服务提供者两个维度去配置，从而消费端配置更灵活，实现差异化降级策略。<br>服务降级策略配置的优先级：消费者配置策略 &gt; 服务提供者配置策略。屏蔽降级 &gt; 容错降级。 </p>
+<h2 id="2-2-运行时容错降级"><a href="#2-2-运行时容错降级" class="headerlink" title="2.2 运行时容错降级"></a>2.2 运行时容错降级</h2><p><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/distributed_principle_prictice/15_3.png" alt><br>如果开发态没有指定容错降级策略，系统上线运行后，需要临时增加容错降级策略，服务框架也需要支持在线动态增加容错降级策略，它的工作流程与屏蔽降级类似。</p>
+<p>而在实际项目中，利用容错降级做业务放通是主要的应用场景。</p>
+<h1 id="3-业务层降级"><a href="#3-业务层降级" class="headerlink" title="3 业务层降级"></a>3 业务层降级</h1><p>实际业务开发过程中，可能会存在比较复杂的业务放通场景，例如“调用 A 服务 + 执行本地方法调用”组合成一个流程，针对这个流程的执行结果做放通，这种场景由于本地方法调用并不经过分布式服务框架，因此需要业务自己做放通处理。  </p>
+<p>服务降级并不能 100% 满足所有业务放通场景，需要业务层开发自己的降级框架。 </p>
+<h1 id="4-个人总结"><a href="#4-个人总结" class="headerlink" title="4 个人总结"></a>4 个人总结</h1><p>在服务化之前，业务往往需要自己实现放通逻辑或者框架，不同的业务模块，甚至不同的开发者都自己实现了一套私有的放通流程，这对项目的开发和运维都会造成很多麻烦。  </p>
+<p>更为严重的是由于没有统一的服务降级策略和框架，无法在服务治理 Portal 上进行统一线上降级，在应对业务高峰时，运维人员会力不从心，往往需要一大群开发在背后支撑，运维效率非常低下。<br>基于分布式服务框架的服务降级功能，有效提升线上的服务治理效率，保证服务的 SLA，尽管服务降级更多是为了提升服务线上运行质量，但是它反向对服务的设计和开发也有约束。它要求服务在设计之初就要做如下识别：  </p>
+<ol>
+<li>哪些服务是核心服务、哪些是非核心服务？</li>
+<li>哪些服务支持降级，降级策略是什么？</li>
+<li>除了服务降级之外，是否还存在更为复杂的业务放通场景，它的策略是什么？  </li>
+</ol>
+<p>系统的高效、健康运行仅仅依赖线上服务治理和运维是解决不了的，需要通过分布式服务框架的特性反向映射到设计和开发态，从设计阶段就开始考虑未来如何高效运维，才能在根本上提升服务和产品的质量，这也是矛盾对立和统一的一个具体体现。</p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-09-05</div>
+      <div class="popular-posts-title"><a href="/2019/09/05/tech/unique_id_1.html/" rel="bookmark">浅出分布式唯一ID生成器</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-12-20</div>
+      <div class="popular-posts-title"><a href="/2020/12/20/tech/mysql/snowflake&hash.html/" rel="bookmark">雪花算法与Hash分表键的坑</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2018-05-18</div>
+      <div class="popular-posts-title"><a href="/2018/05/18/distributed_principle_prictice/1.html/" rel="bookmark">一、应用框架演进</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2018-05-30</div>
+      <div class="popular-posts-title"><a href="/2018/05/30/distributed_principle_prictice/7.html/" rel="bookmark">七、集群容错</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2018-05-20</div>
+      <div class="popular-posts-title"><a href="/2018/05/20/distributed_principle_prictice/3.html/" rel="bookmark">三、通信框架</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>李文文 | zed
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.liwenguang.com/2018/06/11/distributed_principle_prictice/15.html/" title="十五、服务降级">https://blog.liwenguang.com/2018/06/11/distributed_principle_prictice/15.html/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/分布式/" rel="tag"><i class="fa fa-tag"></i> 分布式</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2018/06/07/distributed_principle_prictice/14.html/" rel="prev" title="十四、流量控制">
+      <i class="fa fa-chevron-left"></i> 十四、流量控制
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/06/11/distributed_principle_prictice/16.html/" rel="next" title="十六 服务优先级调度">
+      十六 服务优先级调度 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-屏蔽降级"><span class="nav-text">1 屏蔽降级</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-屏蔽降级的流程"><span class="nav-text">1.1 屏蔽降级的流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-屏蔽降级的设计实现"><span class="nav-text">1.2 屏蔽降级的设计实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-容错降级"><span class="nav-text">2 容错降级</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-容错降级的工作原理"><span class="nav-text">2.1 容错降级的工作原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-运行时容错降级"><span class="nav-text">2.2 运行时容错降级</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-业务层降级"><span class="nav-text">3 业务层降级</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-个人总结"><span class="nav-text">4 个人总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李文文 | zed"
+      src="/images/avatar2.jpg">
+  <p class="site-author-name" itemprop="name">李文文 | zed</p>
+  <div class="site-description" itemprop="description">Not you, who?</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">186</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LiWenGu" title="GitHub → https://github.com/LiWenGu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liwenguang_dev@163.com" title="E-Mail → mailto:liwenguang_dev@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="rss → /atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.battcn.com/" title="https://blog.battcn.com/" rel="noopener" target="_blank">唐亚峰 | battcn</a>
+        </li>
+    </ul>
+  </div>
+<!-- CloudCalendar -->
+<div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
+	<div class="widget" id="CloudCalendar"></div>
+</div>
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李文文 | zed</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">1m</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">15:28</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+<!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script>
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
+
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'tPNbcXbsHeBH6mDDuQiRNAIi-gzGzoHsz',
+      appKey     : 'DuDTx0gUNp6hJiNaBNXPREQQ',
+      placeholder: "欢迎评论",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Menlo:300,300italic,400,400italic,700,700italic|Monda:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.liwenguang.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1 本章概要SSL（Secure Socket Layer）与TLS(Transport Layer Security)是不同的，TLS 相当于是 SSL 的后续版本。 2 什么是 SSL/TLS2.1 客户端与服务器将 Alice 和 Bob 书店的通信过程整理如下图（不使用SSL/TLS）：Alice 向 Bob 书店发送信用卡号使用 HTTP 来完成。 Alice 输入信用卡号之后按下提交按">
+<meta name="keywords" content="密码学">
+<meta property="og:type" content="article">
+<meta property="og:title" content="十四、SSL&#x2F;TLS-为了更安全的通信">
+<meta property="og:url" content="https://blog.liwenguang.com/2017/12/04/graphic2cryptography/14.html/index.html">
+<meta property="og:site_name" content="不坠青云志">
+<meta property="og:description" content="1 本章概要SSL（Secure Socket Layer）与TLS(Transport Layer Security)是不同的，TLS 相当于是 SSL 的后续版本。 2 什么是 SSL/TLS2.1 客户端与服务器将 Alice 和 Bob 书店的通信过程整理如下图（不使用SSL/TLS）：Alice 向 Bob 书店发送信用卡号使用 HTTP 来完成。 Alice 输入信用卡号之后按下提交按">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_1.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_2.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_3.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_4.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_5.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_6.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_7.png">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_8.png">
+<meta property="og:updated_time" content="2017-12-06T23:40:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="十四、SSL&#x2F;TLS-为了更安全的通信">
+<meta name="twitter:description" content="1 本章概要SSL（Secure Socket Layer）与TLS(Transport Layer Security)是不同的，TLS 相当于是 SSL 的后续版本。 2 什么是 SSL/TLS2.1 客户端与服务器将 Alice 和 Bob 书店的通信过程整理如下图（不使用SSL/TLS）：Alice 向 Bob 书店发送信用卡号使用 HTTP 来完成。 Alice 输入信用卡号之后按下提交按">
+<meta name="twitter:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_1.png">
+
+<link rel="canonical" href="https://blog.liwenguang.com/2017/12/04/graphic2cryptography/14.html/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>十四、SSL/TLS-为了更安全的通信 | 不坠青云志</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146913835-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-146913835-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cfa1bf8fa457ee5150093dc7c8761541";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">不坠青云志</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">严律己，宽待人</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">44</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">31</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">186</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+  <a href="https://github.com/LiWenGu/liwengu.github.io" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2017/12/04/graphic2cryptography/14.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          十四、SSL/TLS-为了更安全的通信
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-12-04 23:31:00" itemprop="dateCreated datePublished" datetime="2017-12-04T23:31:00+00:00">2017-12-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2017-12-06 23:40:00" itemprop="dateModified" datetime="2017-12-06T23:40:00+00:00">2017-12-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书总结/" itemprop="url" rel="index"><span itemprop="name">读书总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书总结/图解密码技术/" itemprop="url" rel="index"><span itemprop="name">图解密码技术</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2017/12/04/graphic2cryptography/14.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2017/12/04/graphic2cryptography/14.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1-本章概要"><a href="#1-本章概要" class="headerlink" title="1 本章概要"></a>1 本章概要</h1><p>SSL（Secure Socket Layer）与TLS(Transport Layer Security)是不同的，TLS 相当于是 SSL 的后续版本。</p>
+<h1 id="2-什么是-SSL-TLS"><a href="#2-什么是-SSL-TLS" class="headerlink" title="2 什么是 SSL/TLS"></a>2 什么是 SSL/TLS</h1><h2 id="2-1-客户端与服务器"><a href="#2-1-客户端与服务器" class="headerlink" title="2.1 客户端与服务器"></a>2.1 客户端与服务器</h2><p>将 Alice 和 Bob 书店的通信过程整理如下图（不使用SSL/TLS）：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_1.png" alt><br>Alice 向 Bob 书店发送信用卡号使用 HTTP 来完成。 Alice 输入信用卡号之后按下提交按钮，这时客户端（Web浏览器）就会将信用卡号作为 HTTP 请求发送给服务器。服务器则会将“生成订单”的网页作为 HTTP 响应返回给客户端。  </p>
+<p>不过，如果直接发送请求的话，信用卡号就很可能被窃听。</p>
+<h2 id="2-2-用-SSL-TLS-承载-HTTP"><a href="#2-2-用-SSL-TLS-承载-HTTP" class="headerlink" title="2.2 用 SSL/TLS 承载 HTTP"></a>2.2 用 SSL/TLS 承载 HTTP</h2><p>当 Web 浏览器发送信用卡号时，信用卡号的数据会作为客户端请求发送给服务器。使用 SSL/TLS 作为对通信进行加密的协议，然后在此之上承载 HTTP。通过将两种协议进行叠加，我们就可以对 HTTP 的通信（请求和响应）进行加密，从而防止窃听。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_2.png" alt></p>
+<h2 id="2-3-SSL-TLS-的工作"><a href="#2-3-SSL-TLS-的工作" class="headerlink" title="2.3 SSL/TLS 的工作"></a>2.3 SSL/TLS 的工作</h2><p>进行安全的通信，我们有几个必须要解决的问题：  </p>
+<ol>
+<li>Alice 的信用卡号和地址在发送到 Bob 书店的过程中不能被窃听。</li>
+<li>Alice 的信用卡号和地址在发送到 Bob 书店的过程终不能被篡改。</li>
+<li>确认通信对方的 Web 服务器是真正的 Bob 书店。</li>
+</ol>
+<p>在这里，1 是机密性问题，2 是完整性的问题， 3 则是认证的问题。<br>要解决这些问题，让我们在密码学家的工具箱中找一找：<br>要确保机密性，可以使用对称密码。由于对称密码的秘钥不能被攻击者预测，因此我们使用伪随机数生成器来生成秘钥。若要将对称密码的秘钥发送给通信对象，可以使用公钥密码或者 Diffie-Hellman 秘钥交换。<br>要识别篡改，对数据进行认证，可以使用消息认证码。消息认证码是使用单向散列函数来实现的。<br>要对通信对象进行认证，可以使用对公钥加上数字签名所生成的证书。<br>好，工具已经找齐了，下面只要用一个“框架”（framework）将这些工具组合起来就可以了。SSL/TSL 协议其实就扮演了这样一种框架的角色。</p>
+<h2 id="2-4-SSL-TLS-也可以保护其它的协议"><a href="#2-4-SSL-TLS-也可以保护其它的协议" class="headerlink" title="2.4 SSL/TLS 也可以保护其它的协议"></a>2.4 SSL/TLS 也可以保护其它的协议</h2><p>刚刚我们提到用 SSL/TLS 承载 HTTP 通信，这是因为 HTTP 是一种很常见的协议。其实 SSL/TSL 上面不仅可以承载 HTTP，还可以承载其它很多协议。例如，发送邮件时使用的 SMTP（Simple Mail Transfer Protocol，简单邮件传输协议）和接收邮件时使用的 POP3（Post Office Protocol，邮局协议）都可以用 SSL/TSL 进行承载。在这样的情况下， SSL/TSL 就可以对收发的邮件进行保护。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_3.png" alt></p>
+<h2 id="2-5-密码套件"><a href="#2-5-密码套件" class="headerlink" title="2.5 密码套件"></a>2.5 密码套件</h2><p>SSL/TLS 提供了一种密码通信的框架，这意味着 SSL/TSL 中使用的对称密码、公钥密码、数字签名、单向散列函数等技术，都是可以像零件一样进行替换的。也就是说，如果发现现在所使用的某个密码技术存在弱点，那么只要将这一部分进行替换就可以了。<br>尽管如此，也并不是说所有的组件都可以自由选择。由于实际进行对话的客户端和服务器必须使用相同的密码技术才能进行通信，因此如果选择过于自由，就难以确保整体的兼容性。为此， SSL/TSL 就事先搭配好饭盒一样，规定了一些密码技术的“推荐套餐”，这种推荐套餐称为<strong>密码套件</strong>（cipher suite）。</p>
+<h2 id="2-6-SSL-与-TLS-的区别"><a href="#2-6-SSL-与-TLS-的区别" class="headerlink" title="2.6 SSL 与 TLS 的区别"></a>2.6 SSL 与 TLS 的区别</h2><p>SSL（Secure Socket Layer，安全套接层）是 1994 年由网景（Netscape）公司设计的一种协议。而 TLS（Transport Layer Security，传输层安全）是 IETF 在 SSL3.0 的基础上设计的协议，在 1999 年作为 RFC2246 发布的 TLS1.0 ，实际上相当于 SSL3.1 。</p>
+<h1 id="3-使用-SSL-TLS-进行通信"><a href="#3-使用-SSL-TLS-进行通信" class="headerlink" title="3 使用 SSL/TLS 进行通信"></a>3 使用 SSL/TLS 进行通信</h1><p>下面介绍使用 SSL/TLS 进行通信的步骤。本节内容是基于 TLS1.0 编写的，因此直接写作 TLS。</p>
+<h2 id="3-1-层次化的协议"><a href="#3-1-层次化的协议" class="headerlink" title="3.1 层次化的协议"></a>3.1 层次化的协议</h2><p>TLS 协议是由“TLS记录协议”（TLS record protocol）和“TLS握手协议”（TLS handshake protocol）这两层协议叠加而成的。位于底层的 TLS记录协议负责进行加密，而位于上层的 TLS握手协议则负责除加密以为的其它各种操作。上层的 TLS握手协议又可以分为 4 个子协议。TLS协议的层次结构如下：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_4.png" alt><br>下面简单介绍一下其中各个协议的功能</p>
+<h3 id="1-TLS记录协议"><a href="#1-TLS记录协议" class="headerlink" title="1.TLS记录协议"></a>1.TLS记录协议</h3><p>TLS记录协议位于 TLS握手协议的下层，是负责使用对称密码对消息进行加密通信的部分。<br>TLS记录协议中使用了对称密码和消息认证码，但是具体的算法和共享秘钥则是通过握手协议在服务器和客户端之间协商决定的。</p>
+<h3 id="2-TLS握手协议"><a href="#2-TLS握手协议" class="headerlink" title="2.TLS握手协议"></a>2.TLS握手协议</h3><p>TLS 握手协议分为下列 4 个子协议：握手协议、密码规格变更协议、警告协议和应用数据协议。</p>
+<h4 id="2-1-握手协议"><a href="#2-1-握手协议" class="headerlink" title="2-1 握手协议"></a>2-1 握手协议</h4><p><strong>握手协议</strong>是 TLS握手协议的一部分，负责在客户端和服务器之间协商决定密码算法和共享秘钥。基于证书的认证操作也是在这个协议中完成的。它是 4 个子协议中最复杂的一个。这个协议大致相当于下面这段对话：<br>客户端：“你好。我能够理解额密码套件由 RSA/3DES，或者 DSS/AES，请问我们使用哪一种密码套件来通信呢？”<br>服务器：“你好。那么我们用 RSA/3DES 来进行通信吧，这是我的证书。”<br>在服务器和客户端之间通过握手协议协商一致之后，就会相互发出信号来切换密码。负责发出信号的就是下面要介绍的密码规格变更协议。</p>
+<h4 id="2-2-密码规格变更协议"><a href="#2-2-密码规格变更协议" class="headerlink" title="2-2 密码规格变更协议"></a>2-2 密码规格变更协议</h4><p><strong>密码规格变更协议</strong>是 TLS握手协议的一部分，负责向通信对象传达变更密码方式的信号。简单地说，就跟向对方喊“1、2、3！”差不多。<br>这个协议所发送的消息，大致相当于下面的对话：<br>客户端：“好，我们按照刚才的约定切换密码吧。1、2、3！”<br>当协议中途发生错误时，就会通过下面的警告协议传达给对方。</p>
+<h4 id="2-3-警告协议"><a href="#2-3-警告协议" class="headerlink" title="2-3 警告协议"></a>2-3 警告协议</h4><p><strong>警告协议</strong>是 TLS握手协议的一部分。警告协议负责在发生错误时将错误传达给对方。<br>这个协议所发送的消息，大致相当于下面的对话：<br>服务器：“刚才的消息无法正确解密哦！”<br>如果没有发生错误，则会使用下面的应用数据协议来进行通信。</p>
+<h4 id="2-4-应用数据协议"><a href="#2-4-应用数据协议" class="headerlink" title="2-4 应用数据协议"></a>2-4 应用数据协议</h4><p><strong>应用数据协议</strong>是 TLS 握手协议的一部分。应用数据协议是将 TLS 上面承载的应用数据传达给通信对象的协议。<br>下面我们按照相同的顺序，更加详细地介绍一下 TLS协议。</p>
+<h2 id="3-2-TLS记录协议"><a href="#3-2-TLS记录协议" class="headerlink" title="3.2 TLS记录协议"></a>3.2 TLS记录协议</h2><p><strong>TLS记录协议</strong>负责消息的压缩、加密以及数据的认证，其处理过程如下：  </p>
+<ol>
+<li>消息被分割成多个较短的片段（fragment），然后分别对每个片段进行压缩。压缩算法需与通信对象协商决定。</li>
+<li>经过压缩的片段会被加上消息认证码，这是为了保证完整性，并进行数据的认证。通过附加消息认证码的 MAC 值，可以识别出篡改。与此同时，为了防止重放攻击，在计算消息认证码时，还加上了片段编号。单向散列函数的算法，以及消息认证码所使用的共享秘钥都需要与通信对象协商决定。</li>
+<li>经过压缩的片段再加上消息认证码会一起通过对称密码进行加密。加密使用 CBC模式。</li>
+<li>最后，上述经过加密的数据再加上由数据类型、版本号、压缩后的长度组成的报头（header）就是最终的报文数据。其中，数据类型为 TLS记录协议所承载的 4 个子协议的其中之一。</li>
+</ol>
+<p><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_5.png" alt></p>
+<h2 id="3-3-TLS握手协议"><a href="#3-3-TLS握手协议" class="headerlink" title="3.3 TLS握手协议"></a>3.3 TLS握手协议</h2><h3 id="1-握手协议"><a href="#1-握手协议" class="headerlink" title="1.握手协议"></a>1.握手协议</h3><p><strong>握手协议</strong>是 TLS握手协议的一部分，负责生成共享秘钥以及交换证书。其中，生成共享秘钥是为了进行密码通信，交换证书是为了通信双方互相进行认证。<br>握手协议这一名乘中的“握手”（handshake），是服务器和客户端在密码通信之前交换一些必要信息这一过程的比喻。<br>由于握手协议中的信息交换是在没有加密的情况下进行的（即使用“不加密”这一密码套件），也就是说，在这一协议中所收发的所有数据都可能被窃听者 Eve 所窃听，因此，在这一过程中必须使用公钥密码或者 Diffie-Hellman 秘钥交换。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_6.png" alt><br>下面我们来详细讲解握手协议中所交换的消息。</p>
+<h3 id="2-密码规格变更协议"><a href="#2-密码规格变更协议" class="headerlink" title="2.密码规格变更协议"></a>2.密码规格变更协议</h3><p>TLS 的密码规格变更协议（change cipher spec protocol）是 TLS握手协议的一部分，用于密码切换的同步。<br>那么为什么这个协议不叫密码规格开始协议，而叫密码规格变更协议呢？这是因为即便在密码通信开始之后，客户端和服务器也可以通过重新握手来再次改变密码套件。也就是说，在最开始的时候，客户端和服务器是使用“不加密”这一密码套件进行通信的，因此通信内容没有进行加密。</p>
+<h3 id="3-警告协议"><a href="#3-警告协议" class="headerlink" title="3.警告协议"></a>3.警告协议</h3><p>TLS 的警告协议（alert protocol）是 TLS握手协议的一部分，用于当发生错误时通知通信对象。当握手协议的过程中产生异常，或者发生消息认证码错误、压缩数据无法解压缩等问题时，会使用该协议。</p>
+<h3 id="4-应用数据协议"><a href="#4-应用数据协议" class="headerlink" title="4.应用数据协议"></a>4.应用数据协议</h3><p><strong>应用数据协议</strong>是 TLS握手协议的一部分，用于和通信对象之间传送应用数据。<br>当 TLS 承载 HTTP 时，HTTP 的请求和响应就会通过 TLS 的应用数据协议和 TLS 记录协议来进行传送。</p>
+<h2 id="3-4-主密码"><a href="#3-4-主密码" class="headerlink" title="3.4 主密码"></a>3.4 主密码</h2><p>主密码是 TLS 客户端和服务器之间协商出来的一个密码的数值。这个数值非常重要，TLS 密码通信的机密性和数据的认证全部依靠这个数值。<br>主密码是根据：预备主密码、客户端随机数、服务器随机数计算出来的。<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_7.png" alt></p>
+<h2 id="3-5-TLS-中使用的密码技术小结"><a href="#3-5-TLS-中使用的密码技术小结" class="headerlink" title="3.5 TLS 中使用的密码技术小结"></a>3.5 TLS 中使用的密码技术小结</h2><p><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/graphic2cryptography/14_8.png" alt></p>
+<h1 id="4-对-SSL-TLS-的攻击"><a href="#4-对-SSL-TLS-的攻击" class="headerlink" title="4 对 SSL/TLS 的攻击"></a>4 对 SSL/TLS 的攻击</h1><h2 id="4-1-对各个密码技术的攻击"><a href="#4-1-对各个密码技术的攻击" class="headerlink" title="4.1 对各个密码技术的攻击"></a>4.1 对各个密码技术的攻击</h2><p>针对 SSL/TLS 中使用的各个密码技术的攻击，会直接成为对 SSL/TLS 的攻击。例如，如果能够找到 SSL/TLS 中使用的对称密码的弱点，就相当于找到了 SSL/TLS 通信机密性的弱点。<br>然而， SSL/TLS 作为框架的特性也正是在这里能够得以体现。 SSL/TLS 并不依赖于某种特定的密码技术，当发现某种对称密码存在弱点时，今后只要选择不包含该对称密码的密码套件就可以了。这就好像一台机器的某个零件损坏时，只要更换这个损坏的零件就可以了。</p>
+<h2 id="4-2-对伪随机数生成器的攻击"><a href="#4-2-对伪随机数生成器的攻击" class="headerlink" title="4.2 对伪随机数生成器的攻击"></a>4.2 对伪随机数生成器的攻击</h2><p>只要生成伪随机数生成器的种子在可预测范围内，其生成的秘钥是可以被预测的。</p>
+<h2 id="4-3-利用证书的时间差进行攻击"><a href="#4-3-利用证书的时间差进行攻击" class="headerlink" title="4.3 利用证书的时间差进行攻击"></a>4.3 利用证书的时间差进行攻击</h2><p>SSL/TLS 中，客户端会使用服务器证书对服务器进行认证。在这个过程中，客户端需要使用合法认证机构的公钥对证书所附带的数字签名进行验证。正如第十章所提到那样，如果证书已过期，但是 Web 浏览器没有获取到最新版的信息，这是无法保证通信的安全的。</p>
+<h1 id="5-SSL-TLS-用户的注意事项"><a href="#5-SSL-TLS-用户的注意事项" class="headerlink" title="5 SSL/TLS 用户的注意事项"></a>5 SSL/TLS 用户的注意事项</h1><h2 id="5-1-不要误解证书的含义"><a href="#5-1-不要误解证书的含义" class="headerlink" title="5.1 不要误解证书的含义"></a>5.1 不要误解证书的含义</h2><p>在 SSL/TLS 中，我们能够通过证书对服务器进行认证。然后这里的认证，知识确认了通信对象是经过认证机构确认的服务器，并不能确认是否可以和该通信对象进行安全的在线购物交易。直白点，就是<strong>即便对方拥有合法的证书，也不代表你就可以放心地发送信用卡号，</strong>因为仅通过 SSL/TLS 是无法确认对方是否在从事信用卡诈骗的。<br>此外，认证机构所进行的本人身份确认也分为不同的等级，需要仔细确认一下认证机构的业务规则。<br>为了提高 SSL/TLS 运用的可靠性，一个名为 CA/Brower 论坛的组织制定了 EV SSL 证书（Extended Validation Certificate）规范。</p>
+<h2 id="5-2-密码通信之前的数据时不受保护的"><a href="#5-2-密码通信之前的数据时不受保护的" class="headerlink" title="5.2 密码通信之前的数据时不受保护的"></a>5.2 密码通信之前的数据时不受保护的</h2><p>SSL/TLS 仅对通信过程中的数据进行保护，而无法保护通信前的的数据。</p>
+<h2 id="5-3-密码通信之后的数据时不受保护的"><a href="#5-3-密码通信之后的数据时不受保护的" class="headerlink" title="5.3 密码通信之后的数据时不受保护的"></a>5.3 密码通信之后的数据时不受保护的</h2><p>SSL/TLS 也无法保护通信之后的数据。<br>因此信用卡号<strong>不会再通信过程中被第三方获取</strong>，而信用卡号在通信之前被偷窥，以及在通信之后，服务器被窃取可能性还是存在的。</p>
+<h1 id="6-本章小结"><a href="#6-本章小结" class="headerlink" title="6 本章小结"></a>6 本章小结</h1><p>SSL/TLS 是将对称密码、公钥密码、单向散列函数、消息认证码、伪随机数生成器、数字签名等技术相结合来实现安全通信的。通过切换密码套件来使用强度更高的密码算法。</p>
+<h1 id="7-小测验"><a href="#7-小测验" class="headerlink" title="7 小测验"></a>7 小测验</h1><ol>
+<li>使用 SSL/TLS 可以确保通信的机密性。</li>
+<li>在 SSL/TLS 中，使用数字签名技术来认证通信双发的身份。</li>
+<li>在 SSL/TLS 中，由于使用了公钥密码或者秘钥交换技术，因此伪随机数生成器的品质低一点也没有关系。</li>
+<li>在 SSL/TLS 中，由于公钥是服务器发送的，因此客户端无需持有任何公钥就可以对服务器进行认证。</li>
+<li>使用 SSL/TLS 的公司是可信的，因此可以放心地发送信用卡号。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-02-22</div>
+      <div class="popular-posts-title"><a href="/2019/02/22/tech/https_tls.html/" rel="bookmark">HTTPS中的TLS</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-08-21</div>
+      <div class="popular-posts-title"><a href="/2019/08/21/tech/algo_go_1.html/" rel="bookmark">密码技术Go语言实现</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2017-11-10</div>
+      <div class="popular-posts-title"><a href="/2017/11/10/graphic2cryptography/1.html/" rel="bookmark">一、环游密码世界</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2017-11-19</div>
+      <div class="popular-posts-title"><a href="/2017/11/19/graphic2cryptography/7.html/" rel="bookmark">七、单向散列函数（获取消息的“指纹”）</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2017-11-21</div>
+      <div class="popular-posts-title"><a href="/2017/11/21/graphic2cryptography/9.html/" rel="bookmark">九、数字签名——消息到底是谁写的</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>李文文 | zed
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.liwenguang.com/2017/12/04/graphic2cryptography/14.html/" title="十四、SSL/TLS-为了更安全的通信">https://blog.liwenguang.com/2017/12/04/graphic2cryptography/14.html/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/密码学/" rel="tag"><i class="fa fa-tag"></i> 密码学</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/11/23/graphic2cryptography/10.html/" rel="prev" title="十一、秘钥——秘密的精华">
+      <i class="fa fa-chevron-left"></i> 十一、秘钥——秘密的精华
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/12/05/talker/decentralization_1.html/" rel="next" title="去中心化">
+      去中心化 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-本章概要"><span class="nav-text">1 本章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-什么是-SSL-TLS"><span class="nav-text">2 什么是 SSL/TLS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-客户端与服务器"><span class="nav-text">2.1 客户端与服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-用-SSL-TLS-承载-HTTP"><span class="nav-text">2.2 用 SSL/TLS 承载 HTTP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-SSL-TLS-的工作"><span class="nav-text">2.3 SSL/TLS 的工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-SSL-TLS-也可以保护其它的协议"><span class="nav-text">2.4 SSL/TLS 也可以保护其它的协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-密码套件"><span class="nav-text">2.5 密码套件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-6-SSL-与-TLS-的区别"><span class="nav-text">2.6 SSL 与 TLS 的区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-使用-SSL-TLS-进行通信"><span class="nav-text">3 使用 SSL/TLS 进行通信</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-层次化的协议"><span class="nav-text">3.1 层次化的协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-TLS记录协议"><span class="nav-text">1.TLS记录协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-TLS握手协议"><span class="nav-text">2.TLS握手协议</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-握手协议"><span class="nav-text">2-1 握手协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-密码规格变更协议"><span class="nav-text">2-2 密码规格变更协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-警告协议"><span class="nav-text">2-3 警告协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4-应用数据协议"><span class="nav-text">2-4 应用数据协议</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-TLS记录协议"><span class="nav-text">3.2 TLS记录协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-TLS握手协议"><span class="nav-text">3.3 TLS握手协议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-握手协议"><span class="nav-text">1.握手协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-密码规格变更协议"><span class="nav-text">2.密码规格变更协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-警告协议"><span class="nav-text">3.警告协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-应用数据协议"><span class="nav-text">4.应用数据协议</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-主密码"><span class="nav-text">3.4 主密码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-TLS-中使用的密码技术小结"><span class="nav-text">3.5 TLS 中使用的密码技术小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-对-SSL-TLS-的攻击"><span class="nav-text">4 对 SSL/TLS 的攻击</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-对各个密码技术的攻击"><span class="nav-text">4.1 对各个密码技术的攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-对伪随机数生成器的攻击"><span class="nav-text">4.2 对伪随机数生成器的攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-利用证书的时间差进行攻击"><span class="nav-text">4.3 利用证书的时间差进行攻击</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-SSL-TLS-用户的注意事项"><span class="nav-text">5 SSL/TLS 用户的注意事项</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-不要误解证书的含义"><span class="nav-text">5.1 不要误解证书的含义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-密码通信之前的数据时不受保护的"><span class="nav-text">5.2 密码通信之前的数据时不受保护的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-3-密码通信之后的数据时不受保护的"><span class="nav-text">5.3 密码通信之后的数据时不受保护的</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-本章小结"><span class="nav-text">6 本章小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-小测验"><span class="nav-text">7 小测验</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李文文 | zed"
+      src="/images/avatar2.jpg">
+  <p class="site-author-name" itemprop="name">李文文 | zed</p>
+  <div class="site-description" itemprop="description">Not you, who?</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">186</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LiWenGu" title="GitHub → https://github.com/LiWenGu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liwenguang_dev@163.com" title="E-Mail → mailto:liwenguang_dev@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="rss → /atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.battcn.com/" title="https://blog.battcn.com/" rel="noopener" target="_blank">唐亚峰 | battcn</a>
+        </li>
+    </ul>
+  </div>
+<!-- CloudCalendar -->
+<div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
+	<div class="widget" id="CloudCalendar"></div>
+</div>
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李文文 | zed</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">1m</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">15:28</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+<!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script>
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
+
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'tPNbcXbsHeBH6mDDuQiRNAIi-gzGzoHsz',
+      appKey     : 'DuDTx0gUNp6hJiNaBNXPREQQ',
+      placeholder: "欢迎评论",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

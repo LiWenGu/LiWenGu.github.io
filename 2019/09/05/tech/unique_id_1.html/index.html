@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Menlo:300,300italic,400,400italic,700,700italic|Monda:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.liwenguang.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="0. 背景近日由于订单量+机器数量增加，导致原来使用时间戳生成唯一订单号的方法行不通了，出现很多主键冲突。并且由于主键冲突导致的事务死锁的几率也随之加大，进而需要补的数据越来越多！因此急需一个全局唯一ID生成方式。但由于现在单体框架还在拆解过程中，新的生成方式需要兼容单体应用（多台集群）最好能用最简单的方式先解决，待以后服务拆解出来后考虑可用性扩展性。">
+<meta name="keywords" content="分布式,唯一ID生成算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浅出分布式唯一ID生成器">
+<meta property="og:url" content="https://blog.liwenguang.com/2019/09/05/tech/unique_id_1.html/index.html">
+<meta property="og:site_name" content="不坠青云志">
+<meta property="og:description" content="0. 背景近日由于订单量+机器数量增加，导致原来使用时间戳生成唯一订单号的方法行不通了，出现很多主键冲突。并且由于主键冲突导致的事务死锁的几率也随之加大，进而需要补的数据越来越多！因此急需一个全局唯一ID生成方式。但由于现在单体框架还在拆解过程中，新的生成方式需要兼容单体应用（多台集群）最好能用最简单的方式先解决，待以后服务拆解出来后考虑可用性扩展性。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-09-05T23:55:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浅出分布式唯一ID生成器">
+<meta name="twitter:description" content="0. 背景近日由于订单量+机器数量增加，导致原来使用时间戳生成唯一订单号的方法行不通了，出现很多主键冲突。并且由于主键冲突导致的事务死锁的几率也随之加大，进而需要补的数据越来越多！因此急需一个全局唯一ID生成方式。但由于现在单体框架还在拆解过程中，新的生成方式需要兼容单体应用（多台集群）最好能用最简单的方式先解决，待以后服务拆解出来后考虑可用性扩展性。">
+
+<link rel="canonical" href="https://blog.liwenguang.com/2019/09/05/tech/unique_id_1.html/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>浅出分布式唯一ID生成器 | 不坠青云志</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146913835-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-146913835-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cfa1bf8fa457ee5150093dc7c8761541";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">不坠青云志</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">严律己，宽待人</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">44</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">31</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">186</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+  <a href="https://github.com/LiWenGu/liwengu.github.io" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2019/09/05/tech/unique_id_1.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          浅出分布式唯一ID生成器
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-09-05 23:55:00" itemprop="dateCreated datePublished" datetime="2019-09-05T23:55:00+00:00">2019-09-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术总结/" itemprop="url" rel="index"><span itemprop="name">技术总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术总结/mysql/" itemprop="url" rel="index"><span itemprop="name">mysql</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/09/05/tech/unique_id_1.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/09/05/tech/unique_id_1.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="0-背景"><a href="#0-背景" class="headerlink" title="0. 背景"></a>0. 背景</h1><p>近日由于订单量+机器数量增加，导致原来使用时间戳生成唯一订单号的方法行不通了，出现很多主键冲突。<br>并且由于主键冲突导致的事务死锁的几率也随之加大，进而需要补的数据越来越多！因此急需一个全局唯一ID生成方式。<br>但由于现在单体框架还在拆解过程中，新的生成方式需要兼容单体应用（多台集群）<br>最好能用最简单的方式先解决，待以后服务拆解出来后考虑可用性扩展性。</p>
+<a id="more"></a>
+<h1 id="1-调研"><a href="#1-调研" class="headerlink" title="1. 调研"></a>1. 调研</h1><p>大概有以下几个选择，优先级由高到低：</p>
+<ol>
+<li>snowflake</li>
+<li>数据库唯一ID主键约束</li>
+<li>redis 原子递增</li>
+<li>UUID</li>
+<li>leaf</li>
+<li>uid-generator</li>
+</ol>
+<p>优先级 snowflake 主要是有以下理由：</p>
+<ol>
+<li>snowflake 现阶段用一个工具类就能直接上手使用</li>
+<li>现在分库分表也使用了 snowflake，以后可以做统一的唯一ID服务</li>
+<li>很多分布式ID中间件都基于 snowflake，以后也方便扩展，而不会出现<strong>由于算法不同，新算法生成的序列号可能被以前已经生成过</strong></li>
+</ol>
+<h1 id="2-实际使用"><a href="#2-实际使用" class="headerlink" title="2. 实际使用"></a>2. 实际使用</h1><ol>
+<li>开始考虑使用IP的最后一位作为 workid，因为已经和运维确认过，现在线上机器是最后是连号，不会重复，但是因为默认 workid 最大是 32，就没有将 datacenterid 都改为 workid，因为我发现我们 hostname 是带编号的，而且是递增的规律：xxservice001，最后三位是序号，因此直接取最后三位数字，作为 workid。</li>
+</ol>
+<blockquote>
+<p>snowflake 默认使用 <code>1+41+10+12</code> ID组装模式，其中 10 bit 是 datacenter + workid</p>
+</blockquote>
+<h1 id="2-1-时钟回拨问题"><a href="#2-1-时钟回拨问题" class="headerlink" title="2.1 时钟回拨问题"></a>2.1 时钟回拨问题</h1><p>关于时钟回拨，一般解决方法有：</p>
+<ol>
+<li>机器之间定时同步时间</li>
+<li>通过请求其它机器获取平均时间戳对比（Leaf）</li>
+<li>在阈值内不断获取当前时间直到大于上次申请时间</li>
+<li>使用第三方存储号段来解决（我个人倾向号段方案）</li>
+</ol>
+<p>由于正面临拆分，以后会有专门的 id 生成服务，因此现在并没有在单体服务上做时钟回拨的解决，我选择最简单的 hutool 工具引用即可，但是它仍可能有一定几率有时钟回拨。</p>
+<blockquote>
+<p>现阶段运行了两周，还没发现这个错误。</p>
+</blockquote>
+<h1 id="3-其它ID算法简析"><a href="#3-其它ID算法简析" class="headerlink" title="3. 其它ID算法简析"></a>3. 其它ID算法简析</h1><p>稍微系统的学习一下业内的分布式ID生成方案</p>
+<h2 id="3-1-uid-generator"><a href="#3-1-uid-generator" class="headerlink" title="3.1 uid-generator"></a>3.1 uid-generator</h2><p>以中间件的形式提供服务，基于 snowflake 的优化版，使用双 buffer 环（我个人理解为生产者和消费者模式），一个 buffer 生产号段，一个 buffer 消费号段。</p>
+<p>snowflake 各个分配可自定义：</p>
+<ul>
+<li>1bit：第一位不用，用于标志 0 ，表示正数</li>
+<li>28bits：每个机器当前时间，单位秒</li>
+<li>22bits：机器数量</li>
+<li>13bits：每秒的并发数</li>
+</ul>
+<ol>
+<li>默认是秒级并发，常规的 <code>snowflake</code> 算法是基于毫秒级(41 bits)，但是没有必要这么精确，每台机器每秒并发最多8192够用了。</li>
+<li>接着是环形数组，通俗来讲就是生产者和消费者模型，一个不能生产过快，一个不能消费过快。同时该模型又有扩容机制，即生产者到一定量后扩容。生产者每次生产者的数量。由于是周期性填充生产并缓存，因此可以接受短时间内第三方存储服务不可用。</li>
+<li>默认支持通过 mysql 存储机器申请情况，这可以用其它来代替，例如 zk，但是这需要<strong>我依赖的需要高可用</strong></li>
+</ol>
+<blockquote>
+<p>由此可见, 不管如何配置, CachedUidGenerator总能提供600万/s的稳定吞吐量, 只是使用年限会有所减少. 这真的是太棒了<br>[<a href="https://github.com/baidu/uid-generator/blob/master/README.zh_cn.md]" target="_blank" rel="noopener">https://github.com/baidu/uid-generator/blob/master/README.zh_cn.md]</a></p>
+</blockquote>
+<h2 id="3-2-leaf"><a href="#3-2-leaf" class="headerlink" title="3.2 leaf"></a>3.2 leaf</h2><p>也是以中间件的形式提供服务。</p>
+<blockquote>
+<p>目前Leaf的性能在4C8G的机器上QPS能压测到近5w/s，TP999 1ms，已经能够满足大部分的业务的需求</p>
+</blockquote>
+<p>有两种生产号段方式：<code>Leaf-segment</code>、<code>Leaf-snowflake</code></p>
+<h3 id="3-2-1-Leaf-segment"><a href="#3-2-1-Leaf-segment" class="headerlink" title="3.2.1 Leaf-segment"></a>3.2.1 Leaf-segment</h3><p>基于 mysql 数据库的号段模式，不是每一次都访问数据库，而是在数据库记录哪台机器分配了哪个号段区间。</p>
+<p>在每次消费时，当前机器访问 Leaf 时，Leaf 会得到该机器是否已经发了号段，并判断下一个号段的状态，接着从数据库中更新号段信息，并将号段到载入内存中，防止出现当前号段消费完后，加载下一个号段时的卡顿。</p>
+<p>由此得知可以短暂的容忍 mysql 一段时间内不可用。</p>
+<h3 id="3-2-2-Leaf-snowflake"><a href="#3-2-2-Leaf-snowflake" class="headerlink" title="3.2.2 Leaf-snowflake"></a>3.2.2 Leaf-snowflake</h3><p>标准的 <code>1+41+10+12</code> ID组装模式，默认使用 zk 做 leaf 集群多机房部署以达到高可用，主要是利用临时节点，记录当前正在访问 leaf 的消费端。</p>
+<blockquote>
+<p>解决了时钟回拨问题：3s一次上传 leaf 机器节点当前的时间，并进行 RPC 调用其它机器的时间，得到平均时间后，有个阈值（考虑网络延迟）进而通过判断当前机器时间与平均时间，来解决时钟回拨的问题。</p>
+</blockquote>
+<h2 id="3-3-UUID"><a href="#3-3-UUID" class="headerlink" title="3.3 UUID"></a>3.3 UUID</h2><p>唯一，但是无序，且长度太长，一般来说，数据库存都是 bigint(20) 即 64 bit，对应在 java 中使用 long，也是 64bit，而 uuid 是 128 bit，且是字母数字组合，需要 char(128)，空间浪费很严重</p>
+<h2 id="3-4-redis"><a href="#3-4-redis" class="headerlink" title="3.4 redis"></a>3.4 redis</h2><p>基于 Redis 全局递增，步长设置。<br>使用 lua 脚本结合 snowflake 来实现</p>
+<p>例如有三台业务机器，两台 redis 作为id生成机器：<code>1+41+10+12</code> 模式，其中的 workid 使用 redis 集群中的机器编号，这样就会请求的每个 redis 获取的 redis 都不会重复，但是仍旧有时钟回拨的问题。</p>
+<h2 id="3-5-idx-mysql-id"><a href="#3-5-idx-mysql-id" class="headerlink" title="3.5 idx_mysql_id"></a>3.5 idx_mysql_id</h2><p>基于 mysql 的主键，强依赖mysql，而且性能低，适合前期使用，并发量大时，不仅每次要访问数据库，而且还要做保证数据库的高可用</p>
+<h2 id="3-6-snowflake"><a href="#3-6-snowflake" class="headerlink" title="3.6 snowflake"></a>3.6 snowflake</h2><p>基本上现在主流的都会或多或少参考该算法<br>一共64bit，</p>
+<ol>
+<li>1bit默认为0，表示正数</li>
+<li>41bit作为时间戳毫秒值</li>
+<li>10bit作为工作机器</li>
+<li>12bit作为每个机器每毫秒下最多能支持多少个并发请求生成号</li>
+</ol>
+<p>cn.hutool.core.lang.Snowflake</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取当前时间，hutool 内部有个定时任务刷时间</span></span><br><span class="line"><span class="keyword">long</span> timestamp = genTime();</span><br><span class="line"><span class="comment">// 将当前时间与上次申请时间对比，判断是否出现时钟回拨</span></span><br><span class="line"><span class="keyword">if</span> (timestamp &lt; lastTimestamp) &#123;</span><br><span class="line">     <span class="comment">//如果服务器时间有问题(时钟回拨) 报错。</span></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(StrUtil.format(<span class="string">"Clock moved backwards. Refusing to generate id for &#123;&#125;ms"</span>, lastTimestamp - timestamp));</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 微秒下的并发走这里</span></span><br><span class="line"><span class="keyword">if</span> (lastTimestamp == timestamp) &#123;</span><br><span class="line">    <span class="comment">// 微秒下进行序号 +1，默认最多支持微秒 8192 并发量</span></span><br><span class="line">    sequence = (sequence + <span class="number">1</span>) &amp; sequenceMask;</span><br><span class="line">    <span class="keyword">if</span> (sequence == <span class="number">0</span>) &#123;</span><br><span class="line">        timestamp = tilNextMillis(lastTimestamp);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 并发数重置</span></span><br><span class="line">    sequence = <span class="number">0L</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 重置上一次时间</span></span><br><span class="line">lastTimestamp = timestamp;</span><br></pre></td></tr></table></figure>
+<h1 id="4-个人认为好的解决方案"><a href="#4-个人认为好的解决方案" class="headerlink" title="4. 个人认为好的解决方案"></a>4. 个人认为好的解决方案</h1><h2 id="4-1-号段"><a href="#4-1-号段" class="headerlink" title="4.1 号段"></a>4.1 号段</h2><p>记录请求的机器ip+port（能唯一定位该机器的标识），然后分配号段，例如1000~3000，另一个机器过来请求，分配另一个号段，例如 4000~9000，这样。主要是依赖第三方存储号段分配情况，例如使用数据库，Redis，Zookeeper 都可以。没有</p>
+<h2 id="4-2-算法生成"><a href="#4-2-算法生成" class="headerlink" title="4.2 算法生成"></a>4.2 算法生成</h2><p>就是 snowflake，不同在于根据业务的不同，可以对其中的 bit 做不同的分配，例如毫秒位改为秒位，这样多了三个位可以放给机器位，适合并发量不大，但是机器多的场景，或者机器位给最后的并发请求量位，适合并发量大，机器数量比 1024 少的场景。</p>
+<p>而且这个也可以进化为号段，但是会有很多永远都不会用到的号段，需要有个重复利用的方案。但是这解决了普通号段模式的订单有序性问题。</p>
+<h1 id="5-参考"><a href="#5-参考" class="headerlink" title="5. 参考"></a>5. 参考</h1><p>分布是唯一ID系列5篇：[<a href="https://www.cnblogs.com/itqiankun/p/11350857.html]" target="_blank" rel="noopener">https://www.cnblogs.com/itqiankun/p/11350857.html]</a><br>美团分布式ID系列2篇：[<a href="https://tech.meituan.com/2019/03/07/open-source-project-leaf.html]" target="_blank" rel="noopener">https://tech.meituan.com/2019/03/07/open-source-project-leaf.html]</a><br>多key的预备：[<a href="https://mp.weixin.qq.com/s/PCzRAZa9n4aJwHOX-kAhtA]" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/PCzRAZa9n4aJwHOX-kAhtA]</a></p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2020-12-20</div>
+      <div class="popular-posts-title"><a href="/2020/12/20/tech/mysql/snowflake&hash.html/" rel="bookmark">雪花算法与Hash分表键的坑</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2018-05-18</div>
+      <div class="popular-posts-title"><a href="/2018/05/18/distributed_principle_prictice/1.html/" rel="bookmark">一、应用框架演进</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2018-05-30</div>
+      <div class="popular-posts-title"><a href="/2018/05/30/distributed_principle_prictice/7.html/" rel="bookmark">七、集群容错</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2018-05-20</div>
+      <div class="popular-posts-title"><a href="/2018/05/20/distributed_principle_prictice/3.html/" rel="bookmark">三、通信框架</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2018-06-02</div>
+      <div class="popular-posts-title"><a href="/2018/06/02/distributed_principle_prictice/9.html/" rel="bookmark">九、服务注册中心</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>李文文 | zed
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.liwenguang.com/2019/09/05/tech/unique_id_1.html/" title="浅出分布式唯一ID生成器">https://blog.liwenguang.com/2019/09/05/tech/unique_id_1.html/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/分布式/" rel="tag"><i class="fa fa-tag"></i> 分布式</a>
+              <a href="/tags/唯一ID生成算法/" rel="tag"><i class="fa fa-tag"></i> 唯一ID生成算法</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/09/03/2019/35.html/" rel="prev" title="2019/35周总结">
+      <i class="fa fa-chevron-left"></i> 2019/35周总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/09/11/2019/36.html/" rel="next" title="2019/36周总结">
+      2019/36周总结 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0-背景"><span class="nav-text">0. 背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-调研"><span class="nav-text">1. 调研</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-实际使用"><span class="nav-text">2. 实际使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-1-时钟回拨问题"><span class="nav-text">2.1 时钟回拨问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-其它ID算法简析"><span class="nav-text">3. 其它ID算法简析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-uid-generator"><span class="nav-text">3.1 uid-generator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-leaf"><span class="nav-text">3.2 leaf</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-1-Leaf-segment"><span class="nav-text">3.2.1 Leaf-segment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-2-Leaf-snowflake"><span class="nav-text">3.2.2 Leaf-snowflake</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-UUID"><span class="nav-text">3.3 UUID</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-4-redis"><span class="nav-text">3.4 redis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-5-idx-mysql-id"><span class="nav-text">3.5 idx_mysql_id</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-6-snowflake"><span class="nav-text">3.6 snowflake</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-个人认为好的解决方案"><span class="nav-text">4. 个人认为好的解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-号段"><span class="nav-text">4.1 号段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-算法生成"><span class="nav-text">4.2 算法生成</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-参考"><span class="nav-text">5. 参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李文文 | zed"
+      src="/images/avatar2.jpg">
+  <p class="site-author-name" itemprop="name">李文文 | zed</p>
+  <div class="site-description" itemprop="description">Not you, who?</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">186</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LiWenGu" title="GitHub → https://github.com/LiWenGu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liwenguang_dev@163.com" title="E-Mail → mailto:liwenguang_dev@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="rss → /atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.battcn.com/" title="https://blog.battcn.com/" rel="noopener" target="_blank">唐亚峰 | battcn</a>
+        </li>
+    </ul>
+  </div>
+<!-- CloudCalendar -->
+<div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
+	<div class="widget" id="CloudCalendar"></div>
+</div>
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李文文 | zed</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">1m</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">15:28</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+<!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script>
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
+
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'tPNbcXbsHeBH6mDDuQiRNAIi-gzGzoHsz',
+      appKey     : 'DuDTx0gUNp6hJiNaBNXPREQQ',
+      placeholder: "欢迎评论",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

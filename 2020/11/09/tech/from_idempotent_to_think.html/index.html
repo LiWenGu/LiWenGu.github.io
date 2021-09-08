@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Menlo:300,300italic,400,400italic,700,700italic|Monda:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.liwenguang.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="记录前段时间做的一个业务中的思考，对技术与业务结合分析做到取舍并最终的需求。">
+<meta name="keywords" content="幂等,业务思考">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从幂等引发的一个思考">
+<meta property="og:url" content="https://blog.liwenguang.com/2020/11/09/tech/from_idempotent_to_think.html/index.html">
+<meta property="og:site_name" content="不坠青云志">
+<meta property="og:description" content="记录前段时间做的一个业务中的思考，对技术与业务结合分析做到取舍并最终的需求。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-11-23T20:41:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从幂等引发的一个思考">
+<meta name="twitter:description" content="记录前段时间做的一个业务中的思考，对技术与业务结合分析做到取舍并最终的需求。">
+
+<link rel="canonical" href="https://blog.liwenguang.com/2020/11/09/tech/from_idempotent_to_think.html/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>从幂等引发的一个思考 | 不坠青云志</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146913835-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-146913835-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cfa1bf8fa457ee5150093dc7c8761541";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">不坠青云志</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">严律己，宽待人</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">44</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">31</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">186</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+  <a href="https://github.com/LiWenGu/liwengu.github.io" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2020/11/09/tech/from_idempotent_to_think.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从幂等引发的一个思考
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-09 19:30:00" itemprop="dateCreated datePublished" datetime="2020-11-09T19:30:00+00:00">2020-11-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-23 20:41:00" itemprop="dateModified" datetime="2020-11-23T20:41:00+00:00">2020-11-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/工作思考/" itemprop="url" rel="index"><span itemprop="name">工作思考</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/11/09/tech/from_idempotent_to_think.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/11/09/tech/from_idempotent_to_think.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>记录前段时间做的一个业务中的思考，对技术与业务结合分析做到取舍并最终的需求。</p>
+<a id="more"></a>
+<h1 id="0-背景"><a href="#0-背景" class="headerlink" title="0. 背景"></a>0. 背景</h1><p>广告服务现在需要支付服务提供一个实时扣费的接口，用于支撑 CPC 的新业务，即属于 CPC（Cost per Click） 的范畴，整个业务流转链路如下：商家用一定的金额买下某个广告位，搜索服务在拉出商品时根据权重排序，其中有专门的广告位用于展示此类商品。抽象到技术，即支持近实时的扣费，用户每有效点击一次该商品，就扣除商家的账户金额，因为要支持近实时，上层服务不希望使用 MQ 来与支付系统交互，而是想直接使用 RPC 接口调用，也就是广告点击 TPS 和支付服务的 TPS 是一致的（风险）。</p>
+<p>关于这个近实时直接扣费的点，属于业务上的考虑，虽然也跟产品讨论这个“近实时”的点，但是说初期需要近实时，后期可以接收延迟，并且对大小商家需要有不同的延迟处理，以做到性能和业务上的平衡。</p>
+<h1 id="1-业务分析"><a href="#1-业务分析" class="headerlink" title="1. 业务分析"></a>1. 业务分析</h1><p>业务分析后总结如下：</p>
+<ol>
+<li>TPS 广告服务与支付共享，这是不合理的，但是已经和产品以及上下游讨论了这个点，重点在于：可以接受非实时，但是不能都是非实时，即部分用户实时，部分用户非实时。</li>
+<li>业务上支持对于大广告主可以使用保证金这种兜底方案，这种大客户可以接受非实时，也不怕被薅羊毛，因为会扣除保证金。而对于小客户我们初期给他们实时扣费处理，因为这类的用户 TPS 不会很高，因此可以接受这类方案。</li>
+<li>此类扣费需要支持幂等，保证每次点击就算下游服务出现短暂的超时（例如滚动发布时），也需要能通过重试策略来达到数据一致，而不用人工修复数据或强行引入一致性的第三方服务（成本过大）。</li>
+</ol>
+<h1 id="2-实时与非实时"><a href="#2-实时与非实时" class="headerlink" title="2. 实时与非实时"></a>2. 实时与非实时</h1><p>既然业务可接受部分用户实时，部分用户非实时，在于如何区分大客户/小客户，其实从性能上考虑，大客户是很容易造成热点问题，尤其是在广告的热点时间。最开始计划是做纯动态，非人工干扰，即根据对请求的 userId 做收集，同时后台增加一个定时任务按天或按小时做一个统计（这里可以直接用现有大数据的同步库拉数据），来动态计算出大客户/小客户，从而做出不同的业务策略。后来由于时间问题被业务方 pass 了。接着选择了最快且能满足业务方的一个方案，通过业务方后台动态配置 userId，在处理时判断是否属于该配置的 userId 组，来执行大客户或小客户的业务逻辑，这个方案运营人员也能接受，因为大客户也就那么多。这里选用了选择了已有的技术栈 Apollo 动态配置。</p>
+<h2 id="大客户处理"><a href="#大客户处理" class="headerlink" title="大客户处理"></a>大客户处理</h2><p>大客户是最核心的点，可能 TPS 百分之八十都是来自于大客户，甚至在后期占比会越来越高，而且也会涉及到经典的热点数据问题（MySQL 的行锁竞争），因此是主要优化点。</p>
+<h3 id="保证金"><a href="#保证金" class="headerlink" title="保证金"></a>保证金</h3><p>对于大客户，业务方接受使用了保证金兜底，就有个问题，保证金设置多少合适？</p>
+<p>这里我们可以根据系统可接受的最低阈值来计算：线上的接口 TPS 阈值，乘以当前广告位的值再乘以 timeout 来获得，例如线上 TPS 是 10，当前广告位是 1 元/点击，timeout 为 200ms，那么在极端情况下，当用户金额已为 0 时，此时每秒扣客户的保证金为 10*1/0.2=50 元/秒，同时上游服务会对此类异常响应（余额不足）做一系列的广告位下架处理，假如他们能在 1s 内就能完成，那么保证金最低设置为 50 就可以满足该场景了。</p>
+<h3 id="异步优化"><a href="#异步优化" class="headerlink" title="异步优化"></a>异步优化</h3><p>我们已经知道了对于大客户来说，他们是有保证金兜底的，因此我们可以使用异步做扣款，达到近实时。异步我使用了 MQ，至于为什么选用 MQ 不选用进程内子线程就不必多说了，可以参见 MQ 的优点。使用了 MQ 处理扣款我们不用担心余额不足，因为如果走到了 MQ 逻辑，那么它肯定是大客户，肯定是有保证金兜底的。同时为了削峰，我们可以使用了 MQ 的延迟消息，至于这里的延迟消息是否开启延迟多久，也可以通过动态配置或直接在 Apollo 上配置，在高峰时 ，手动设置开启延迟时间，设置延迟时间。但是设置了延迟时间，同时也要同步到设置保证金的场景，因为每延迟 1s，保证金就要增加 50 元。消息重复问题使用幂等接口处理。而消息的丢失就使用可靠消息入日志处理。</p>
+<h2 id="小客户处理"><a href="#小客户处理" class="headerlink" title="小客户处理"></a>小客户处理</h2><p>小客户就不用多说了，小客户的 TPS 与上游服务的 TPS 对齐，不会很高，直接进行数据库的扣除操作。当 TPS 过高时，会晋升为大客户处理逻辑。</p>
+<h1 id="3-幂等支持"><a href="#3-幂等支持" class="headerlink" title="3. 幂等支持"></a>3. 幂等支持</h1><p>系统框架本身没有支持幂等，一是量没到，二是觉得幂等处理会比较复杂，但是这个接口明确是需要做幂等的（大部分开发时间都在做幂等的支持），当前这个业务是一个典型的复杂转账业务，在成功是返回一个值，在失败是返回另一个值，虽然这个返回值在数据库中可以直接查询得到，但是该表的分库分表键设置的不合理，不建议使用查询返回，对 RT 有影响。例如，虽然转账可能是一个非常简单插入更新操作，但是需要返回是否当前余额不够，我们是直接做更新插入（update xx where column &gt; xx 方式）而不是先查。因此最简单支持幂等的方法就是根据请求的唯一参数，来存储第一次的返回值，我们不用考虑返回值从哪来。而我们业务已经约定好的有一个唯一的请求参数，这个唯一的请求参数（主键 ID 或 UUID 或雪花算法）用来判断是否是相同的重复请求。</p>
+<p>对第一次的请求参数 + 第一次的请求响应做（key,value）即可，以后的 N+1 次请求直接 get(key)返回。因此重点在于判断出是否第一次请求。这里我们可以使用数据库的 insert 或 redis 的 setnx 方式。</p>
+<h2 id="弊端"><a href="#弊端" class="headerlink" title="弊端"></a>弊端</h2><p>多了一层存储（key,value）的开销，key 是在本业务中上游服务是支持的，而 value 是下游服务响应的结果，如果 value 响应体过大则存储量会变大的开销。且每次独立的请求都会有此额外开销，因此需要定时/定期的删除，防止膨胀，删除时间需要业务和性能考虑。</p>
+<p>因为存储介质大概率会考虑 Redis/MySQL，这两种在量大的时候都会对性能有一定的影响，而每次每个接口不同的请求都要存储。因此我们需要提现在线上查看该接口可能的峰值，以及业务上可能正常重复请求的情况，这里说的正常重复请求的情况是指， RT 过高或网络抖动导致的 RPC 重复请求。</p>
+<blockquote>
+<p>异常重复请求是指这种情况，例如该接口正常 100ms 处理完成，一般来说我们 timeout 会设置 3 倍（一般性能敏感业务的 timeout 会设置为 99% 的 RT 时间），即 timeout=300ms，但是如果上游出现异常，导致在 100ms 内，接口不断的请求，那么我们只会对第一次请求返回成功，在这 100ms 内的 n+1 次请求都会返回请求频率过快的报错。</p>
+</blockquote>
+<p>其实说到这，幂等框架已经初步形成了。在实际开发中，我们直接使用注解来避免对现有业务做侵入，使用切面来做一系列的判断逻辑。具体代码可以参考：<a href="https://github.com/liuyukuai/dis.git%E2%80%B8" target="_blank" rel="noopener">https://github.com/liuyukuai/dis.git</a>。不过这个项目是在框架做完后发现的，但是核心思想相同，细节做了不同的处理，例如对请求参数的键设置，我使用了设置字段反射获取值，而不是再使用另一个字段注解，优点在于接口上就能直接看到唯一请求参数是什么，而不用进入到具体请求参数体中，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">scratch</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 接口一眼就能看出，唯一键为三个字段的值。</span></span><br><span class="line">    <span class="meta">@IdempotentReq</span>(&#123;RequestBean.Fields.name, RequestBean.Fields.age, RequestBean.Fields.gender&#125;)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">req</span><span class="params">(RequestBean requestBean)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Object();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@FieldNameConstants</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RequestBean</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Long age;</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; habits;</span><br><span class="line">    <span class="keyword">private</span> Gender gender;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> Gender &#123;</span><br><span class="line">    MAN,</span><br><span class="line">    WOMAN,</span><br><span class="line">    ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="期望的优点"><a href="#期望的优点" class="headerlink" title="期望的优点"></a>期望的优点</h2><ol>
+<li>这里所说的期望优点，是希望能从代码层面对业务透明化，即，正常的一个业务服务提供者，它只需要增加一个标识，即可以自动变成幂等接口，这是我们想到达到的</li>
+<li>隐含的期望优点，是指对于某些业务方，能支持存储方式的模块选择，例如我们可以自由选择 Redis/MySQL 作为存储（key,value）的介质，但是对于 MySQL 有个问题：一是表的存储在哪，二是定时删除数据的定时任务。</li>
+<li>其实达到以上两点，那么它就能做到：成为一个幂等通用处理框架。</li>
+</ol>
+<h1 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h1><p>最后是抽出了一套通用的幂等方案，支持 redis 和 mysql 存储请求以及响应。和这个框架类似：<a href="https://github.com/liuyukuai/dis" target="_blank" rel="noopener">https://github.com/liuyukuai/dis</a>。</p>
+<p>关于这个业务场景，主要是为平台增收，同时也满足大小客户不同的流量需求。由于需求的特殊和时间问题，在技术设计上做了一定的取舍。（从技术上看，我觉得使用 MQ 交互是最好的，但是他们更加信任 RPC 而不是 MQ~）。当广告的 TPS 到了极高时（当平台流量高后，广告点击也会随之上升），底层服务 TPS 与上游 TPS 对齐，这是不合理的，二是耦合重。最好的方式是通过 MQ 交互，异步回调返回结果，这是一个非常好的优化点，不过目前的方案上线了几个月，目前没出现什么问题。</p>
+<h1 id="5-反馈"><a href="#5-反馈" class="headerlink" title="5. 反馈"></a>5. 反馈</h1><p>这个方案后面又做了优化，起因是在上线大概一周后，周末在家无聊修复一个微信退款数据时想到的。</p>
+<p>微信对超过一个月的订单退款会有频率限制，即对 TPS 限流，但是由于之前业务量没到这个阈值体系，因此编写代码没有考虑线上也一直也没有触发，而且微信官网也没有这个说明（坑），因此代码上没有对这个频率错误做重试处理，而是直接返回了错误，导致数据有问题，业务大概是：读写数据库 A-&gt; 微信退款-&gt; 读写数据库 B。</p>
+<p>导致正常重试是不行的，对于 A 操作不能直接重试，需要重试<strong>查询退款进度</strong>然后做 B 操作。就是这个查询退款进度启发了我。</p>
+<p>同步请求 + 提供查询接口。因为同步请求已经是幂等，但是不可避免 RT 会有抖动，导致重试，而我们超时时间短，极有可能触发上个请求还未完成，下个请求就来了，这时候接口只能返回请求正在处理中，但是对于上游服务是不友好的。最终优化方式为：</p>
+<ol>
+<li>同步请求幂等（我们内部异步）</li>
+<li>去掉重试，减少超时时间</li>
+<li>提供反查接口。</li>
+</ol>
+<p>第二步是去掉了重试，并将超时时间减少，减少异常时不必要的等待时间，因为当 RT 过高极有可能不是程序慢的问题，这时候让上游请求我们的反查接口，来最终得到结果值。</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>李文文 | zed
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.liwenguang.com/2020/11/09/tech/from_idempotent_to_think.html/" title="从幂等引发的一个思考">https://blog.liwenguang.com/2020/11/09/tech/from_idempotent_to_think.html/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/幂等/" rel="tag"><i class="fa fa-tag"></i> 幂等</a>
+              <a href="/tags/业务思考/" rel="tag"><i class="fa fa-tag"></i> 业务思考</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/04/2020/44.html/" rel="prev" title="2020/44周总结">
+      <i class="fa fa-chevron-left"></i> 2020/44周总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/09/2020/45.html/" rel="next" title="2020/45周总结">
+      2020/45周总结 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0-背景"><span class="nav-text">0. 背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-业务分析"><span class="nav-text">1. 业务分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-实时与非实时"><span class="nav-text">2. 实时与非实时</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#大客户处理"><span class="nav-text">大客户处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#保证金"><span class="nav-text">保证金</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#异步优化"><span class="nav-text">异步优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小客户处理"><span class="nav-text">小客户处理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-幂等支持"><span class="nav-text">3. 幂等支持</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#弊端"><span class="nav-text">弊端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#期望的优点"><span class="nav-text">期望的优点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-总结"><span class="nav-text">4. 总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-反馈"><span class="nav-text">5. 反馈</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李文文 | zed"
+      src="/images/avatar2.jpg">
+  <p class="site-author-name" itemprop="name">李文文 | zed</p>
+  <div class="site-description" itemprop="description">Not you, who?</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">186</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LiWenGu" title="GitHub → https://github.com/LiWenGu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liwenguang_dev@163.com" title="E-Mail → mailto:liwenguang_dev@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="rss → /atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.battcn.com/" title="https://blog.battcn.com/" rel="noopener" target="_blank">唐亚峰 | battcn</a>
+        </li>
+    </ul>
+  </div>
+<!-- CloudCalendar -->
+<div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
+	<div class="widget" id="CloudCalendar"></div>
+</div>
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李文文 | zed</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">1m</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">15:28</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+<!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script>
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
+
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'tPNbcXbsHeBH6mDDuQiRNAIi-gzGzoHsz',
+      appKey     : 'DuDTx0gUNp6hJiNaBNXPREQQ',
+      placeholder: "欢迎评论",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

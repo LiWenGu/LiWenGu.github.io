@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Menlo:300,300italic,400,400italic,700,700italic|Monda:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.liwenguang.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="除非你觉得你的时间不是很宝贵，否则不要看这篇流水账式的博文，这只是篇个人的工作的学习一个总结而已，没有包含任何的技术细节">
+<meta name="keywords" content="2019总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2019&#x2F;37周总结">
+<meta property="og:url" content="https://blog.liwenguang.com/2019/09/17/2019/37.html/index.html">
+<meta property="og:site_name" content="不坠青云志">
+<meta property="og:description" content="除非你觉得你的时间不是很宝贵，否则不要看这篇流水账式的博文，这只是篇个人的工作的学习一个总结而已，没有包含任何的技术细节">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-09-17T22:42:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2019&#x2F;37周总结">
+<meta name="twitter:description" content="除非你觉得你的时间不是很宝贵，否则不要看这篇流水账式的博文，这只是篇个人的工作的学习一个总结而已，没有包含任何的技术细节">
+
+<link rel="canonical" href="https://blog.liwenguang.com/2019/09/17/2019/37.html/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>2019/37周总结 | 不坠青云志</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146913835-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-146913835-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cfa1bf8fa457ee5150093dc7c8761541";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">不坠青云志</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">严律己，宽待人</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">44</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">31</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">186</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+  <a href="https://github.com/LiWenGu/liwengu.github.io" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2019/09/17/2019/37.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          2019/37周总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-09-17 22:42:00" itemprop="dateCreated datePublished" datetime="2019-09-17T22:42:00+00:00">2019-09-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/" itemprop="url" rel="index"><span itemprop="name">行为总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/行为总结/周总结/" itemprop="url" rel="index"><span itemprop="name">周总结</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/09/17/2019/37.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/09/17/2019/37.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <div id="hbe-security">
+  <div class="hbe-input-container">
+  <input type="password" class="hbe-form-control" id="pass" placeholder="除非你知道 Y 代表什么，不然请不要输入 Y" />
+    <label for="pass">除非你知道 Y 代表什么，不然请不要输入 Y</label>
+    <div class="bottom-line"></div>
+  </div>
+</div>
+<div id="decryptionError" style="display: none;">Incorrect Password!</div>
+<div id="noContentError" style="display: none;">No content to display!</div>
+<div id="encrypt-blog" style="display:none">
+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
+</div>
+<script src="/lib/crypto-js.js"></script><script src="/lib/blog-encrypt.js"></script><link href="/css/blog-encrypt.css" rel="stylesheet" type="text/css">
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-12-31</div>
+      <div class="popular-posts-title"><a href="/2019/12/31/2019/index.html/" rel="bookmark">2019 总结</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-01-13</div>
+      <div class="popular-posts-title"><a href="/2019/01/13/2019/02.html/" rel="bookmark">2019/02周总结</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-01-21</div>
+      <div class="popular-posts-title"><a href="/2019/01/21/2019/03.html/" rel="bookmark">2019/03周总结</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-01-29</div>
+      <div class="popular-posts-title"><a href="/2019/01/29/2019/04.html/" rel="bookmark">2019/04周总结</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-02-12</div>
+      <div class="popular-posts-title"><a href="/2019/02/12/2019/06.html/" rel="bookmark">2019/06周总结</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>李文文 | zed
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.liwenguang.com/2019/09/17/2019/37.html/" title="2019/37周总结">https://blog.liwenguang.com/2019/09/17/2019/37.html/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/2019总结/" rel="tag"><i class="fa fa-tag"></i> 2019总结</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/09/11/2019/36.html/" rel="prev" title="2019/36周总结">
+      <i class="fa fa-chevron-left"></i> 2019/36周总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2019/10/01/2019/39.html/" rel="next" title="2019/39周总结">
+      2019/39周总结 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李文文 | zed"
+      src="/images/avatar2.jpg">
+  <p class="site-author-name" itemprop="name">李文文 | zed</p>
+  <div class="site-description" itemprop="description">Not you, who?</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">186</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LiWenGu" title="GitHub → https://github.com/LiWenGu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liwenguang_dev@163.com" title="E-Mail → mailto:liwenguang_dev@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="rss → /atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.battcn.com/" title="https://blog.battcn.com/" rel="noopener" target="_blank">唐亚峰 | battcn</a>
+        </li>
+    </ul>
+  </div>
+<!-- CloudCalendar -->
+<div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
+	<div class="widget" id="CloudCalendar"></div>
+</div>
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李文文 | zed</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">1m</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">15:28</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+<!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script>
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
+
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'tPNbcXbsHeBH6mDDuQiRNAIi-gzGzoHsz',
+      appKey     : 'DuDTx0gUNp6hJiNaBNXPREQQ',
+      placeholder: "欢迎评论",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

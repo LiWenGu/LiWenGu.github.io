@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Menlo:300,300italic,400,400italic,700,700italic|Monda:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.liwenguang.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="0. 背景此文源于在二开 SkyWalking 时，发现公司搭建的 SkyWalking 性能剖析不能生效，在排查过程中学到了很多，因此记录下来方便对 SkyWalking 的性能剖析功能有更深的理解。">
+<meta name="keywords" content="skywalking">
+<meta property="og:type" content="article">
+<meta property="og:title" content="skywalking-profile原理">
+<meta property="og:url" content="https://blog.liwenguang.com/2021/05/29/tech/apm/skywalking_1_profile.html/index.html">
+<meta property="og:site_name" content="不坠青云志">
+<meta property="og:description" content="0. 背景此文源于在二开 SkyWalking 时，发现公司搭建的 SkyWalking 性能剖析不能生效，在排查过程中学到了很多，因此记录下来方便对 SkyWalking 的性能剖析功能有更深的理解。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://markdownnoteimages.oss-cn-hangzhou.aliyuncs.com/20210529161727.png">
+<meta property="og:image" content="https://markdownnoteimages.oss-cn-hangzhou.aliyuncs.com/20210529171849.png">
+<meta property="og:updated_time" content="2021-05-29T15:52:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="skywalking-profile原理">
+<meta name="twitter:description" content="0. 背景此文源于在二开 SkyWalking 时，发现公司搭建的 SkyWalking 性能剖析不能生效，在排查过程中学到了很多，因此记录下来方便对 SkyWalking 的性能剖析功能有更深的理解。">
+<meta name="twitter:image" content="https://markdownnoteimages.oss-cn-hangzhou.aliyuncs.com/20210529161727.png">
+
+<link rel="canonical" href="https://blog.liwenguang.com/2021/05/29/tech/apm/skywalking_1_profile.html/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>skywalking-profile原理 | 不坠青云志</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146913835-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-146913835-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cfa1bf8fa457ee5150093dc7c8761541";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">不坠青云志</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">严律己，宽待人</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">44</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">31</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">186</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+  <a href="https://github.com/LiWenGu/liwengu.github.io" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2021/05/29/tech/apm/skywalking_1_profile.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          skywalking-profile原理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-05-29 15:52:00" itemprop="dateCreated datePublished" datetime="2021-05-29T15:52:00+00:00">2021-05-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术总结/" itemprop="url" rel="index"><span itemprop="name">技术总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术总结/apm/" itemprop="url" rel="index"><span itemprop="name">apm</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/05/29/tech/apm/skywalking_1_profile.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/05/29/tech/apm/skywalking_1_profile.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>23k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>21 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="0-背景"><a href="#0-背景" class="headerlink" title="0. 背景"></a>0. 背景</h1><p>此文源于在二开 SkyWalking 时，发现公司搭建的 SkyWalking 性能剖析不能生效，在排查过程中学到了很多，因此记录下来方便对 SkyWalking 的性能剖析功能有更深的理解。</p>
+<a id="more"></a>
+<h1 id="1-最开始的地方：后台创建性能剖析任务"><a href="#1-最开始的地方：后台创建性能剖析任务" class="headerlink" title="1. 最开始的地方：后台创建性能剖析任务"></a>1. 最开始的地方：后台创建性能剖析任务</h1><p><img src="https://markdownnoteimages.oss-cn-hangzhou.aliyuncs.com/20210529161727.png" alt="创建性能剖析任务"></p>
+<h2 id="1-1-后台接收-profile-任务创建请求"><a href="#1-1-后台接收-profile-任务创建请求" class="headerlink" title="1.1 后台接收 profile 任务创建请求"></a>1.1 后台接收 profile 任务创建请求</h2><p>当创建任务时，oap 服务会通过内嵌的 org.apache.skywalking.oap.server.library.server.jetty.JettyJsonHandler.doPost 处理。而 GraphQLQueryHandler 是实际处理类，因为 GraphQLQueryHandler 继承自 JettyJsonHandler 类。</p>
+<p>这是 org.apache.skywalking.oap.query.graphql.GraphQLQueryHandler#execute 源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 处理 oap 的 http post 请求</span></span><br><span class="line"><span class="comment">     * 以性能剖析任务创建为例，这是 graphql 的定义：server-query-plugin/query-graphql-plugin/resources/query-protocol/profile.graphqls</span></span><br><span class="line"><span class="comment">     * 而真正执行的 java 代码为：org.apache.skywalking.oap.query.graphql.resolver.ProfileMutation#createProfileTask()</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> request    oap 的后台查询语法有两个参数，一个是 query，包含要执行的类方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> variables  还有一个是 variables 参数，包含要执行的参数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> </span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> JsonObject <span class="title">execute</span><span class="params">(String request, Map&lt;String, Object&gt; variables)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ExecutionInput executionInput = ExecutionInput.newExecutionInput()</span><br><span class="line">                                                          .query(request)</span><br><span class="line">                                                          .variables(variables)</span><br><span class="line">                                                          .build();</span><br><span class="line">            <span class="comment">// 通过 graphQL 语法找到真正执行的类方法，性能剖析的创建处理类为：ProfileMutation#createProfileTask()</span></span><br><span class="line">            ExecutionResult executionResult = graphQL.execute(executionInput);</span><br><span class="line">            LOGGER.debug(<span class="string">"Execution result is &#123;&#125;"</span>, executionResult);</span><br><span class="line">            Object data = executionResult.getData();</span><br><span class="line">            List&lt;GraphQLError&gt; errors = executionResult.getErrors();</span><br><span class="line">            JsonObject jsonObject = <span class="keyword">new</span> JsonObject();</span><br><span class="line">            <span class="keyword">if</span> (data != <span class="keyword">null</span>) &#123;</span><br><span class="line">                jsonObject.add(DATA, gson.fromJson(gson.toJson(data), JsonObject.class));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (CollectionUtils.isNotEmpty(errors)) &#123;</span><br><span class="line">                JsonArray errorArray = <span class="keyword">new</span> JsonArray();</span><br><span class="line">                errors.forEach(error -&gt; &#123;</span><br><span class="line">                    JsonObject errorJson = <span class="keyword">new</span> JsonObject();</span><br><span class="line">                    errorJson.addProperty(MESSAGE, error.getMessage());</span><br><span class="line">                    errorArray.add(errorJson);</span><br><span class="line">                &#125;);</span><br><span class="line">                jsonObject.add(ERRORS, errorArray);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> jsonObject;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (<span class="keyword">final</span> Throwable e) &#123;</span><br><span class="line">            ...</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="1-2-从-graphqls-定位到具体的执行类"><a href="#1-2-从-graphqls-定位到具体的执行类" class="headerlink" title="1.2 从 graphqls 定位到具体的执行类"></a>1.2 从 graphqls 定位到具体的执行类</h2><p>我们看下 http 的入参：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query"</span>: <span class="string">"mutation createProfileTask($creationRequest: ProfileTaskCreationRequest) &#123;\n  createTask: createProfileTask(creationRequest: $creationRequest) &#123;\n    id\n    errorReason\n  &#125;\n  &#125;"</span>,</span><br><span class="line">    <span class="attr">"variables"</span>: &#123;</span><br><span class="line">        <span class="attr">"creationRequest"</span>: &#123;</span><br><span class="line">            <span class="attr">"serviceId"</span>: <span class="string">"ZHViYm8tZXhhbXBsZS1jb25zdW1lcg==.1"</span>,</span><br><span class="line">            <span class="attr">"endpointName"</span>: <span class="string">"/api/users"</span>,</span><br><span class="line">            <span class="attr">"startTime"</span>: <span class="number">1622276464546</span>,</span><br><span class="line">            <span class="attr">"duration"</span>: <span class="number">5</span>,</span><br><span class="line">            <span class="attr">"minDurationThreshold"</span>: <span class="number">0</span>,</span><br><span class="line">            <span class="attr">"dumpPeriod"</span>: <span class="number">10</span>,</span><br><span class="line">            <span class="attr">"maxSamplingCount"</span>: <span class="number">5</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>得到了要执行的类方法以及参数。<br>接着看</p>
+<p>server-query-plugin/query-graphql-plugin/resources/query-protocol/profile.graphqls 内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">extend type Mutation &#123;</span><br><span class="line">    # crate new profile task</span><br><span class="line">    createProfileTask(creationRequest: ProfileTaskCreationRequest): ProfileTaskCreationResult!</span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>最后定位到 ProfileMutation 类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * profile mutation GraphQL resolver</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProfileMutation</span> <span class="keyword">implements</span> <span class="title">GraphQLMutationResolver</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ProfileTaskCreationResult <span class="title">createProfileTask</span><span class="params">(ProfileTaskCreationRequest creationRequest)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> getProfileTaskService().createTask(creationRequest.getServiceId(), creationRequest.getEndpointName() == <span class="keyword">null</span> ? <span class="keyword">null</span> : creationRequest</span><br><span class="line">            .getEndpointName()</span><br><span class="line">            .trim(), creationRequest.getStartTime() == <span class="keyword">null</span> ? -<span class="number">1</span> : creationRequest.getStartTime(), creationRequest.getDuration(), creationRequest</span><br><span class="line">            .getMinDurationThreshold(), creationRequest.getDumpPeriod(), creationRequest.getMaxSamplingCount());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="1-3-profile-task-任务存储"><a href="#1-3-profile-task-任务存储" class="headerlink" title="1.3 profile task 任务存储"></a>1.3 profile task 任务存储</h2><p>最终会将任务存储到 DB 中，以 ES7 存储为例：</p>
+<p>存储的数据结构 ProfileTaskRecord：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ScopeDeclaration</span>(id = PROFILE_TASK, name = <span class="string">"ProfileTask"</span>)</span><br><span class="line"><span class="meta">@Stream</span>(name = ProfileTaskRecord.INDEX_NAME, scopeId = PROFILE_TASK, builder = ProfileTaskRecord.Builder.class, processor = NoneStreamProcessor.class)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProfileTaskRecord</span> <span class="keyword">extends</span> <span class="title">NoneStream</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String INDEX_NAME = <span class="string">"profile_task"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String SERVICE_ID = <span class="string">"service_id"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String ENDPOINT_NAME = <span class="string">"endpoint_name"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String START_TIME = <span class="string">"start_time"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String DURATION = <span class="string">"duration"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String MIN_DURATION_THRESHOLD = <span class="string">"min_duration_threshold"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String DUMP_PERIOD = <span class="string">"dump_period"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String CREATE_TIME = <span class="string">"create_time"</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String MAX_SAMPLING_COUNT = <span class="string">"max_sampling_count"</span>;</span><br></pre></td></tr></table></figure>
+<p>在 ES 的数据：</p>
+<p><img src="https://markdownnoteimages.oss-cn-hangzhou.aliyuncs.com/20210529171849.png" alt="ES中的profile数据"></p>
+<h1 id="2-client-将-profile-数据传输给-oap"><a href="#2-client-将-profile-数据传输给-oap" class="headerlink" title="2. client 将 profile 数据传输给 oap"></a>2. client 将 profile 数据传输给 oap</h1><p>当 oap 服务端创建了 profile task 后，需要让客户端感知，并将对应的 endpoint 的堆栈数据发送给 oap 服务端，以供分析。</p>
+<h2 id="2-1-client-请求-oap-创建的-profile-task"><a href="#2-1-client-请求-oap-创建的-profile-task" class="headerlink" title="2.1 client 请求 oap 创建的 profile task"></a>2.1 client 请求 oap 创建的 profile task</h2><p>agent client 通过 org.apache.skywalking.apm.agent.core.profile.ProfileTaskChannelService 中的定时任务来定时获取后端中的 profile task 列表，如下是 boot 方法的源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">boot</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    sender = ServiceManager.INSTANCE.findService(ProfileSnapshotSender.class);</span><br><span class="line">    <span class="comment">// 客户端开启 profile 的开关</span></span><br><span class="line">    <span class="keyword">if</span> (Config.Profile.ACTIVE) &#123;</span><br><span class="line">        <span class="comment">// query task list，定时从 oap 获取要分析的 endpoint 列表</span></span><br><span class="line">        getTaskListFuture = Executors.newSingleThreadScheduledExecutor(</span><br><span class="line">            <span class="keyword">new</span> DefaultNamedThreadFactory(<span class="string">"ProfileGetTaskService"</span>)</span><br><span class="line">        ).scheduleWithFixedDelay(</span><br><span class="line">            <span class="keyword">new</span> RunnableWithExceptionProtection(</span><br><span class="line">                <span class="keyword">this</span>,</span><br><span class="line">                t -&gt; LOGGER.error(<span class="string">"Query profile task list failure."</span>, t)</span><br><span class="line">            ), <span class="number">0</span>, Config.Collector.GET_PROFILE_TASK_INTERVAL, TimeUnit.SECONDS</span><br><span class="line">        );</span><br><span class="line">        <span class="comment">// 将客户端收集的分析堆栈信息传输给 oap</span></span><br><span class="line">        sendSnapshotFuture = Executors.newSingleThreadScheduledExecutor(</span><br><span class="line">            <span class="keyword">new</span> DefaultNamedThreadFactory(<span class="string">"ProfileSendSnapshotService"</span>)</span><br><span class="line">        ).scheduleWithFixedDelay(</span><br><span class="line">            <span class="keyword">new</span> RunnableWithExceptionProtection(</span><br><span class="line">                () -&gt; &#123;</span><br><span class="line">                    List&lt;TracingThreadSnapshot&gt; buffer = <span class="keyword">new</span> ArrayList&lt;&gt;(Config.Profile.SNAPSHOT_TRANSPORT_BUFFER_SIZE);</span><br><span class="line">                    snapshotQueue.drainTo(buffer);</span><br><span class="line">                    <span class="keyword">if</span> (!buffer.isEmpty()) &#123;</span><br><span class="line">                        sender.send(buffer);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,</span><br><span class="line">                t -&gt; LOGGER.error(<span class="string">"Profile segment snapshot upload failure."</span>, t)</span><br><span class="line">            ), <span class="number">0</span>, <span class="number">500</span>, TimeUnit.MILLISECONDS</span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从 oap 服务端获取 profile task 列表的执行逻辑 ProfileTaskChannelService.java：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (status == GRPCChannelStatus.CONNECTED) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            ProfileTaskCommandQuery.Builder builder = ProfileTaskCommandQuery.newBuilder();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// sniffer info</span></span><br><span class="line">            builder.setService(Config.Agent.SERVICE_NAME).setServiceInstance(Config.Agent.INSTANCE_NAME);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// last command create time</span></span><br><span class="line">            builder.setLastCommandTime(ServiceManager.INSTANCE.findService(ProfileTaskExecutionService.class)</span><br><span class="line">                                                                .getLastCommandCreateTime());</span><br><span class="line">            <span class="comment">// 主动跟 oap 通信，通过 grpc 查询当前应用需要开启的 profile task 列表</span></span><br><span class="line">            Commands commands = profileTaskBlockingStub.withDeadlineAfter(GRPC_UPSTREAM_TIMEOUT, TimeUnit.SECONDS)</span><br><span class="line">                                                        .getProfileTaskCommands(builder.build());</span><br><span class="line">            <span class="comment">// 获取到任务列表后客户端处理该命令逻辑</span></span><br><span class="line">            ServiceManager.INSTANCE.findService(CommandService.class).receiveCommand(commands);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!(t <span class="keyword">instanceof</span> StatusRuntimeException)) &#123;</span><br><span class="line">                LOGGER.error(t, <span class="string">"Query profile task from backend fail."</span>);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">final</span> StatusRuntimeException statusRuntimeException = (StatusRuntimeException) t;</span><br><span class="line">            <span class="keyword">if</span> (statusRuntimeException.getStatus().getCode() == Status.Code.UNIMPLEMENTED) &#123;</span><br><span class="line">                LOGGER.warn(<span class="string">"Backend doesn't support profiling, profiling will be disabled"</span>);</span><br><span class="line">                <span class="keyword">if</span> (getTaskListFuture != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    getTaskListFuture.cancel(<span class="keyword">true</span>);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// stop snapshot sender</span></span><br><span class="line">                <span class="keyword">if</span> (sendSnapshotFuture != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    sendSnapshotFuture.cancel(<span class="keyword">true</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-2-oap-响应-client-获取-profile-task-列表的请求"><a href="#2-2-oap-响应-client-获取-profile-task-列表的请求" class="headerlink" title="2.2 oap 响应 client 获取 profile task 列表的请求"></a>2.2 oap 响应 client 获取 profile task 列表的请求</h2><p>而 oap 是在 server-receiver-plugin/skywalking-profile-receiver-plugin 处理客户端的 ProfileTaskCommandQuery 请求，ProfileTaskServiceHandler.java：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getProfileTaskCommands</span><span class="params">(ProfileTaskCommandQuery request, StreamObserver&lt;Commands&gt; responseObserver)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// query profile task list by service id</span></span><br><span class="line">    <span class="keyword">final</span> String serviceId = IDManager.ServiceID.buildId(request.getService(), NodeType.Normal);</span><br><span class="line">    <span class="keyword">final</span> String serviceInstanceId = IDManager.ServiceInstanceID.buildId(serviceId, request.getServiceInstance());</span><br><span class="line">    <span class="comment">// 从缓存中获取该服务的 profile task 列表，该缓存每隔 10s 从存储中更新 profile task</span></span><br><span class="line">    <span class="keyword">final</span> List&lt;ProfileTask&gt; profileTaskList = profileTaskCache.getProfileTaskList(serviceId);</span><br><span class="line">    <span class="keyword">if</span> (CollectionUtils.isEmpty(profileTaskList)) &#123;</span><br><span class="line">        responseObserver.onNext(Commands.newBuilder().build());</span><br><span class="line">        responseObserver.onCompleted();</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// build command list</span></span><br><span class="line">    <span class="keyword">final</span> Commands.Builder commandsBuilder = Commands.newBuilder();</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">long</span> lastCommandTime = request.getLastCommandTime();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (ProfileTask profileTask : profileTaskList) &#123;</span><br><span class="line">        <span class="comment">// if command create time less than last command time, means sniffer already have task</span></span><br><span class="line">        <span class="keyword">if</span> (profileTask.getCreateTime() &lt;= lastCommandTime) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// record profile task log</span></span><br><span class="line">        recordProfileTaskLog(profileTask, serviceInstanceId, ProfileTaskLogOperationType.NOTIFIED);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// add command</span></span><br><span class="line">        commandsBuilder.addCommands(commandService.newProfileTaskCommand(profileTask).serialize().build());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    responseObserver.onNext(commandsBuilder.build());</span><br><span class="line">    responseObserver.onCompleted();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2-3-client-开启-profile-task-的相关定时任务"><a href="#2-3-client-开启-profile-task-的相关定时任务" class="headerlink" title="2.3 client 开启 profile task 的相关定时任务"></a>2.3 client 开启 profile task 的相关定时任务</h2><p>此时 client 主动向 oap 请求获取 profile task 列表，当 client 获取到后，需要进步做处理，ProfileTaskCommandExecutor.java：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(BaseCommand command)</span> <span class="keyword">throws</span> CommandExecutionException </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> ProfileTaskCommand profileTaskCommand = (ProfileTaskCommand) command;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// build profile task</span></span><br><span class="line">    <span class="keyword">final</span> ProfileTask profileTask = <span class="keyword">new</span> ProfileTask();</span><br><span class="line">    profileTask.setTaskId(profileTaskCommand.getTaskId());</span><br><span class="line">    profileTask.setFirstSpanOPName(profileTaskCommand.getEndpointName());</span><br><span class="line">    profileTask.setDuration(profileTaskCommand.getDuration());</span><br><span class="line">    profileTask.setMinDurationThreshold(profileTaskCommand.getMinDurationThreshold());</span><br><span class="line">    profileTask.setThreadDumpPeriod(profileTaskCommand.getDumpPeriod());</span><br><span class="line">    profileTask.setMaxSamplingCount(profileTaskCommand.getMaxSamplingCount());</span><br><span class="line">    profileTask.setStartTime(profileTaskCommand.getStartTime());</span><br><span class="line">    profileTask.setCreateTime(profileTaskCommand.getCreateTime());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// send to executor</span></span><br><span class="line">    <span class="comment">// 将该任务列表塞入一个 list 中，该 list</span></span><br><span class="line">    ServiceManager.INSTANCE.findService(ProfileTaskExecutionService.class).addProfileTask(profileTask);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当客户端获取到 profile task 后，需要知道什么时候启动，和什么时候停止，ProfileTaskExecutionService.java：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * add profile task from OAP</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addProfileTask</span><span class="params">(ProfileTask task)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// update last command create time</span></span><br><span class="line">    <span class="keyword">if</span> (task.getCreateTime() &gt; lastCommandCreateTime) &#123;</span><br><span class="line">        lastCommandCreateTime = task.getCreateTime();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// check profile task limit</span></span><br><span class="line">    <span class="keyword">final</span> CheckResult dataError = checkProfileTaskSuccess(task);</span><br><span class="line">    <span class="keyword">if</span> (!dataError.isSuccess()) &#123;</span><br><span class="line">        LOGGER.warn(</span><br><span class="line">            <span class="string">"check command error, cannot process this profile task. reason: &#123;&#125;"</span>, dataError.getErrorReason());</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// add task to list</span></span><br><span class="line">    profileTaskList.add(task);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// schedule to start task，计算出该任务还需要多久才能启动，通过定时任务实现</span></span><br><span class="line">    <span class="keyword">long</span> timeToProcessMills = task.getStartTime() - System.currentTimeMillis();</span><br><span class="line">    PROFILE_TASK_SCHEDULE.schedule(() -&gt; processProfileTask(task), timeToProcessMills, TimeUnit.MILLISECONDS);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * active the selected profile task to execution task, and start a removal task for it.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">processProfileTask</span><span class="params">(ProfileTask task)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// make sure prev profile task already stopped</span></span><br><span class="line">    stopCurrentProfileTask(taskExecutionContext.get());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// make stop task schedule and task context，通过上下文保存该 profile task，该上下文也实际在 trace 记录时塞入堆栈信息</span></span><br><span class="line">    <span class="keyword">final</span> ProfileTaskExecutionContext currentStartedTaskContext = <span class="keyword">new</span> ProfileTaskExecutionContext(task);</span><br><span class="line">    taskExecutionContext.set(currentStartedTaskContext);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// start profiling this task，开启 profileing 定时任务，抓取堆栈信息</span></span><br><span class="line">    currentStartedTaskContext.startProfiling(PROFILE_EXECUTOR);</span><br><span class="line">    <span class="comment">// 计算出该 profile task 的停止时间，通过定时任务停止该 profile task</span></span><br><span class="line">    PROFILE_TASK_SCHEDULE.schedule(</span><br><span class="line">        () -&gt; stopCurrentProfileTask(currentStartedTaskContext), task.getDuration(), TimeUnit.MINUTES);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时 client 已经开启了 profile task，并通过 oap 的参数，控制了开启时间和持续时间（停止时间）的定时任务，同时也开启了子线程 profile_executor，用于真正的抓取执行中的堆栈信息。也就是 client 开启了三个定时任务，一个用于 profile 的开启，一个用于 profile 的关闭，一个是用于 profile 真正抓取堆栈信息。</p>
+<h1 id="3-client-与-oap-的-profileSnapshot-信息"><a href="#3-client-与-oap-的-profileSnapshot-信息" class="headerlink" title="3 client 与 oap 的 profileSnapshot 信息"></a>3 client 与 oap 的 profileSnapshot 信息</h1><h2 id="3-1-client-profileSnapshot-的生成"><a href="#3-1-client-profileSnapshot-的生成" class="headerlink" title="3.1 client profileSnapshot 的生成"></a>3.1 client profileSnapshot 的生成</h2><p>在 ProfileTaskExecutionService.processProfileTask 方法中会开启 ProfileThread 任务，profileThread 定时任务会抓取堆栈信息并塞入队列。 ProfileThread.java：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        profiling(taskExecutionContext);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">        <span class="comment">// ignore interrupted</span></span><br><span class="line">        <span class="comment">// means current task has stopped</span></span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        LOGGER.error(e, <span class="string">"Profiling task fail. taskId:&#123;&#125;"</span>, taskExecutionContext.getTask().getTaskId());</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="comment">// finally stop current profiling task, tell execution service task has stop</span></span><br><span class="line">        profileTaskExecutionService.stopCurrentProfileTask(taskExecutionContext);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * start profiling</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">profiling</span><span class="params">(ProfileTaskExecutionContext executionContext)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> maxSleepPeriod = executionContext.getTask().getThreadDumpPeriod();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// run loop when current thread still running</span></span><br><span class="line">    <span class="keyword">long</span> currentLoopStartTime = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (!Thread.currentThread().isInterrupted()) &#123;</span><br><span class="line">        currentLoopStartTime = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// each all slot</span></span><br><span class="line">        AtomicReferenceArray&lt;ThreadProfiler&gt; profilers = executionContext.threadProfilerSlots();</span><br><span class="line">        <span class="keyword">int</span> profilerCount = profilers.length();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> slot = <span class="number">0</span>; slot &lt; profilerCount; slot++) &#123;</span><br><span class="line">            ThreadProfiler currentProfiler = profilers.get(slot);</span><br><span class="line">            <span class="keyword">if</span> (currentProfiler == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">switch</span> (currentProfiler.profilingStatus().get()) &#123;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">case</span> PENDING:</span><br><span class="line">                    <span class="comment">// check tracing context running time</span></span><br><span class="line">                    currentProfiler.startProfilingIfNeed();</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">case</span> PROFILING:</span><br><span class="line">                    <span class="comment">// dump stack</span></span><br><span class="line">                    TracingThreadSnapshot snapshot = currentProfiler.buildSnapshot();</span><br><span class="line">                    <span class="keyword">if</span> (snapshot != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        <span class="comment">// 将获取的堆栈信息快照文件，存入 snapshotQueue 队列中，而 ProfileTaskChannelService 中的 ProfileSendSnapshotService</span></span><br><span class="line">                        <span class="comment">// 定时任务会定期将 snapshotQueue 队列通过 ProfileSnapshotSender 任务发送给 oap</span></span><br><span class="line">                        profileTaskChannelService.addProfilingSnapshot(snapshot);</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        <span class="comment">// tell execution context current tracing thread dump failed, stop it</span></span><br><span class="line">                        executionContext.stopTracingProfile(currentProfiler.tracingContext());</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// sleep to next period</span></span><br><span class="line">        <span class="comment">// if out of period, sleep one period</span></span><br><span class="line">        <span class="keyword">long</span> needToSleep = (currentLoopStartTime + maxSleepPeriod) - System.currentTimeMillis();</span><br><span class="line">        needToSleep = needToSleep &gt; <span class="number">0</span> ? needToSleep : maxSleepPeriod;</span><br><span class="line">        Thread.sleep(needToSleep);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将 profileSnapshot 信息由 client 发送给 oap，有两种方式，当前默认为 grpc 方式：ProfileSnapshotSender.java，也可以用 kafka 方式发送：KafkaProfileSnapshotSender.java</p>
+<h2 id="3-1-oap-获取-client-传输的-profileSnapshot-信息"><a href="#3-1-oap-获取-client-传输的-profileSnapshot-信息" class="headerlink" title="3.1 oap 获取 client 传输的 profileSnapshot 信息"></a>3.1 oap 获取 client 传输的 profileSnapshot 信息</h2><p>grpc 方式获取也是通过 skywalking-profile-receiver-plugin 模块处理，该模块不仅负责 client 获取 profile task，也负责 profileSnapshot 的 grpc 通信，ProfileTaskServiceHandler.java：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="comment">// 前文说过，oap 处理 client 获取 profile task 列表的请求处理</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getProfileTaskCommands</span><span class="params">(ProfileTaskCommandQuery request, StreamObserver&lt;Commands&gt; responseObserver)</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * oap 接收来自 client 的 profileSnapshot 信息</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> responseObserver</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> StreamObserver&lt;ThreadSnapshot&gt; <span class="title">collectSnapshot</span><span class="params">(StreamObserver&lt;Commands&gt; responseObserver)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> StreamObserver&lt;ThreadSnapshot&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNext</span><span class="params">(ThreadSnapshot snapshot)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (LOGGER.isDebugEnabled()) &#123;</span><br><span class="line">                LOGGER.debug(<span class="string">"receive profile segment snapshot"</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// build database data</span></span><br><span class="line">            <span class="keyword">final</span> ProfileThreadSnapshotRecord record = <span class="keyword">new</span> ProfileThreadSnapshotRecord();</span><br><span class="line">            record.setTaskId(snapshot.getTaskId());</span><br><span class="line">            record.setSegmentId(snapshot.getTraceSegmentId());</span><br><span class="line">            record.setDumpTime(snapshot.getTime());</span><br><span class="line">            record.setSequence(snapshot.getSequence());</span><br><span class="line">            record.setStackBinary(snapshot.getStack().toByteArray());</span><br><span class="line">            record.setTimeBucket(TimeBucket.getRecordTimeBucket(snapshot.getTime()));</span><br><span class="line"></span><br><span class="line">            <span class="comment">// async storage</span></span><br><span class="line">            RecordStreamProcessor.getInstance().in(record);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable throwable)</span> </span>&#123;</span><br><span class="line">            LOGGER.error(throwable.getMessage(), throwable);</span><br><span class="line">            responseObserver.onCompleted();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onCompleted</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            responseObserver.onNext(Commands.newBuilder().build());</span><br><span class="line">            responseObserver.onCompleted();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>kafka 的 oap 接收profileSnapshot 也是类似处理，只不过换成了从 topic 中获取数据而已。</p>
+<h1 id="4-profileSnapshot-生成与分析"><a href="#4-profileSnapshot-生成与分析" class="headerlink" title="4. profileSnapshot 生成与分析"></a>4. profileSnapshot 生成与分析</h1><h2 id="4-1-client-生成-profileSnapshot"><a href="#4-1-client-生成-profileSnapshot" class="headerlink" title="4.1 client 生成 profileSnapshot"></a>4.1 client 生成 profileSnapshot</h2><p>在每次创建 TracingContext 的时候，也会初始化 profile 当前的堆栈信息：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * Initialize all fields with default value.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">TracingContext(String firstOPName) &#123;</span><br><span class="line">    <span class="keyword">this</span>.segment = <span class="keyword">new</span> TraceSegment();</span><br><span class="line">    <span class="keyword">this</span>.spanIdGenerator = <span class="number">0</span>;</span><br><span class="line">    isRunningInAsyncMode = <span class="keyword">false</span>;</span><br><span class="line">    createTime = System.currentTimeMillis();</span><br><span class="line">    running = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// profiling status</span></span><br><span class="line">    <span class="keyword">if</span> (PROFILE_TASK_EXECUTION_SERVICE == <span class="keyword">null</span>) &#123;</span><br><span class="line">        PROFILE_TASK_EXECUTION_SERVICE = ServiceManager.INSTANCE.findService(ProfileTaskExecutionService.class);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 判断是否需要 profile，同时尝试初始化当前 segment 的 thread 信息</span></span><br><span class="line">    <span class="keyword">this</span>.profileStatus = PROFILE_TASK_EXECUTION_SERVICE.addProfiling(</span><br><span class="line">        <span class="keyword">this</span>, segment.getTraceSegmentId(), firstOPName);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.correlationContext = <span class="keyword">new</span> CorrelationContext();</span><br><span class="line">    <span class="keyword">this</span>.extensionContext = <span class="keyword">new</span> ExtensionContext();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>addProfiling 方法最终会走到 ProfileTaskExecutionContext.attemptProfiling 方法，该方法会将当前线程堆栈信息存储 volatile 变量：profilingSegmentSlots 中，该变量会在 ProfileThread.profiling 方法中通过 executionContext.threadProfilerSlots(); 方式死循环取出来。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * check have available slot to profile and add it</span></span><br><span class="line"><span class="comment">    *</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span> is add profile success</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> ProfileStatusReference <span class="title">attemptProfiling</span><span class="params">(TracingContext tracingContext,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                String traceSegmentId,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                String firstSpanOPName)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// check has available slot</span></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> usingSlotCount = currentProfilingCount.get();</span><br><span class="line">    <span class="keyword">if</span> (usingSlotCount &gt;= Config.Profile.MAX_PARALLEL) &#123;</span><br><span class="line">        <span class="keyword">return</span> ProfileStatusReference.createWithNone();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// check first operation name matches</span></span><br><span class="line">    <span class="keyword">if</span> (!Objects.equals(task.getFirstSpanOPName(), firstSpanOPName)) &#123;</span><br><span class="line">        <span class="keyword">return</span> ProfileStatusReference.createWithNone();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// if out limit started profiling count then stop add profiling</span></span><br><span class="line">    <span class="keyword">if</span> (totalStartedProfilingCount.get() &gt; task.getMaxSamplingCount()) &#123;</span><br><span class="line">        <span class="keyword">return</span> ProfileStatusReference.createWithNone();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// try to occupy slot</span></span><br><span class="line">    <span class="keyword">if</span> (!currentProfilingCount.compareAndSet(usingSlotCount, usingSlotCount + <span class="number">1</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> ProfileStatusReference.createWithNone();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 将当前线程 Thread.currentThread() 赋值给 ThreadProfiler 的 profilingThread 参数</span></span><br><span class="line">    <span class="comment">// 同时将 threadProfiler 存入 profilingSegmentSlots 中，profilingSegmentSlots 会被 profileThread 取出</span></span><br><span class="line">    <span class="keyword">final</span> ThreadProfiler threadProfiler = <span class="keyword">new</span> ThreadProfiler(</span><br><span class="line">        tracingContext, traceSegmentId, Thread.currentThread(), <span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">int</span> slotLength = profilingSegmentSlots.length();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> slot = <span class="number">0</span>; slot &lt; slotLength; slot++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (profilingSegmentSlots.compareAndSet(slot, <span class="keyword">null</span>, threadProfiler)) &#123;</span><br><span class="line">            <span class="keyword">return</span> threadProfiler.profilingStatus();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ProfileStatusReference.createWithNone();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例如当前只有一个 http 请求：</p>
+<ol>
+<li>在 before method 前将该请求堆栈信息初始化并发送给 oap，该信息包含该 traceId 以及 beginTime。</li>
+<li>该请求执行完后，在 after method 后，会将该 trace 发送给 oap。</li>
+<li>oap 后台查询到 profile 的 trace 后，点击执行按钮，会从存储中获取该请求堆栈信息，并通过 traceId 反查到 trace 链路，并通过 beginTime 和 trace 的 time，得到该堆栈的执行时间。注意：后台点击执行时才会主动分析堆栈的执行和相关信息。</li>
+</ol>
+<h2 id="4-2-oap-执行分析堆栈信息"><a href="#4-2-oap-执行分析堆栈信息" class="headerlink" title="4.2 oap 执行分析堆栈信息"></a>4.2 oap 执行分析堆栈信息</h2><p>oap 请求执行堆栈分析参数：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query"</span>: <span class="string">"query getProfileAnalyze($segmentId: String!, $timeRanges: [ProfileAnalyzeTimeRange!]!) &#123;\\n  getProfileAnalyze: getProfileAnalyze(segmentId: $segmentId, timeRanges: $timeRanges) &#123;\\n    tip\\n    trees &#123;\\n      elements &#123;\\n        id\\n        parentId\\n        codeSignature\\n        duration\\n        durationChildExcluded\\n        count\\n      &#125;\\n    &#125;\\n  &#125;\\n  &#125;"</span>,</span><br><span class="line">    <span class="attr">"variables"</span>: &#123;</span><br><span class="line">        <span class="attr">"segmentId"</span>: <span class="string">"f26ef21ccee943d1806c12cf54948c00.57.16225422981970000"</span>,</span><br><span class="line">        <span class="attr">"timeRanges"</span>: [</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="attr">"start"</span>: <span class="number">1622542298197</span>,</span><br><span class="line">                <span class="attr">"end"</span>: <span class="number">1622542301399</span></span><br><span class="line">            &#125;</span><br><span class="line">        ]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>定位到 org.apache.skywalking.oap.server.core.profile.analyze.ProfileAnalyzer#analyze() 执行的分析：从 es 取出从 client 获取的 ProfileSnapshot 堆栈信息，映射的实体类为：ProfileThreadSnapshotRecord</p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2021-06-12</div>
+      <div class="popular-posts-title"><a href="/2021/06/12/tech/apm/skywalking_2_service-traffic.html/" rel="bookmark">skywalking-service-traffic的交互</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>李文文 | zed
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.liwenguang.com/2021/05/29/tech/apm/skywalking_1_profile.html/" title="skywalking-profile原理">https://blog.liwenguang.com/2021/05/29/tech/apm/skywalking_1_profile.html/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/skywalking/" rel="tag"><i class="fa fa-tag"></i> skywalking</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/25/2021/21.html/" rel="prev" title="2021/21周总结">
+      <i class="fa fa-chevron-left"></i> 2021/21周总结
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/01/readbook/996.html/" rel="next" title="《干法》阅读总结">
+      《干法》阅读总结 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#0-背景"><span class="nav-text">0. 背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-最开始的地方：后台创建性能剖析任务"><span class="nav-text">1. 最开始的地方：后台创建性能剖析任务</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-后台接收-profile-任务创建请求"><span class="nav-text">1.1 后台接收 profile 任务创建请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-从-graphqls-定位到具体的执行类"><span class="nav-text">1.2 从 graphqls 定位到具体的执行类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-3-profile-task-任务存储"><span class="nav-text">1.3 profile task 任务存储</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-client-将-profile-数据传输给-oap"><span class="nav-text">2. client 将 profile 数据传输给 oap</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-client-请求-oap-创建的-profile-task"><span class="nav-text">2.1 client 请求 oap 创建的 profile task</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-oap-响应-client-获取-profile-task-列表的请求"><span class="nav-text">2.2 oap 响应 client 获取 profile task 列表的请求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-client-开启-profile-task-的相关定时任务"><span class="nav-text">2.3 client 开启 profile task 的相关定时任务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-client-与-oap-的-profileSnapshot-信息"><span class="nav-text">3 client 与 oap 的 profileSnapshot 信息</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-client-profileSnapshot-的生成"><span class="nav-text">3.1 client profileSnapshot 的生成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-oap-获取-client-传输的-profileSnapshot-信息"><span class="nav-text">3.1 oap 获取 client 传输的 profileSnapshot 信息</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-profileSnapshot-生成与分析"><span class="nav-text">4. profileSnapshot 生成与分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-client-生成-profileSnapshot"><span class="nav-text">4.1 client 生成 profileSnapshot</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-oap-执行分析堆栈信息"><span class="nav-text">4.2 oap 执行分析堆栈信息</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李文文 | zed"
+      src="/images/avatar2.jpg">
+  <p class="site-author-name" itemprop="name">李文文 | zed</p>
+  <div class="site-description" itemprop="description">Not you, who?</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">186</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LiWenGu" title="GitHub → https://github.com/LiWenGu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liwenguang_dev@163.com" title="E-Mail → mailto:liwenguang_dev@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="rss → /atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.battcn.com/" title="https://blog.battcn.com/" rel="noopener" target="_blank">唐亚峰 | battcn</a>
+        </li>
+    </ul>
+  </div>
+<!-- CloudCalendar -->
+<div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
+	<div class="widget" id="CloudCalendar"></div>
+</div>
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李文文 | zed</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">1m</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">15:28</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+<!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script>
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
+
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'tPNbcXbsHeBH6mDDuQiRNAIi-gzGzoHsz',
+      appKey     : 'DuDTx0gUNp6hJiNaBNXPREQQ',
+      placeholder: "欢迎评论",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>

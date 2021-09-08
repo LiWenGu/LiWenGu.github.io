@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Menlo:300,300italic,400,400italic,700,700italic|Monda:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/themes/blue/pace-theme-minimal.min.css">
+  <script src="//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.liwenguang.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="1 volatile 的应用   术语 英文 解释     缓存行 Cache line 缓存的最小操作单位（例如处理器的一级缓存等）   比较并交换 Compare And Swap CAS 操作需要输入两个数值，一个旧值和一个新值，在操作期间先比较旧值发生变化没，如果没有变化，才交换成新值    1.1 volatile 的定义与实现原理volatile 变量修饰的共享变量进行写操作的时候，会">
+<meta name="keywords" content="并发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二、Java并发机制的底层实现原理">
+<meta property="og:url" content="https://blog.liwenguang.com/2017/09/26/concurrent-art/2.html/index.html">
+<meta property="og:site_name" content="不坠青云志">
+<meta property="og:description" content="1 volatile 的应用   术语 英文 解释     缓存行 Cache line 缓存的最小操作单位（例如处理器的一级缓存等）   比较并交换 Compare And Swap CAS 操作需要输入两个数值，一个旧值和一个新值，在操作期间先比较旧值发生变化没，如果没有变化，才交换成新值    1.1 volatile 的定义与实现原理volatile 变量修饰的共享变量进行写操作的时候，会">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/concurrent_art/2-1.png">
+<meta property="og:updated_time" content="2017-09-26T00:18:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="二、Java并发机制的底层实现原理">
+<meta name="twitter:description" content="1 volatile 的应用   术语 英文 解释     缓存行 Cache line 缓存的最小操作单位（例如处理器的一级缓存等）   比较并交换 Compare And Swap CAS 操作需要输入两个数值，一个旧值和一个新值，在操作期间先比较旧值发生变化没，如果没有变化，才交换成新值    1.1 volatile 的定义与实现原理volatile 变量修饰的共享变量进行写操作的时候，会">
+<meta name="twitter:image" content="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/concurrent_art/2-1.png">
+
+<link rel="canonical" href="https://blog.liwenguang.com/2017/09/26/concurrent-art/2.html/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>二、Java并发机制的底层实现原理 | 不坠青云志</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146913835-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-146913835-1');
+      }
+    </script>
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cfa1bf8fa457ee5150093dc7c8761541";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">不坠青云志</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">严律己，宽待人</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">44</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">31</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">186</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+
+  <a href="https://github.com/LiWenGu/liwengu.github.io" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.liwenguang.com/2017/09/26/concurrent-art/2.html/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar2.jpg">
+      <meta itemprop="name" content="李文文 | zed">
+      <meta itemprop="description" content="Not you, who?">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不坠青云志">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          二、Java并发机制的底层实现原理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-09-26 00:18:00" itemprop="dateCreated datePublished" datetime="2017-09-26T00:18:00+00:00">2017-09-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书总结/" itemprop="url" rel="index"><span itemprop="name">读书总结</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/读书总结/Java并发编程的艺术/" itemprop="url" rel="index"><span itemprop="name">Java并发编程的艺术</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2017/09/26/concurrent-art/2.html/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2017/09/26/concurrent-art/2.html/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>6.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1-volatile-的应用"><a href="#1-volatile-的应用" class="headerlink" title="1 volatile 的应用"></a>1 volatile 的应用</h1><table>
+<thead>
+<tr>
+<th style="text-align:center">术语</th>
+<th style="text-align:center">英文</th>
+<th style="text-align:center">解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">缓存行</td>
+<td style="text-align:center">Cache line</td>
+<td style="text-align:center">缓存的最小操作单位（例如处理器的一级缓存等）</td>
+</tr>
+<tr>
+<td style="text-align:center">比较并交换</td>
+<td style="text-align:center">Compare And Swap</td>
+<td style="text-align:center">CAS 操作需要输入两个数值，一个旧值和一个新值，在操作期间先比较旧值发生变化没，如果没有变化，才交换成新值</td>
+</tr>
+</tbody>
+</table>
+<h2 id="1-1-volatile-的定义与实现原理"><a href="#1-1-volatile-的定义与实现原理" class="headerlink" title="1.1 volatile 的定义与实现原理"></a>1.1 volatile 的定义与实现原理</h2><p>volatile 变量修饰的共享变量进行写操作的时候，会引发两件事情：</p>
+<p>将当前处理器缓存行（ cache line ）的数据写回到系统内存。<br>这个写回内存的操作会使其它 CPU 里缓存了该内存地址的数据无效。<br>为了提高处理速度，处理器不直接和内存进行通信，而是先将系统内存的数据读到内部缓存（L1，L2或其它，即一级缓存、二级缓存等）后再进行操作， 但操作完全不知道何时会真正写到内存。而声明了 volatile 的变量进行写操作， JVM 就会向处理器发送一条 Lock 前缀的指令， 将这个变量所在缓存行的数据写回到系统内存。但是，就算写回到内存，如果其它处理器缓存的值还是旧的，再执行计算操作就会有问题。所以， 在多处理器下，为了保证各个处理器的缓存是一致的，就会实现缓存一致性协议，每个处理器通过嗅探在总线上传播的数据来检查自己缓存的值是不是过期了， 当处理器发现自己缓存行对应的内存地址被修改，就会将当前处理器的缓存行设置成无效状态，当处理器对这个数据进行修改操作的时候， 会重新从系统内存中把数据读到处理器缓存里。</p>
+<h2 id="1-2-volatile-的使用优化"><a href="#1-2-volatile-的使用优化" class="headerlink" title="1.2 volatile 的使用优化"></a>1.2 volatile 的使用优化</h2><p>在 JDK 1.7 中的 LinkedTransferQueue 使用 volatile 变量时，用一种追加字节的方式来优化队列出队和入队的性能，即将共享变量追加到 64 字节。 一个对象的引用占用 4 个字节，追加 15 个变量（共占 60 个字节），一共 64 个字节。这样 CPU 中缓存行中，最多只有一个队列， 而不会导致有两个队列，操作其中一个队列的时候由于和另一个队列在同一个缓存行中锁住了另一个队列。但是有两种场景下不应该使用这种方式：</p>
+<p>缓存行非 64 字节宽的处理。<br>共享变量不会被频繁的写。<br>但是在 java7 中，它会淘汰或重新排列无用字段，因此需要使用其它追加字节的方式。</p>
+<h1 id="2-synchronized-的实现原理与应用"><a href="#2-synchronized-的实现原理与应用" class="headerlink" title="2 synchronized 的实现原理与应用"></a>2 synchronized 的实现原理与应用</h1><p>作为一个重量级锁，它是存在 Java 对象头里的。并在 Java SE 1.6 对 synchronized 进行了各种优化。<br>Java 中的每一个对象都可以作为锁：</p>
+<p>对于普通同步方法，锁是当前实例对象。<br>对于静态同步方法，锁是当前类的 Class 对象。<br>对于同步方法块，锁是 Synchronized 括号里配置的对象。<br>JVM 基于进入和退出 Monitor 对象来实现方法同步和代码块同步，但两者的实现细节不同。<br>代码块同步是使用 monitorenter 和 monitorexit 指令实现的，而方法同步使用另外一种方法实现，细节在 JVM 规范里并没有详细说明。但是， 方法的同步同样可以使用这两个指令来实现。</p>
+<h2 id="2-1-锁的升级与对比"><a href="#2-1-锁的升级与对比" class="headerlink" title="2.1 锁的升级与对比"></a>2.1 锁的升级与对比</h2><p>Java SE 1.6 为了减少获得锁和释放锁带来的性能消耗，引入了“偏向锁”和“轻量级锁”，在 Java SE 1.6 中，锁一共有 4 种状态，级别从低到高依次是：</p>
+<p>无锁状态<br>偏向锁状态<br>轻量级锁状态<br>重量级锁状态<br>这几种状态随着竞争情况逐渐升级。锁可以升级但不能降级，这是为了提高获得锁和释放锁的效率，下文会详细分析。</p>
+<h3 id="2-1-1-偏向锁"><a href="#2-1-1-偏向锁" class="headerlink" title="2.1.1 偏向锁"></a>2.1.1 偏向锁</h3><p>HotSpot 的作者经过研究发现，大多数情况下，锁不仅不存在多线程竞争，而且总是由同一线程多次获得，为了让线程获得锁的代价更低而引入了偏向锁。<br>当一个线程访问同步块并获取锁时，会在当前同步块的对象头和栈帧中的锁记录里存储锁偏向的线程 ID ，以后该线程再进入和退出同步块时不需要进行 CAS 操作来加锁和解锁， 只需要简单地测试一下对象头里的 Mark Word 里是否存储着指向当前线程的偏向锁。如果测试成功，表示当前线程已经获得了锁。如果测试失败，则需要再测试一下对象头中偏向锁的标识是否设置成1 （标识当前是偏向锁）：如果没有设置，则使用 CAS 竞争锁；如果设置了，则尝试使用 CAS 将对象头的偏向锁指向当前线程。</p>
+<p>1) 偏向锁的撤销<br>偏向锁使用了一种等到竞争出现才释放锁的机制，所以当其它线程尝试竞争偏向锁时，持有偏向锁的线程才会释放锁。偏向锁的撤销，需要等待全局安全点 （在这个时间点上没有正在执行的字节码，GC 可以在这个点进行暂停所有线程进行暂停回收操作）。它会首先暂停拥有偏向锁的线程， 然后检查持有偏向锁的线程是否活着，如果线程不处于活动状态，则将对象头设置成无锁状态；如果线程仍然活着，拥有偏向锁的栈会被执行，遍历偏向对象的锁记录， 栈中的锁记录和对象头，要么重新偏向于其它线程，要么恢复到无锁或者标记对象不适合作为偏向锁，最后唤醒暂停的线程。</p>
+<p>2) 关闭偏向锁<br>偏向锁在 Java 6 和 Java 7 里是默认启用的，但是它在应用程序启动几秒钟之后才激活，可以使用 -XX:BiasedLockingStartupDelay=0 。 如果你确定应用程序里所有的锁通常情况下处理竞争状态，可以通过 -XX:UseBiasedLocking=false 关闭偏向锁，那么程序默认会进入轻量级锁状态。</p>
+<h3 id="2-1-2-轻量级锁"><a href="#2-1-2-轻量级锁" class="headerlink" title="2.1.2 轻量级锁"></a>2.1.2 轻量级锁</h3><p>1) 轻量级锁加锁<br>线程在执行同步块之前， JVM 会先在当前线程的栈帧中创建用于存储锁记录的空间，并将对象头中的Mark Word 复制到锁记录中，官方称为 Displaced Mark Word 。 然后线程尝试使用 CAS 将对象头中的 Mark Word 替换为指向锁记录的指针。如果成功，当前线程获得锁，如果失败，表示其它线程竞争锁，当前线程便尝试使用自旋来获取锁。</p>
+<p>2) 轻量级锁解锁<br>使用 CAS 操作将 Displaced Mark Word 替换回到对象头，如果成功，则表示没有竞争发生。如果失败，表示当前锁存在竞争，锁就会膨胀成重量级锁。<br>当锁处于这个状态下，其它线程试图获取锁时，都会被阻塞住，当持有锁的线程释放锁之后会唤醒这些线程，被唤醒的线程就会进行新一轮的夺锁之争。</p>
+<p>3) 锁的优缺点对比</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">锁</th>
+<th style="text-align:center">优 点</th>
+<th style="text-align:center">缺点</th>
+<th style="text-align:center">适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">偏向锁</td>
+<td style="text-align:center">加锁和解锁不需要额外消耗，和执行非同步方法相对仅存在纳秒级的差距</td>
+<td style="text-align:center">如果线程间存在锁竞争，会带来额外的锁撤销的消耗</td>
+<td style="text-align:center">适用于只有一个线程访问同步块场景</td>
+</tr>
+<tr>
+<td style="text-align:center">轻量级锁</td>
+<td style="text-align:center">竞争的线程不会阻塞，提高了程序的响应速度</td>
+<td style="text-align:center">如果始终得不到锁竞争的线程，使用自旋会消耗 CPU</td>
+<td style="text-align:center">追求响应时间，同步块内执行速度非常快</td>
+</tr>
+<tr>
+<td style="text-align:center">重量级锁</td>
+<td style="text-align:center">线程竞争不适用自旋，不会消耗 CPU</td>
+<td style="text-align:center">线程阻塞，响应时间缓慢</td>
+<td style="text-align:center">追求吞吐量，同步块内执行速度较快</td>
+</tr>
+</tbody>
+</table>
+<h1 id="3-原子操作的实现原理"><a href="#3-原子操作的实现原理" class="headerlink" title="3 原子操作的实现原理"></a>3 原子操作的实现原理</h1><h2 id="3-1-处理器使用总线锁保证原子性"><a href="#3-1-处理器使用总线锁保证原子性" class="headerlink" title="3.1 处理器使用总线锁保证原子性"></a>3.1 处理器使用总线锁保证原子性</h2><p>如果多个处理器同时对共享变量进行读改写操作（i++ 就是经典的读改写操作），那么共享变量就会被多个处理器同时进行操作，这样读改写操作就不是原子的， 操作完之后共享变量的值会和期望的不一致。例如：如果 i=1 ,我们进行两次 i++ 操作，期望结果是 3 ，但是有可能结果是 2 。如下图：<br><img src="http://leran2deeplearnjavawebtech.oss-cn-beijing.aliyuncs.com/learn/concurrent_art/2-1.png" alt></p>
+<p>可能是多个处理器同时从各自的缓存中读取变量 i ，分别进行加 1 操作，然后分别写入系统内存中。那么，想要保证读改写共享变量的操作是原子的， 就必须保证 CPU1 读改写共享变量的时候， CPU2 不能操作缓存了该共享变量内存地址的缓存。</p>
+<p>处理器使用总线锁来解决这个问题，即使用处理器提供的一个 LOCK# 信号，当一个处理器在总线上输出此信号时，其它处理器的请求将被阻塞住， 那么该处理器就可以独占共享内存，而其它处理器会直接废弃掉该信号的值，从内存中取，再缓存。</p>
+<h2 id="3-2-处理器使用缓存锁保证原子性"><a href="#3-2-处理器使用缓存锁保证原子性" class="headerlink" title="3.2 处理器使用缓存锁保证原子性"></a>3.2 处理器使用缓存锁保证原子性</h2><p>在同一时刻，我们只需要保证对某个内存地址的操作是原子性即可，但总线锁定把 CPU 和内存之间的通信锁住了，这使得锁定期间，其它处理器不能操作其它内存地址的户数， 所以总线锁定的开销比较大，在某些场合下可以使用缓存锁定代替总线锁定进行优化。</p>
+<p>频繁使用的内存会缓存在处理器的 L1、L2 和 L3 高级缓存里，那么原子操作就可以直接在处理器内部缓存中进行，并不需要声明总线锁。所谓“缓存锁定” 是指内存区域如果被缓存在处理器的缓存行中，并且在 Lock 操作期间被锁定，那么当它执行锁操作回写到内存时，处理器不在总线上声明 LOCK# 信号， 而是膝盖内部的内存地址，并允许它的缓存一致性机制来保证操作的原子性，因为缓存一致性机制会阻止同时修改两个以上处理器缓存的内存区域数据， 当其它处理器回写已被锁定的缓存行的数据时，会使缓存行无效。如上图的例子，当 CPU1 修改缓存行中的 i 时使用了缓存锁定，那么 CPU2 就不能同时缓存 i 和缓存行。</p>
+<p>但是有两种情况下处理器不会使用缓存锁定：<br>1：当操作的数据不能被缓存在处理器内部，或操作的数据跨多个缓存行，则处理器会调用总线锁定。<br>2：处理器本身不支持缓存锁定。</p>
+<h1 id="4-Java-如何实现原子操作"><a href="#4-Java-如何实现原子操作" class="headerlink" title="4 Java 如何实现原子操作"></a>4 Java 如何实现原子操作</h1><h2 id="4-1-使用循环-CAS-实现原子操作"><a href="#4-1-使用循环-CAS-实现原子操作" class="headerlink" title="4.1 使用循环 CAS 实现原子操作"></a>4.1 使用循环 CAS 实现原子操作</h2><p>使用 JDK 1.5 之后的并发包，里面有一些类来支持原子操作，如 AtomicBoolean 、 AtomicInteger 、 AtomicLong ，还有一些工具了， 如以原子额方式将当前值自增 1 和自减 1 。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Counter</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> AtomicInteger atomicI = <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">final</span> Counter cas = <span class="keyword">new</span> Counter();</span><br><span class="line">        List&lt;Thread&gt; ts = <span class="keyword">new</span> ArrayList&lt;&gt;(<span class="number">600</span>);</span><br><span class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">100</span>; j++) &#123;</span><br><span class="line">            Thread t = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="meta">@Override</span> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">                        cas.count();</span><br><span class="line">                        cas.safeCount();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            ts.add(t);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (Thread t : ts) &#123;</span><br><span class="line">            t.start();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 等待所有线程执行完成</span></span><br><span class="line">        <span class="keyword">for</span> (Thread t : ts) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                t.join();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(cas.i);</span><br><span class="line">        System.out.println(cas.atomicI.get());</span><br><span class="line">        System.out.println(System.currentTimeMillis() - start);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 使用 CAS 实现线程安全计数器</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">safeCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">            <span class="keyword">int</span> i = atomicI.get();</span><br><span class="line">            <span class="keyword">boolean</span> suc = atomicI.compareAndSet(i, ++i);</span><br><span class="line">            <span class="keyword">if</span> (suc) &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 非线程安全计数器</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">count</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-2-CAS-实现原子操作的三大问题"><a href="#4-2-CAS-实现原子操作的三大问题" class="headerlink" title="4.2 CAS 实现原子操作的三大问题"></a>4.2 CAS 实现原子操作的三大问题</h2><h3 id="4-2-1-ABA-问题"><a href="#4-2-1-ABA-问题" class="headerlink" title="4.2.1 ABA 问题"></a>4.2.1 ABA 问题</h3><p>如果一个值原来是 A ，变成了 B ，又变成了 A ，那么使用 CAS 进行检查时会发现它的值没有变化，但是实际却变化了。<br>解决思路就是使用版本号，即 A-&gt;B-&gt;A 变成 1A-&gt;2B-&gt;3A 。 Atomic 包提供了类 AtomicStampedReference 来解决 ABA 问题。</p>
+<h3 id="4-2-2-循环时间开销大"><a href="#4-2-2-循环时间开销大" class="headerlink" title="4.2.2 循环时间开销大"></a>4.2.2 循环时间开销大</h3><p>自旋 CAS 如果长时间不成功，会给 CPU 带来非常大的执行开销。</p>
+<h3 id="4-2-3-只能保证一个共享变量的原子操作"><a href="#4-2-3-只能保证一个共享变量的原子操作" class="headerlink" title="4.2.3 只能保证一个共享变量的原子操作"></a>4.2.3 只能保证一个共享变量的原子操作</h3><p>对多个共享变量操作时，循环 CAS 就无法保证操作的原子性，这个时候就可以用锁。还有一个取巧的办法，就是把多个共享变量合并成一个共享变量来操作， 例如，有两个共享变量 i=2 ，j=a ，合并以下 ij=2a ，然后用 CAS 来操作 ij 。 JDK 1.5 之后提供了 AtomicReference 类来保证引用对象之间的原子性， 就可以把多个变量放在一个对象里来进行 CAS 操作。</p>
+<h2 id="4-3-使用锁机制实现原子操作"><a href="#4-3-使用锁机制实现原子操作" class="headerlink" title="4.3 使用锁机制实现原子操作"></a>4.3 使用锁机制实现原子操作</h2><p>JVM 内部实现了很多种锁机制，有偏向锁、轻量级锁和互斥锁。有意思的是除了偏向锁， JVM 实现锁的方式都用了循环 CAS ，即当一个线程想进入同步块的时候使用循环 CAS 的方式来获取锁， 当它退出同步块的时候使用循环 CAS 释放锁。</p>
+<h1 id="5-本章小结"><a href="#5-本章小结" class="headerlink" title="5 本章小结"></a>5 本章小结</h1><p>volatile 的实现原理，从处理器到 JVM 讲解。<br>synchronized 的实现原理以及三种锁对象以及 JDK 1.6 之后的四种状态锁。<br>原子操作的实现原理，即 CAS 。<br>Java 中的大部分容器和框架都依赖于本章介绍的 volatile 和原子操作的实现原理，了解这些原理对我们进行并发编程会更有帮助。</p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2019-12-30</div>
+      <div class="popular-posts-title"><a href="/2019/12/30/tech/from_Synchronized_to_Lock.html/" rel="bookmark">从Synchronized到Lock</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2017-09-27</div>
+      <div class="popular-posts-title"><a href="/2017/09/27/concurrent-art/3.html/" rel="bookmark">三、Java内存模型的基础</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2017-11-07</div>
+      <div class="popular-posts-title"><a href="/2017/11/07/concurrent-art/8.html/" rel="bookmark">八、Java中的并发工具类</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2017-11-07</div>
+      <div class="popular-posts-title"><a href="/2017/11/07/concurrent-art/6.html/" rel="bookmark">六、Java并发容器和框架</a></div>
+    </li>
+    <li class="popular-posts-item">
+        <div class="popular-posts-date">2017-11-07</div>
+      <div class="popular-posts-title"><a href="/2017/11/07/concurrent-art/4.html/" rel="bookmark">四、Java并发编程基础</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>李文文 | zed
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.liwenguang.com/2017/09/26/concurrent-art/2.html/" title="二、Java并发机制的底层实现原理">https://blog.liwenguang.com/2017/09/26/concurrent-art/2.html/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/并发/" rel="tag"><i class="fa fa-tag"></i> 并发</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/09/25/concurrent-art/1.html/" rel="prev" title="一、并发编程的挑战">
+      <i class="fa fa-chevron-left"></i> 一、并发编程的挑战
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/09/27/concurrent-art/3.html/" rel="next" title="三、Java内存模型的基础">
+      三、Java内存模型的基础 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-volatile-的应用"><span class="nav-text">1 volatile 的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-volatile-的定义与实现原理"><span class="nav-text">1.1 volatile 的定义与实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-volatile-的使用优化"><span class="nav-text">1.2 volatile 的使用优化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-synchronized-的实现原理与应用"><span class="nav-text">2 synchronized 的实现原理与应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-锁的升级与对比"><span class="nav-text">2.1 锁的升级与对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-1-偏向锁"><span class="nav-text">2.1.1 偏向锁</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-2-轻量级锁"><span class="nav-text">2.1.2 轻量级锁</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-原子操作的实现原理"><span class="nav-text">3 原子操作的实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-处理器使用总线锁保证原子性"><span class="nav-text">3.1 处理器使用总线锁保证原子性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-处理器使用缓存锁保证原子性"><span class="nav-text">3.2 处理器使用缓存锁保证原子性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-Java-如何实现原子操作"><span class="nav-text">4 Java 如何实现原子操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-使用循环-CAS-实现原子操作"><span class="nav-text">4.1 使用循环 CAS 实现原子操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-CAS-实现原子操作的三大问题"><span class="nav-text">4.2 CAS 实现原子操作的三大问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-1-ABA-问题"><span class="nav-text">4.2.1 ABA 问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-2-循环时间开销大"><span class="nav-text">4.2.2 循环时间开销大</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-3-只能保证一个共享变量的原子操作"><span class="nav-text">4.2.3 只能保证一个共享变量的原子操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3-使用锁机制实现原子操作"><span class="nav-text">4.3 使用锁机制实现原子操作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-本章小结"><span class="nav-text">5 本章小结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="李文文 | zed"
+      src="/images/avatar2.jpg">
+  <p class="site-author-name" itemprop="name">李文文 | zed</p>
+  <div class="site-description" itemprop="description">Not you, who?</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">186</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">31</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/LiWenGu" title="GitHub → https://github.com/LiWenGu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:liwenguang_dev@163.com" title="E-Mail → mailto:liwenguang_dev@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i></a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="rss → /atom.xml"><i class="fa fa-rss fa-fw"></i></a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-cn" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://blog.battcn.com/" title="https://blog.battcn.com/" rel="noopener" target="_blank">唐亚峰 | battcn</a>
+        </li>
+    </ul>
+  </div>
+<!-- CloudCalendar -->
+<div class="widget-wrap" style="width: 90%;margin-left: auto;margin-right: auto; opacity: 0.97;">
+	<div class="widget" id="CloudCalendar"></div>
+</div>
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李文文 | zed</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">1m</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">15:28</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+<!-- calendar widget -->
+
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/calendar.min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-calendar/languages.min.js"></script>
+    <script>
+    $(function() {
+        $('#CloudCalendar').aCalendar('zh-CN',
+            $.extend(
+                '', {
+                    single:true,
+                    root:'/calendar/'
+                }
+            )
+        );
+    });
+    </script>
+
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : true,
+      notify     : false,
+      appId      : 'tPNbcXbsHeBH6mDDuQiRNAIi-gzGzoHsz',
+      appKey     : 'DuDTx0gUNp6hJiNaBNXPREQQ',
+      placeholder: "欢迎评论",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.7},"log":false});</script></body>
+</html>
