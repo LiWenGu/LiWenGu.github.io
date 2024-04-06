@@ -34,11 +34,11 @@ Vue.config.productionTip = false
 axios.defaults.timeout = 5000
 //设置api地址
 //全局定义axios
-axios.defaults.baseURL = 'http://shkjgw.shkjem.com/api/'
+axios.defaults.baseURL = 'https://www.yangchengtz.com/api/'
 Vue.prototype.$http = axios
 
 // 图片服务器地址
-Vue.prototype.imgserver = 'http://shkjgw.shkjem.com/'
+Vue.prototype.imgserver = 'https://www.yangchengtz.com/'
 
 new Vue({
   router,
